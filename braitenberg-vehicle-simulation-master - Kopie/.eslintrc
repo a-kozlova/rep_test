@@ -1,0 +1,35 @@
+{
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint"],
+  "extends": [
+    "airbnb-typescript/base",
+    "plugin:@typescript-eslint/recommended",
+    "prettier/@typescript-eslint",
+    "plugin:prettier/recommended"
+  ],
+  "env": {
+    "node": true,
+    "browser": true,
+    "jest": true
+  },
+  "rules": {
+    "no-continue": "off",
+    "no-param-reassign": ["error", { "props": false }],
+    "class-methods-use-this": ["error", { "exceptMethods": ["update", "onEntityCreated", "onEntityDestroyed"] }],
+    "no-prototype-builtins": "off",
+    "@typescript-eslint/no-non-null-assertion": "warn",
+    "@typescript-eslint/explicit-function-return-type": [
+      "error",
+      {
+        "allowExpressions": true,
+        "allowTypedFunctionExpressions": true
+      }
+    ]
+  },
+  "overrides": [
+    {
+      "files": ["src/**/*"],
+      "excludedFiles": "*.d.ts"
+    }
+  ]
+}

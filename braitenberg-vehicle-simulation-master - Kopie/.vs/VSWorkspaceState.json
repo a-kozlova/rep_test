@@ -1,0 +1,13 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\src",
+    "\\src\\components",
+    "\\src\\dynamic_input",
+    "\\src\\gui",
+    "\\src\\scenes",
+    "\\src\\utils"
+  ],
+  "SelectedNode": "\\src\\dynamic_input\\SelectInput.ts",
+  "PreviewInSolutionExplorer": false
+}
