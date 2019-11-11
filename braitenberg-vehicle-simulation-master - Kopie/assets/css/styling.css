@@ -181,10 +181,65 @@ button,
 
 
 
-.navbar {
-    background: #ccc;
-    height: auto;
-    justify-content: flex-end;
+.nav-tabs a {
+    color: black;
+    text-align: center;
+}
+
+#settings{
+    width: 230px;
+}
+
+
+h4 {
+    background-color: #EFEFEF;
+    border-radius: 3%;
+    margin-top: 2px;
+    padding: 5px 3px; 
+    color: #383838;
+}
+
+[draggable="true"] {
+    /*
+   To prevent user selecting inside the drag source
+  */
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+}
+
+#drag-drop-basic {
+    display: flex;
+}
+
+#add-remove-container {
+    height: 200px;
+    flex: 1;
+    }
+
+#object-container {
+        height: 200px;
+        border: 2px solid #CCC;
+        background-color: white;
+        flex: 1;
+}
+
+#drag-source {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background-color: steelblue;
+        padding-left: 15px;
+        cursor:pointer;
+}
+
+.dragging {
+    opacity: .25;
+}
+
+.hover {
+    background-color: grey;
 }
 
 
