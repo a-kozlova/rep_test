@@ -17,6 +17,8 @@ import UIPlugin from '../../templates/ui-plugin.js';
 import Button from '../gui/Button';
 import { getNode, parseDOM } from '../utils/dom';
 
+type DropHandler = (position: { x: number; y: number }) => void;
+
 
 export default class SettingScene extends SidebarScene {
   public constructor() {
@@ -118,55 +120,111 @@ export default class SettingScene extends SidebarScene {
 
 
         const tabs = this.add.dom(0, 0).createFromHTML(` 
-             <ul class="nav nav-tabs nav-fill" id="#myTab1" role="tablist">
-              <li class="nav-item">
-                <a class="nav-link active" href="#motor" role="tab" data-toggle="tab">Motor</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#sensor" role="tab" data-toggle="tab">Sensor</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#source" role="tab" data-toggle="tab">Source</a>
-            </ul>
-            <ul class="nav nav-tabs nav-fill" id="#myTab2" role="tablist">
-              </li>
-              <li class="nav-item">
-                  <a class="nav-link" href="#body" role="tab" data-toggle="tab">Body</a>
-              </li>
-              <li class="nav-item">
-                  <a class="nav-link" href="#connection" role="tab" data-toggle="tab">Connection</a>
-              </li>
-            </ul>
+        <div id = "settings">
+             <div class="nav nav-tabs nav-fil" id="myTabs" role="tablist">
+                <a class="nav-item nav-link active col-4" data-toggle="tab" href="#motor" role="tab" aria-controls="nav-home" aria-selected="true">Motor</a>
+                <a class="nav-item nav-link col-4" data-toggle="tab" href="#sensor" role="tab" aria-controls="nav-home" aria-selected="false">Sensor</a>
+                <a class="nav-item nav-link col-4" data-toggle="tab" href="#body" role="tab" aria-controls="nav-home" aria-selected="false">Body</a>
+                <a class="nav-item nav-link col-6" data-toggle="tab" href="#emission" role="tab" aria-controls="nav-home" aria-selected="false">Emission</a>
+                <a class="nav-item nav-link col-6" data-toggle="tab" href="#connection" role="tab" aria-controls="nav-home" aria-selected="false">Connection</a>
+             </div>
 
-            <!-- Tab panes -->
-            <div class="tab-content">
-              <div role="tabpanel" class="tab-pane active" id="motor"></div>
-              <div role="tabpanel" class="tab-pane fade" id="sensor"></div>
-              <div role="tabpanel" class="tab-pane fade" id="source"></div>
-              <div role="tabpanel" class="tab-pane fade" id="body"></div>
-              <div role="tabpanel" class="tab-pane fade" id="connection"></div>
+             <div class="tab-content" id="nav-tabContent">
+                  <div role="tabpanel" class="tab-pane active" id="motor">                   
+                        <h4>Position</h4>
+                            <div id="drag-drop-basic">
+                                <div id="object-container" data-role="drag-drop-container" class = "col-8"></div>
+                                <div id="add-remove-container" data-role="drag-drop-container" class = "col-4">
+                                    <button id="drag-source" draggable="true">+</button>
+                                </div>
+                            </div>
+                       <h4>Current Speed</h4>
+                       <h4>Min Speed</h4>
+                       <h4>Max Speed</h4>
+                  </div>
+
+              <div role="tabpanel" class="tab-pane fade" id="sensor">Sensor</div>
+              <div role="tabpanel" class="tab-pane fade" id="emission">
+                  <h4>Type</h4>
+                  <div class="custom-control">
+                      <input type="radio" id="barrier" name="emission" class="custom-control-input" checked>
+                      <label class="custom-control-label" for="barrier">Barrier</label>
+                  </div>
+                  <div class="custom-control">
+                      <input type="radio" id="sour" name="emission" class="custom-control-input">
+                      <label class="custom-control-label" for="sour">Source</label>
+                  </div>
+              </div>
+
+              <div role="tabpanel" class="tab-pane fade" id="body">
+                    <h4>Form</h4>
+
+                    <div class="custom-control">
+                      <input type="radio" id="rectangle" name="form" class="custom-control-input" checked>
+                      <label class="custom-control-label" for="rectangle">Rectangle</label>
+                    </div>
+                    <div class="custom-control">
+                      <input type="radio" id="circle" name="form" class="custom-control-input">
+                      <label class="custom-control-label" for="circle">Circle</label>
+                    </div>
+
+                    <h4>Breite</h4>
+                    <h4>Höhe</h4>
+                    <h4>Farbe</h4>
+                    <div class="custom-control custom-radio">
+                      <input type="radio" id="grey" name="farbe" class="custom-control-input" checked>
+                      <label class="custom-control-label" for="grey">Grey</label>
+                    </div>
+                    <div class="custom-control custom-radio">
+                      <input type="radio" id="red" name="farbe" class="custom-control-input">
+                      <label class="custom-control-label" for="red">Red</label>
+                    </div>
+                    <div class="custom-control custom-radio">
+                      <input type="radio" id="green" name="farbe" class="custom-control-input">
+                      <label class="custom-control-label" for="green">Green</label>
+                    </div>
+                    <div class="custom-control custom-radio">
+                      <input type="radio" id="blue" name="farbe" class="custom-control-input">
+                      <label class="custom-control-label" for="blue">Blue</label>
+                    </div>
+
+
+              </div>
+              <div role="tabpanel" class="tab-pane fade" id="connection">Connection</div>
             </div>
+        </div>`);
+;
 
-            <script>
-            $('#myTab1 a').on('click', function (e) {
-              e.preventDefault();
-              $(this).tab('show');
-            });
-            $('#myTab1 a[href="#profile"]').tab('show');
-            $('#myTab2 a').on('click', function (e) {
-              e.preventDefault();
-              $(this).tab('show');
-            });
-            $('#myTab2 a[href="#profile"]').tab('show');
-            </script>`);
+        console.log("tabs", tabs);
 
 
+        let createBtn = tabs.getChildByID("drag-source");
+        createBtn.addEventListener("dragstart", () => {
+            console.log("start");
+        });
+
+        
+
+        let obj = tabs.getChildByID("object-container");
+        obj.addEventListener("dragover", (e) => {
+            e.preventDefault();
+            console.log("over");
+
+        });
+        obj.addEventListener("drop", () => {
+            console.log("end");
+            obj.appendChild(createBtn.cloneNode());
+
+         });
+
+        
+        
         const uiElements = entity.getAllComponents().map((component): Phaser.GameObjects.DOMElement[] => {
             const infoTip = component.getInfo()
                 ? ` <div class="tooltip-left" data-tooltip="${component.getInfo()}"><i class="fa fa-xs fa-info-circle"></i></div>`
                 : '';
             const title = this.add
-                .dom(120, 30)
+                .dom(0, 0)
                 .createFromHTML(
                     `<h3>${component.name} <div class="component-title-info">[ID: ${component.id}]${infoTip}</div></h3>`,
                 )
@@ -179,7 +237,7 @@ export default class SettingScene extends SidebarScene {
                 deleteButton.addListener('click');
                 deleteButton.on('click', () => {
                     EntityManager.removeComponent(entity.id, component);
-                    // alle Componenten der Enittät neu laden
+                    // alle Componenten der Enitität neu laden
                     container.removeAll(true);
                     container.reset();
                     this.onCreate(container, entity);
@@ -188,6 +246,7 @@ export default class SettingScene extends SidebarScene {
             else {
                 deleteButton = this.add.dom(0, 0, 'div', '')
             }
+
             const attributes = Object.keys(component).map(attribute => {
                 console.log(attribute);
                 if (component[attribute] instanceof Attribute) {
@@ -215,7 +274,7 @@ export default class SettingScene extends SidebarScene {
         
         // fuer jedes elt Node-array html-Inhalt nach tab-Inhalt kontrollieren und an tabs anhängen
         // prm: überschneidet sich, fall mehrere Nodes
-        uiElements.flat(2).map((element): Element => {
+       /* uiElements.flat(2).map((element): Element => {
             return element.node;
         }).forEach(element => {
             if (element != undefined) {
@@ -232,10 +291,13 @@ export default class SettingScene extends SidebarScene {
                     tabs.getChildByID('connection').append(element);
                 }
             }
-        });
+        });*/
 
 
 
         this.pack([seperator, tabs]); 
-  }
+    }
+
+    
+
 }
