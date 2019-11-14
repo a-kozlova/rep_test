@@ -180,25 +180,26 @@ button,
 }
 
 
-
+/*VON HIER SIND LAPKIS*/
+/*settings menu*/
 .nav-tabs a {
     color: black;
     text-align: center;
 }
 
-#settings{
-    width: 230px;
+#settings-menu{
+    padding-left: 5px;
 }
-
 
 h4 {
     background-color: #EFEFEF;
     border-radius: 3%;
     margin-top: 2px;
-    padding: 5px 3px; 
+    padding: 5px 15px; 
     color: #383838;
 }
 
+/*draggable component*/
 [draggable="true"] {
     /*
    To prevent user selecting inside the drag source
@@ -216,7 +217,7 @@ h4 {
 #add-remove-container {
     height: 200px;
     flex: 1;
-    }
+}
 
 #object-container {
         height: 200px;
@@ -230,8 +231,7 @@ h4 {
         height: 20px;
         border-radius: 50%;
         background-color: steelblue;
-        padding-left: 15px;
-        cursor:pointer;
+       
 }
 
 .dragging {
@@ -242,5 +242,54 @@ h4 {
     background-color: grey;
 }
 
+/*VITALINA*/
+.btn {
+    align: center;
+    background-color: #EFEFEF;
+    color: #383838;
+    width: 230px;
+    margin-right: 50 px;
+    margin-left: 0;
+    text-align: left;
+    outline: none;
+}
+
+.card {
+    width: 230px;
+    border: none;
+    background-color: #f8f8f8;
+    margin: 3px;
+}
+
+.prefab-btn {
+    background-color: #f8f8f8;
+    outline: none;
+}
 
 
+/*OFF CANVAS in INDEX.HTML*/
+.sidenav {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    right: 0;
+    background-color: #f8f8f8;
+    overflow-x: hidden;
+    transition: 0.5s;
+    padding-top: 60px;
+}
+
+.sidenav .closebtn {
+    position: absolute;
+    top: 0;
+    right: 25px;
+    font-size: 36px;
+    margin-left: 50px;
+}
+
+#main {
+    transition: margin-left .5s;
+    
+}
