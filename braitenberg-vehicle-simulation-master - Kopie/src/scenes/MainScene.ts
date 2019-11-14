@@ -48,8 +48,11 @@ export default class MainScene extends Phaser.Scene {
     this.scene.add('editor', EditorScene, false);
     this.scene.add('settings', SettingScene, false);
 
-    EventBus.subscribe(EventType.ENTITY_SELECTED, (entity: Entity) => {
-      this.scene.launch('SettingScene', entity);
+      EventBus.subscribe(EventType.ENTITY_SELECTED, (entity: Entity) => {
+          new Event("newEventSettings");
+
+
+        //this.scene.launch('SettingScene', entity);
     });
 
     EntityManager.createEntity(
@@ -256,4 +259,25 @@ export default class MainScene extends Phaser.Scene {
   private handleResize(): void {
     this.matter.world.setBounds();
   }
+
+ public createBarrier(): void {
+    EntityManager.createEntity(
+        new TransformableComponent({ position: { x: 300, y: 450 } }),
+        new SolidBodyComponent({
+            size: { width: 20, height: 400 },
+            shape: BodyShape.RECTANGLE,
+            isStatic: true,
+        }),
+        new SourceComponent({
+            range: 100,
+            substance: SubstanceType.BARRIER,
+            emissionType: EmissionType.FLAT,
+        }),
+        new RenderComponent({
+            asset: 0xcccccc,
+            size: 110,
+        }),
+    );
+}
+
 }

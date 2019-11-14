@@ -139,11 +139,14 @@ export default class SettingScene extends SidebarScene {
                                 </div>
                             </div>
                        <h4>Current Speed</h4>
-                       <h4>Min Speed</h4>
-                       <h4>Max Speed</h4>
+                       <h4>Reichweite</h4>
+                       <h4>Winkel</h4>
                   </div>
 
               <div role="tabpanel" class="tab-pane fade" id="sensor">Sensor</div>
+                       <h4>Position</h4>
+                       <h4>Min Speed</h4>
+                       <h4>Max Speed</h4>
               <div role="tabpanel" class="tab-pane fade" id="emission">
                   <h4>Type</h4>
                   <div class="custom-control">
@@ -158,7 +161,6 @@ export default class SettingScene extends SidebarScene {
 
               <div role="tabpanel" class="tab-pane fade" id="body">
                     <h4>Form</h4>
-
                     <div class="custom-control">
                       <input type="radio" id="rectangle" name="form" class="custom-control-input" checked>
                       <label class="custom-control-label" for="rectangle">Rectangle</label>
@@ -187,8 +189,6 @@ export default class SettingScene extends SidebarScene {
                       <input type="radio" id="blue" name="farbe" class="custom-control-input">
                       <label class="custom-control-label" for="blue">Blue</label>
                     </div>
-
-
               </div>
               <div role="tabpanel" class="tab-pane fade" id="connection">Connection</div>
             </div>
@@ -203,18 +203,15 @@ export default class SettingScene extends SidebarScene {
             console.log("start");
         });
 
-        
-
         let obj = tabs.getChildByID("object-container");
         obj.addEventListener("dragover", (e) => {
             e.preventDefault();
             console.log("over");
-
         });
+
         obj.addEventListener("drop", () => {
             console.log("end");
             obj.appendChild(createBtn.cloneNode());
-
          });
 
         

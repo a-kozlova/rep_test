@@ -14,7 +14,7 @@ import '../assets/css/styling.css';
 const config: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
   backgroundColor: '#EAEAEA',
-  parent: 'body',
+  parent: 'phaser',
   scale: {
     mode: Phaser.Scale.RESIZE,
     width: '100%',
@@ -33,17 +33,16 @@ const config: Phaser.Types.Core.GameConfig = {
       gravity: { y: 0 },
     },
   },
-  // add tabs
-  /*plugins: { 
-    scene: [{ 
-       key:  'rexUI', 
-       plugin:  UIPlugin, 
-       mapping:  'rexUI'
-    }, 
-        // ...
-    ]
-  },*/
 };
 
 // eslint-disable-next-line
-new Phaser.Game(config);
+//create a variable
+
+
+var mytestgame = new Phaser.Game(config);
+
+//Have a look at all the members of mytestgame in the console
+console.log(mytestgame);
+
+//create the callback function
+document.getElementById("testbutton").onclick = function () { mytestgame.scene.scenes[1].createBarrier() }

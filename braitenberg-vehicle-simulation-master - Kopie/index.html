@@ -14,10 +14,159 @@
     </style>-->
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,500|Open+Sans" rel="stylesheet">
+    <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.css"> -->
+    <link rel="stylesheet" href="bootstrap-4.3.1-dist/css/bootstrap.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+
+    <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script> -->
+    <script src="bootstrap-4.3.1-dist/js/bootstrap.js"></script>
 </head>
-  <body></body>
+<body>
+    
+    <!--FÜR VITALINA следующие 2 дива копируй (строки 32-37) и пихай свой код, смени айди, в скрипте внизу сделай красиво-->
+    <div id="topLeiste">
+        <span style="font-size:30px;cursor:pointer; position: absolute" onclick="openNav()">&#9776; SETTINGS vorübergehend</span>
+    </div>
+
+    <div id="mySidenav" class="sidenav">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+
+        <div id="settings-menu">
+            <div class="nav nav-tabs nav-fil" id="myTabs" role="tablist">
+                <a class="nav-item nav-link active col-4" data-toggle="tab" href="#motor" role="tab" aria-controls="nav-home" aria-selected="true">Motor</a>
+                <a class="nav-item nav-link col-4" data-toggle="tab" href="#sensor" role="tab" aria-controls="nav-home" aria-selected="false">Sensor</a>
+                <a class="nav-item nav-link col-4" data-toggle="tab" href="#body" role="tab" aria-controls="nav-home" aria-selected="false">Body</a>
+                <a class="nav-item nav-link col-6" data-toggle="tab" href="#emission" role="tab" aria-controls="nav-home" aria-selected="false">Emission</a>
+                <a class="nav-item nav-link col-6" data-toggle="tab" href="#connection" role="tab" aria-controls="nav-home" aria-selected="false">Connection</a>
+            </div>
+
+            <div class="tab-content" id="nav-tabContent">
+                <div role="tabpanel" class="tab-pane active" id="motor">
+                    <h4>Position</h4>
+                    <div id="drag-drop-basic">
+                        <canvas id="object-container" data-role="drag-drop-container" class="col-8"></canvas>
+                        <div id="add-remove-container" data-role="drag-drop-container" class="col-4">
+                            <button id="drag-source" draggable="true">+</button>
+                        </div>
+                    </div>
+                    <h4>Current Speed</h4>
+                    <div class="d-flex justify-content-center my-8">
+                        <span class="font-weight-bold indigo-text mr-2 mt-1">0</span>
+                        <form class="range-field w-25">
+                            <input class="border-0" type="range" min="0" max="100" />
+                        </form>
+                        <span class="font-weight-bold indigo-text ml-2 mt-1">100</span>
+                    </div>
+                    <h4>Min Speed</h4>
+                    <h4>Max Speed</h4>
+                </div>
+
+                <div role="tabpanel" class="tab-pane fade" id="sensor">
+                    <h4>Position</h4>
+                    <h4>Reichweite</h4>
+                    <h4>Winkel</h4>
+                </div>
+
+                <div role="tabpanel" class="tab-pane fade" id="emission">
+                    <h4>Type</h4>
+                    <div class="custom-control">
+                        <input type="radio" id="barrier" name="emission" class="custom-control-input" checked>
+                        <label class="custom-control-label" for="barrier">Barrier</label>
+                    </div>
+                    <div class="custom-control">
+                        <input type="radio" id="sour" name="emission" class="custom-control-input">
+                        <label class="custom-control-label" for="sour">Source</label>
+                    </div>
+                </div>
+
+                <div role="tabpanel" class="tab-pane fade" id="body">
+                    <h4>Form</h4>
+                    <div class="custom-control">
+                        <input type="radio" id="rectangle" name="form" class="custom-control-input" checked>
+                        <label class="custom-control-label" for="rectangle">Rectangle</label>
+                    </div>
+                    <div class="custom-control">
+                        <input type="radio" id="circle" name="form" class="custom-control-input">
+                        <label class="custom-control-label" for="circle">Circle</label>
+                    </div>
+
+                    <h4>Breite</h4>
+                    <h4>Höhe</h4>
+                    <h4>Farbe</h4>
+                    <div class="custom-control custom-radio">
+                        <input type="radio" id="grey" name="farbe" class="custom-control-input" checked>
+                        <label class="custom-control-label" for="grey">Grey</label>
+                    </div>
+                    <div class="custom-control custom-radio">
+                        <input type="radio" id="red" name="farbe" class="custom-control-input">
+                        <label class="custom-control-label" for="red">Red</label>
+                    </div>
+                    <div class="custom-control custom-radio">
+                        <input type="radio" id="green" name="farbe" class="custom-control-input">
+                        <label class="custom-control-label" for="green">Green</label>
+                    </div>
+                    <div class="custom-control custom-radio">
+                        <input type="radio" id="blue" name="farbe" class="custom-control-input">
+                        <label class="custom-control-label" for="blue">Blue</label>
+                    </div>
+                </div>
+
+                <div role="tabpanel" class="tab-pane fade" id="connection">Connection</div>
+
+            </div>
+        </div>
+    </div>
+
+    
+
+    <div id="main">
+        <div id="phaser">  </div>
+        <!--то, что они нашли для связи из хтмл в фазер, продолжение в файлах индекс.тс и мэйнсцен-->>
+        <button id="testbutton">Create A Barrier</button>
+    </div>
+
+    <script>
+        function openNav() {
+            document.getElementById("mySidenav").style.width = "256px";
+            /* тет моя попытка создать и отследить событие из фазера
+             * var event;
+            event.addEventListener("newEventSettings", () => {document.getElementById("mySidenav").style.width = "256px";}*/
+        }
+
+        function closeNav() {
+            document.getElementById("mySidenav").style.width = "0";
+        }
+
+        let createMotorBtn = document.getElementById("drag-source");
+        createMotorBtn.addEventListener("dragstart", () => {
+            console.log("start");
+        });
+
+        let obj = document.getElementById("object-container");
+        obj.addEventListener("dragover", (e) => {
+            e.preventDefault();
+            console.log("over");
+        });
+
+        obj.addEventListener("drop", () => {
+            console.log("end");
+            obj.appendChild(createMotorBtn.cloneNode());
+        });
+
+
+
+
+
+    </script>
+
+
+
+
+
+</body>
 </html>

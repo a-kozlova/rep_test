@@ -120,9 +120,6 @@ export default abstract class SidebarScene extends Phaser.Scene {
     }
   }
 
-	// for settings
-	public getX(): number {
-		return this.game.renderer.width - SidebarScene.getWidth() + 60;
-	}
+	
 	
 }

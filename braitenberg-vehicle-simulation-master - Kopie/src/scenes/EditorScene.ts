@@ -16,6 +16,7 @@ import SidebarScene from './SidebarScene';
 type DropHandler = (position: { x: number; y: number }) => void;
 
 export default class EditorScene extends SidebarScene {
+
   public constructor() {
     super('EditorScene');
   }
@@ -290,7 +291,48 @@ export default class EditorScene extends SidebarScene {
       EntityManager.addExistingEntity(entity);
     });
 
-    this.pack([prefabBlank, prefabSource, prefab2a, prefab2b, prefab3a, prefab3b]);
+	const categories = this.add.dom(0, 0).createFromHTML(`
+		<div class="accordion" id="accordionExample">
+		<div class="card">
+			<button class="prefab-btn"><img src="../../assets/prefabs/blank.png" alt="blank"></button>
+		<div>
+        <div class="card">
+            <button type="button" class="btn collapsed" data-toggle="collapse" data-target="#collapseOne">Source</button>
+            <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+                <div class="card-body">
+					<button class="prefab-btn"><img src="../../assets/prefabs/source.png" alt="source"></button>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <button type="button" class="btn collapsed" data-toggle="collapse" data-target="#collapseTwo">Vehicle</button>
+            <div id="collapseTwo" class="collapse show" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                <div class="card-body">
+					<button class="prefab-btn"><img src="../../assets/prefabs/2a.png" alt="vehicle-2a"></button>
+					<button class="prefab-btn"><img src="../../assets/prefabs/2b.png" alt="vehicle-2b"></button>
+					<button class="prefab-btn"><img src="../../assets/prefabs/3a.png" alt="vehicle-3a"></button>
+					<button class="prefab-btn"><img src="../../assets/prefabs/3b.png" alt="vehicle-3b"></button>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <button type="button" class="btn collapsed" data-toggle="collapse" data-target="#collapseThree">Hindernis</button>
+            <div id="collapseThree" class="collapse show" aria-labelledby="headingThree" data-parent="#accordionExample">
+                <div class="card-body">
+                    <p>Hindernis</p>
+                </div>
+            </div>
+        </div>
+    </div>`);
+
+
+
+    let cr = [categories];
+	this.pack(cr);  
+  }  
+
+  private createObject(): void {
+  console.log("create Object");
   }
 
   private makeInteractable(image: Phaser.GameObjects.Image, onDrop: DropHandler): void {
