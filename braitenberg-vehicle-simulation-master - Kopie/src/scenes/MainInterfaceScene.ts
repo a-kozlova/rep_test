@@ -11,7 +11,7 @@ export default class MainInterfaceScene extends Phaser.Scene {
   }
 
   public create(): void {
-    this.scale.on('resize', this.handleResize.bind(this));
+    //this.scale.on('resize', this.handleResize.bind(this));
     const mainScene = this.scene.get('MainScene') as MainScene;
 
 	// Position der Tasten an Bildschirm anpassen
@@ -27,9 +27,9 @@ export default class MainInterfaceScene extends Phaser.Scene {
       MainScene.createSnapshot();
     }, 'Save');
 
-    const showEditor = new Button(this, this.cameras.main.displayWidth - 35, 35, 17, () => {
-      this.scene.launch('EditorScene');
-    }, '');
+   // const showEditor = new Button(this, this.cameras.main.displayWidth - 35, 35, 17, () => {
+   //   this.scene.launch('EditorScene');
+    //}, '');
 
     const exportButton = new Button(this, 175 + start.getWidth(), 35, 0, () => {
       MainScene.exportJson();
@@ -46,11 +46,11 @@ export default class MainInterfaceScene extends Phaser.Scene {
 
     }, '');
 
-    this.buttons.push(start, newFile, showEditor, save, exportButton, importButton, zoomIn, zoomOut);	
+    this.buttons.push(start, newFile, /*showEditor,*/ save, exportButton, importButton, zoomIn, zoomOut);	
   }
 
-  private handleResize(gameSize: Phaser.Structs.Size): void {
+ /* private handleResize(gameSize: Phaser.Structs.Size): void {
     const showEditor = this.buttons[2];
     showEditor.setPosition(gameSize.width - 35, 35);
-  }
+  }*/
 }
