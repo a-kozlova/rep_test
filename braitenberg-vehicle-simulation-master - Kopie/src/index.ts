@@ -2,6 +2,9 @@ import Phaser from 'phaser';
 import MainScene from './scenes/MainScene';
 import MainInterfaceScene from './scenes/MainInterfaceScene';
 import LoadingScene from './scenes/LoadingScene';
+import EntityManager from './EntityManager';
+import Entity from './Entity';
+import MotorComponent from './components/MotorComponent';
 
 import 'animate.css';
 import 'noty/lib/noty.css';
@@ -45,4 +48,9 @@ var mytestgame = new Phaser.Game(config);
 console.log(mytestgame);
 
 //create the callback function
-document.getElementById("testbutton").onclick = function () { mytestgame.scene.scenes[1].createBarrier() }
+
+document.getElementById("drag-source").onclick = function () {
+    document.addEventListener("entitySelected", (e) => {
+        mytestgame.scene.scenes[4].addMotor(e.detail);
+    });
+}

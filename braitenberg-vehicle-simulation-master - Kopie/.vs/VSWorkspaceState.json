@@ -6,8 +6,8 @@
     "\\src\\dynamic_input",
     "\\src\\gui",
     "\\src\\scenes",
-    "\\src\\utils"
+    "\\src\\systems"
   ],
-  "SelectedNode": "\\src\\dynamic_input\\SelectInput.ts",
+  "SelectedNode": "\\src\\systems\\ReactionSystem.ts",
   "PreviewInSolutionExplorer": false
 }

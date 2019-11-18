@@ -295,6 +295,22 @@ export default class SettingScene extends SidebarScene {
         this.pack([seperator, tabs]); 
     }
 
+
+    public addMotor(entity: Entity): void {
+        EntityManager.addComponent(
+            entity.id,
+            new MotorComponent({
+                position: { x: 0, y: 0 },
+                maxSpeed: 50,
+                defaultSpeed: 5,
+            }),
+        );
+        
+       var event = new CustomEvent("attributeAdded", { detail: entity });
+       document.dispatchEvent(event);
+      
+
+    }
     
 
 }
