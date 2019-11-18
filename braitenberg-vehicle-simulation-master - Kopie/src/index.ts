@@ -52,6 +52,7 @@ console.log(mytestgame);
 document.getElementById("drag-source").onclick = function () {
     document.addEventListener("entitySelected", (e) => {
         mytestgame.scene.scenes[4].addMotor(e.detail);
+		console.log(mytestgame.scene.scenes[4]);
     });
 }
 document.getElementById("testbutton").onclick = function () { mytestgame.scene.scenes[1].createBarrier() }
