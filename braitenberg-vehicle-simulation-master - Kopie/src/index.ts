@@ -2,6 +2,9 @@ import Phaser from 'phaser';
 import MainScene from './scenes/MainScene';
 import MainInterfaceScene from './scenes/MainInterfaceScene';
 import LoadingScene from './scenes/LoadingScene';
+import EntityManager from './EntityManager';
+import Entity from './Entity';
+import MotorComponent from './components/MotorComponent';
 
 import 'animate.css';
 import 'noty/lib/noty.css';
@@ -45,6 +48,12 @@ var mytestgame = new Phaser.Game(config);
 console.log(mytestgame);
 
 //create the callback function
+
+document.getElementById("drag-source").onclick = function () {
+    document.addEventListener("entitySelected", (e) => {
+        mytestgame.scene.scenes[4].addMotor(e.detail);
+    });
+}
 document.getElementById("testbutton").onclick = function () { mytestgame.scene.scenes[1].createBarrier() }
 document.getElementById("blank").onclick = function () { mytestgame.scene.scenes[1].createBlank() }
 document.getElementById("source").onclick = function () { mytestgame.scene.scenes[1].createSource() }
@@ -52,4 +61,5 @@ document.getElementById("source").onclick = function () { mytestgame.scene.scene
 document.getElementById("prefab2a").onclick = function () { mytestgame.scene.scenes[1].createPrefab2a() }
 document.getElementById("prefab2b").onclick = function () { mytestgame.scene.scenes[1].createPrefab2b() }
 document.getElementById("prefab3a").onclick = function () { mytestgame.scene.scenes[1].createPrefab3a() }
+document.getElementById("prefab3b").onclick = function () { mytestgame.scene.scenes[1].createPrefab3b() }
 document.getElementById("prefab3b").onclick = function () { mytestgame.scene.scenes[1].createPrefab3b() }

@@ -49,8 +49,9 @@ export default class MainScene extends Phaser.Scene {
     this.scene.add('settings', SettingScene, false);
 
       EventBus.subscribe(EventType.ENTITY_SELECTED, (entity: Entity) => {
-          new Event("newEventSettings");
-
+          var event = new CustomEvent("entitySelected", { detail: entity });
+          document.dispatchEvent(event);
+          console.log("entity_selected");
 
         //this.scene.launch('SettingScene', entity);
     });
@@ -260,16 +261,17 @@ export default class MainScene extends Phaser.Scene {
     this.matter.world.setBounds();
   }
 
+ // test funktion 14.11.19
  public createBarrier(): void {
     EntityManager.createEntity(
-        new TransformableComponent({ position: { x: 300, y: 450 } }),
+        new TransformableComponent({ position: { x: 200, y: 450 } }),
         new SolidBodyComponent({
             size: { width: 20, height: 400 },
-            shape: BodyShape.RECTANGLE,
+            shape: BodyShape.CIRCLE,
             isStatic: true,
         }),
         new SourceComponent({
-            range: 100,
+            range: 50,
             substance: SubstanceType.BARRIER,
             emissionType: EmissionType.FLAT,
         }),

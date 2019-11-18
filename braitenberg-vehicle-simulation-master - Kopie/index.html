@@ -25,6 +25,54 @@
     </style>
   </head><body>
     
+    
+    <div id="myEntitySettings" class="sidenav">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+
+        <div id="settingsMenu">
+            <div class="nav nav-tabs nav-fil" id="myTabs" role="tablist">
+                <a class="nav-item nav-link active col-4" data-toggle="tab" href="#motor" role="tab" aria-controls="nav-home" aria-selected="true">Motor</a>
+                <a class="nav-item nav-link col-4" data-toggle="tab" href="#sensor" role="tab" aria-controls="nav-home" aria-selected="false">Sensor</a>
+                <a class="nav-item nav-link col-4" data-toggle="tab" href="#body" role="tab" aria-controls="nav-home" aria-selected="false">Body</a>
+                <a class="nav-item nav-link col-6" data-toggle="tab" href="#emission" role="tab" aria-controls="nav-home" aria-selected="false">Emission</a>
+                <a class="nav-item nav-link col-6" data-toggle="tab" href="#connection" role="tab" aria-controls="nav-home" aria-selected="false">Connection</a>
+            </div>
+
+            <div class="tab-content" id="nav-tabContent">
+                <div role="tabpanel" class="tab-pane active" id="motor">
+                    <h4>Position</h4>
+                    <div id="drag-drop-basic">
+                        <div id="motor-container" data-role="drag-drop-container" class="col-8" style="border: 1px black solid">
+                            <canvas id="motorCanvas" width="100" height="150" style="padding: 0;"> </canvas>
+                        </div>
+                        <div id="add-remove-container" data-role="drag-drop-container" class="col-4">
+                            <button id="drag-source" draggable="true">+</button>
+                        </div>
+                    </div>
+                    <h4>Current Speed</h4>
+                        <div id="currentSpeed"> </div>
+                    <h4>Min Speed</h4>
+                        <div id="minSpeed"> </div>
+                    <h4>Max Speed</h4>
+                        <div id="maxSpeed"> </div>
+                </div>
+
+                <div role="tabpanel" class="tab-pane fade" id="sensor">
+                    <h4>Position</h4>
+                    <h4>Reichweite</h4>
+                    <h4>Winkel</h4>
+                </div>
+
+                <div role="tabpanel" class="tab-pane fade" id="emission">
+                    <h4>Type</h4>
+                    <div class="custom-control">
+                        <input type="radio" id="barrier" name="emission" class="custom-control-input" checked>
+                        <label class="custom-control-label" for="barrier">Barrier</label>
+                    </div>
+                    <div class="custom-control">
+                        <input type="radio" id="sour" name="emission" class="custom-control-input">
+                        <label class="custom-control-label" for="sour">Source</label>
+                    </div>
     <div style="float: right; margin-right: 60px;">
         <span style="font-size:30px;cursor:pointer; position: absolute" onclick="openNav()" >&#9776;</span>
     </div>
@@ -81,20 +129,109 @@
 
     <div id="main">
         <div id="phaser">  </div>
-        <button id="testbutton">Create A Barrier</button>
+       
     </div>
 
     <script>
-        function openNav() {
-            document.getElementById("mySidenav").style.width = "256px";
+        // settings menu aufmachen
+        
+        function openSettings(event) {
+            document.getElementById("myEntitySettings").style.width = "256px";
+            var entity = event.detail;                  // die aufgerufene Entität
 
+            drawComponents(entity.components);
+            onCreate(entity.components);
+
+            /*
+            // Versuch die Taste für Hinzufügen eines Motoren draggable zu machen
+            let createMotorBtn = document.getElementById("drag-source");
+            createMotorBtn.addEventListener("dragstart", (entity) => {
+                console.log("start", entity);
+            });
+
+            let obj = document.getElementById("motor-container");
+            obj.addEventListener("dragover", (e) => {
+                e.preventDefault();
+                console.log("over");
+            });
+
+            obj.addEventListener("drop", () => {
+                console.log("end");
+                // TODO addComponent?
+            });*/
+
+            document.addEventListener("entitySelected", switchEntity);            
         }
+
+        function switchEntity(event) {
+            closeNav();
+            console.log("switch", event);
+            openSettings(event);
+        }
+              
+        document.addEventListener("entitySelected", openSettings);
+
+        function onCreate(components) {
+            var slider = `<div class="d-flex justify-content-center my-8">
+                             <span class="font-weight-bold indigo-text mr-2 mt-1">0</span>
+                             <form class="range-field w-25">
+                                 <input class="border-0" type="range" min="0" max="100" />
+                             </form>
+                             <span class="font-weight-bold indigo-text ml-2 mt-1">100</span>
+                         </div>`;
+            var currentSpeed = document.getElementById("currentSpeed");
+            var maxSpeed = document.getElementById("maxSpeed");
+            var minSpeed = document.getElementById("minSpeed");
+            var sliders = [];
+            components.forEach(component => {
+                if (component.name == "Motor") {
+                    sliders.push(slider);
+                    console.log(component);
+                }
+            });
+            
+            currentSpeed.innerHTML = sliders;
+            maxSpeed.innerHTML = sliders;
+            minSpeed.innerHTML = sliders;
+        }
+
+
+        function drawComponents(components) {
+            var canvas = document.getElementById("motorCanvas");
+            canvas.style.border = "1px dashed";
+            var startPoint = { "x": canvas.width / 2, "y": canvas.height / 2 };
+
+            components.forEach(component => {
+                console.log("name", component.name);
+                if (component.name == "Motor") {
+                    var ctx = canvas.getContext('2d');
+                    console.log("component", component.position.value);
+                    var test = ctx.beginPath();
+                    ctx.arc(startPoint.x + component.position.value.x, startPoint.y + component.position.value.y, 5, 0, 2 * Math.PI);
+                    ctx.stroke();
+                    console.log("context", test);
+                }
+            });
+
+            canvas.ondragstart = closeNav;
+            
+            document.getElementById("motor-container").appendChild(canvas);
+        }
+
+
 
         function closeNav() {
-            document.getElementById("mySidenav").style.width = "0";
-        }
+            console.log("closeNav");
+            document.getElementById("myEntitySettings").style.width = "0";
+            var canvas = document.getElementById("motorCanvas");
+            var ctx = canvas.getContext("2d");
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }     
+
 
     </script>
+
+
 </body>
 </html>
 
