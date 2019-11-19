@@ -315,14 +315,15 @@ h4 {
 .container  {
 	background-color: #EFEFEF;	
 	font-size: 26px;
+	font-style: bold;
 }
 
 .create-entity .right{
 	margin-left: 70px;
 }
 
-.settings .right{
-	margin-left: 120px;
+.settings .right{	
+	margin-left: 135px;
 }
 .prefab-btn:hover,.prefab-btn:focus, .prefab-btn:active,
 .closebtn:hover, .closebtn:focus, .closebtn:active {
