@@ -2397,17 +2397,25 @@ textarea.form-control {
 @media (prefers-reduced-motion: reduce) {
   .btn {
     transition: none;
+	border: none;
+	outline: none;
   }
 }
 
 .btn:hover {
-  color: #212529;
   text-decoration: none;
+  background-color: #EFEFEF !important;
+  color: #383838 !important;
 }
 
-.btn:focus, .btn.focus {
-  outline: 0;
-  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+
+.btn:focus, .btn.focus, .btn:active {
+  outline: 0 !important;
+  border: 0 !important;
+  outline-width:0;
+  outline-color: transparent;
+  outline-style: none;
+ box-shadow: 0 0 0 0;
 }
 
 .btn.disabled, .btn:disabled {

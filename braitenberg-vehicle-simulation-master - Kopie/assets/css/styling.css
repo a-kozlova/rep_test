@@ -243,7 +243,7 @@ h4 {
 }
 
 /*VITALINA*/
-.btn {
+.my-btn {
     align: center;
     background-color: #EFEFEF;
     color: #383838;
@@ -251,9 +251,20 @@ h4 {
     margin-right: 50 px;
     margin-left: 0;
     text-align: left;
-    outline: none;
+    outline: none !important;
+	border: none !important;
 }
 
+.my-btn:hover, .my-btn:focus, .my-btn:active {
+    background-color: #EFEFEF !important;
+    color: #383838 !important;
+    outline: 0 !important;
+	border: none !important;
+	box-shadow: 0 !important;
+	outline-width:0!important;
+	outline-color: transparent !important;
+	outline-style: none;
+}
 .card {
     width: 230px;
     border: none;
