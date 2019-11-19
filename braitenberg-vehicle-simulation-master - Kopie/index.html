@@ -27,7 +27,16 @@
     
     
     <div id="myEntitySettings" class="sidenav">
-        <a href="javascript:void(0)" class="closebtn" onclick="closeSettings()">&times;</a>
+	<div class="container settings">
+		  <div class="row">
+			<div class="col-xs left">
+				Settings
+			</div>
+			<div class="col-xs right">
+				<button class="closebtn" onclick="closeSettings()">&times;</button>
+			</div>
+		  </div>
+		</div>    
 		<div id="settingsMenu">
             <div class="nav nav-tabs nav-fil" id="myTabs" role="tablist">
                 <a class="nav-item nav-link active col-4" data-toggle="tab" href="#motor" role="tab" aria-controls="nav-home" aria-selected="true">Motor</a>
@@ -123,7 +132,17 @@
    </div>
 
     <div id="mySidenav" class="sidenav">
-        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+		<div class="container create-entity">
+		  <div class="row">
+			<div class="col-xs left">
+				Create entity
+			</div>
+			<div class="col-xs right">
+				<button class="closebtn" onclick="closeNav()">&times;</button>
+			</div>
+		  </div>
+		</div>       
+		
 		<div class="accordion" id="accordionExample">
             <div class="card">
                 <button id="blank" class="prefab-btn"><img src="assets/prefabs/blank.png" alt="blank"></button>

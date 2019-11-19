@@ -252,9 +252,9 @@ h4 {
 
 }
 .my-btn {
-    background-color: #EFEFEF;
-    color: #383838;
-    text-align: left;
+    background-color: #EFEFEF !important;
+    color: #383838 !important;
+    text-align: left !important;
     outline: none !important;
 	border: none !important;
 	display: block;
@@ -277,8 +277,7 @@ h4 {
 	outline-color: transparent !important;
 	outline-style: none;
 }
-.card {
-   
+.card {   
     border: none;
     background-color: #f8f8f8;
     margin: 0 !important;
@@ -287,23 +286,8 @@ h4 {
 .prefab-btn {
     background-color: #f8f8f8;
     outline: none;
+	margin-left: 20px !important;
 }
-.title{
-	width: 100%; 
-	 white-space: nowrap;
-     overflow-x: auto;
-}
-.left {
-	display:inline-block;
-	width: 90%;
-
-}
-.right {
-	display:inline-block;
-	width:10%;
-	margin:0;
-}
-
 
 /*OFF CANVAS in INDEX.HTML*/
 .sidenav {
@@ -316,16 +300,42 @@ h4 {
     background-color: #f8f8f8;
     overflow-x: hidden;
     transition: 0.5s;
-    padding-top: 60px;
 }
 
-.sidenav .closebtn {
-    position: absolute;
-    top: 0;
-    right: 25px;
-    font-size: 36px;
-    margin-left: 20px;
+.sidenav button {
+    background-color: #f8f8f8;
+    color: #383838;
 }
+.closebtn {
+	padding: 0;
+	margin: 0;
+	background-color: #EFEFEF !important;
+}
+
+.container  {
+	background-color: #EFEFEF;	
+	font-size: 26px;
+}
+
+.create-entity .right{
+	margin-left: 70px;
+}
+
+.settings .right{
+	margin-left: 120px;
+}
+.prefab-btn:hover,.prefab-btn:focus, .prefab-btn:active,
+.closebtn:hover, .closebtn:focus, .closebtn:active {
+    background-color: #f8f8f8;
+    outline: 0 ;
+	border: none ;
+	box-shadow: 0 ;
+	outline-width:0;
+	outline-color: transparent ;
+	outline-style: none;
+}
+
+
 
 #main {
     transition: margin-left .5s;    
