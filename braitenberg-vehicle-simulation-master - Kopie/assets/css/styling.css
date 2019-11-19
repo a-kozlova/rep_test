@@ -243,16 +243,28 @@ h4 {
 }
 
 /*VITALINA*/
+.title {
+    background-color: #EFEFEF;
+    border-radius: 3%;
+    padding: 5px 15px; 
+    color: #383838;
+	display: inline;
+
+}
 .my-btn {
-    align: center;
     background-color: #EFEFEF;
     color: #383838;
-    width: 230px;
-    margin-right: 50 px;
-    margin-left: 0;
     text-align: left;
     outline: none !important;
 	border: none !important;
+	display: block;
+    margin-block-start: 1.33em;
+    margin-block-end: 1.33em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+	margin-top: 0px;
+	margin-bottom: 0px;
+	padding: 5px;
 }
 
 .my-btn:hover, .my-btn:focus, .my-btn:active {
@@ -266,15 +278,30 @@ h4 {
 	outline-style: none;
 }
 .card {
-    width: 230px;
+   
     border: none;
     background-color: #f8f8f8;
-    margin: 3px;
+    margin: 0 !important;
 }
 
 .prefab-btn {
     background-color: #f8f8f8;
     outline: none;
+}
+.title{
+	width: 100%; 
+	 white-space: nowrap;
+     overflow-x: auto;
+}
+.left {
+	display:inline-block;
+	width: 90%;
+
+}
+.right {
+	display:inline-block;
+	width:10%;
+	margin:0;
 }
 
 
@@ -297,7 +324,7 @@ h4 {
     top: 0;
     right: 25px;
     font-size: 36px;
-    margin-left: 50px;
+    margin-left: 20px;
 }
 
 #main {
