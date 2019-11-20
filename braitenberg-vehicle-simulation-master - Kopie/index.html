@@ -76,13 +76,15 @@
 
                 <div role="tabpanel" class="tab-pane fade" id="body">
                     <h4>Form</h4>
-                    <div class="custom-control">
-                        <input type="radio" id="rectangle" name="form" class="custom-control-input" checked>
-                        <label class="custom-control-label" for="rectangle">Rectangle</label>
-                    </div>
-                    <div class="custom-control">
-                        <input type="radio" id="circle" name="form" class="custom-control-input">
-                        <label class="custom-control-label" for="circle">Circle</label>
+                    <div id="shape">
+                        <div class="custom-control">
+                            <input type="radio" id="rectangle" name="form" class="custom-control-input" checked>
+                            <label class="custom-control-label" for="rectangle">Rectangle</label>
+                        </div>
+                        <div class="custom-control">
+                            <input type="radio" id="circle" name="form" class="custom-control-input">
+                            <label class="custom-control-label" for="circle">Circle</label>
+                        </div>
                     </div>
 
                     <h4>Breite</h4>
@@ -169,13 +171,14 @@
 
     <script>
         // settings menu aufmachen
-        
+        var entity = null;
+
         function openSettings(event) {
 			
 			closeNav();
             document.getElementById("myEntitySettings").style.width = "256px";
 			document.getElementById("createEntityMenu").style.marginRight = "306px";
-            var entity = event.detail;                  // die aufgerufene Entität
+            entity = event.detail;                  // die aufgerufene Entität
 
             drawComponents(entity.components);
             onCreate(entity.components);

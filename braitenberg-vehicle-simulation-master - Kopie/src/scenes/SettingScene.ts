@@ -12,8 +12,7 @@ import SolidBodyComponent from '../components/SolidBodyComponent';
 import SourceComponent from '../components/SourceComponent';
 import ScrollableContainer from '../gui/ScrollableContainer';
 
-//for tabs
-import UIPlugin from '../../templates/ui-plugin.js';
+
 import Button from '../gui/Button';
 import { getNode, parseDOM } from '../utils/dom';
 
@@ -120,79 +119,7 @@ export default class SettingScene extends SidebarScene {
 
 
         const tabs = this.add.dom(0, 0).createFromHTML(` 
-        <div id = "settings">
-             <div class="nav nav-tabs nav-fil" id="myTabs" role="tablist">
-                <a class="nav-item nav-link active col-4" data-toggle="tab" href="#motor" role="tab" aria-controls="nav-home" aria-selected="true">Motor</a>
-                <a class="nav-item nav-link col-4" data-toggle="tab" href="#sensor" role="tab" aria-controls="nav-home" aria-selected="false">Sensor</a>
-                <a class="nav-item nav-link col-4" data-toggle="tab" href="#body" role="tab" aria-controls="nav-home" aria-selected="false">Body</a>
-                <a class="nav-item nav-link col-6" data-toggle="tab" href="#emission" role="tab" aria-controls="nav-home" aria-selected="false">Emission</a>
-                <a class="nav-item nav-link col-6" data-toggle="tab" href="#connection" role="tab" aria-controls="nav-home" aria-selected="false">Connection</a>
-             </div>
-
-             <div class="tab-content" id="nav-tabContent">
-                  <div role="tabpanel" class="tab-pane active" id="motor">                   
-                        <h4>Position</h4>
-                            <div id="drag-drop-basic">
-                                <div id="object-container" data-role="drag-drop-container" class = "col-8"></div>
-                                <div id="add-remove-container" data-role="drag-drop-container" class = "col-4">
-                                    <button id="drag-source" draggable="true">+</button>
-                                </div>
-                            </div>
-                       <h4>Current Speed</h4>
-                       <h4>Reichweite</h4>
-                       <h4>Winkel</h4>
-                  </div>
-
-              <div role="tabpanel" class="tab-pane fade" id="sensor">Sensor</div>
-                       <h4>Position</h4>
-                       <h4>Min Speed</h4>
-                       <h4>Max Speed</h4>
-              <div role="tabpanel" class="tab-pane fade" id="emission">
-                  <h4>Type</h4>
-                  <div class="custom-control">
-                      <input type="radio" id="barrier" name="emission" class="custom-control-input" checked>
-                      <label class="custom-control-label" for="barrier">Barrier</label>
-                  </div>
-                  <div class="custom-control">
-                      <input type="radio" id="sour" name="emission" class="custom-control-input">
-                      <label class="custom-control-label" for="sour">Source</label>
-                  </div>
-              </div>
-
-              <div role="tabpanel" class="tab-pane fade" id="body">
-                    <h4>Form</h4>
-                    <div class="custom-control">
-                      <input type="radio" id="rectangle" name="form" class="custom-control-input" checked>
-                      <label class="custom-control-label" for="rectangle">Rectangle</label>
-                    </div>
-                    <div class="custom-control">
-                      <input type="radio" id="circle" name="form" class="custom-control-input">
-                      <label class="custom-control-label" for="circle">Circle</label>
-                    </div>
-
-                    <h4>Breite</h4>
-                    <h4>Höhe</h4>
-                    <h4>Farbe</h4>
-                    <div class="custom-control custom-radio">
-                      <input type="radio" id="grey" name="farbe" class="custom-control-input" checked>
-                      <label class="custom-control-label" for="grey">Grey</label>
-                    </div>
-                    <div class="custom-control custom-radio">
-                      <input type="radio" id="red" name="farbe" class="custom-control-input">
-                      <label class="custom-control-label" for="red">Red</label>
-                    </div>
-                    <div class="custom-control custom-radio">
-                      <input type="radio" id="green" name="farbe" class="custom-control-input">
-                      <label class="custom-control-label" for="green">Green</label>
-                    </div>
-                    <div class="custom-control custom-radio">
-                      <input type="radio" id="blue" name="farbe" class="custom-control-input">
-                      <label class="custom-control-label" for="blue">Blue</label>
-                    </div>
-              </div>
-              <div role="tabpanel" class="tab-pane fade" id="connection">Connection</div>
-            </div>
-        </div>`);
+        <div id = "settings"> </div>`);
 ;
 
         console.log("tabs", tabs);
@@ -311,6 +238,12 @@ export default class SettingScene extends SidebarScene {
       
 
     }
-    
+
+    public updateComponent(entity: Entity): void {
+        if (entity) {
+            console.log(entity);
+        }
+       
+    }
 
 }

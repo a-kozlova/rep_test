@@ -52,7 +52,7 @@ console.log(mytestgame);
 document.getElementById("drag-source").onclick = function () {
     document.addEventListener("entitySelected", (e) => {
         mytestgame.scene.scenes[3].addMotor(e.detail);
-		console.log(mytestgame.scene.scenes[4]);
+		console.log(mytestgame.scene.scenes[3]);
     });
 }
 document.getElementById("testbutton").onclick = function () { mytestgame.scene.scenes[1].createBarrier() }
@@ -64,3 +64,8 @@ document.getElementById("prefab2b").onclick = function () { mytestgame.scene.sce
 document.getElementById("prefab3a").onclick = function () { mytestgame.scene.scenes[1].createPrefab3a() }
 document.getElementById("prefab3b").onclick = function () { mytestgame.scene.scenes[1].createPrefab3b() }
 document.getElementById("prefab3b").onclick = function () { mytestgame.scene.scenes[1].createPrefab3b() }
+
+document.getElementById("circle").onclick = function () {
+    mytestgame.scene.scenes[3].updateComponent(entity);
+    console.log(entity);
+}
