@@ -59,10 +59,12 @@ export default class LoadingScene extends Phaser.Scene {
   private createProgress(): void {
     const progress = this.add.graphics();
 
+    // zeigt den Progress bei der Ladung der Scene an (weißer Rechteck in der Mitte links)
     this.load.on('progress', (value: number) => {
       progress.clear();
       progress.fillStyle(0xffffff, 1);
-      progress.fillRect(0, 270, 800 * value, 60);
+        progress.fillRect(0, 270, 800 * value, 60);
+        
     });
 
     this.load.on('complete', () => {

@@ -318,13 +318,7 @@ h4 {
 	font-style: bold;
 }
 
-.create-entity .right{
-	margin-left: 70px;
-}
 
-.settings .right{	
-	margin-left: 135px;
-}
 .prefab-btn:hover,.prefab-btn:focus, .prefab-btn:active,
 .closebtn:hover, .closebtn:focus, .closebtn:active {
     background-color: #f8f8f8;
