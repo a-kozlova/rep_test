@@ -79,7 +79,7 @@ document.getElementById('motorCanvas').onchange = function () {
 };  
 
 
-$('addMotor').draggable({
+$('#addMotor').draggable({
     start: function () {
         console.log("start");
     },
@@ -90,3 +90,4 @@ $('addMotor').draggable({
         console.log("stop");
     }
 });
+

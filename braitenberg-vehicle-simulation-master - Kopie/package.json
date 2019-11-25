@@ -41,9 +41,11 @@
   },
   "dependencies": {
     "@tensorflow/tfjs-core": "^1.2.1",
+    "@types/jquery": "^3.3.31",
     "@types/lodash-es": "^4.17.3",
     "animate.css": "^3.7.2",
     "interactjs": "^1.5.4",
+    "jquery": "^3.4.1",
     "lodash-es": "^4.17.14",
     "mathjs": "^5.10.3",
     "noty": "^3.2.0-beta",
