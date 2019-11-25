@@ -200,7 +200,17 @@
             document.addEventListener("entitySelected", switchEntity);            
         }
 
-        
+        $('#addMotor').draggable({
+            start: function () {
+                console.log("start");
+            },
+            drag: function () {
+                console.log("drag");
+            },
+            stop: function () {
+                console.log("stop");
+            }
+        });
 
         function switchEntity(event) {
             closeSettings();

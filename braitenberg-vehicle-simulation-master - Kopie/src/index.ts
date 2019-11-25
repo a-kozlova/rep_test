@@ -79,15 +79,5 @@ document.getElementById('motorCanvas').onchange = function () {
 };  
 
 
-$('#addMotor').draggable({
-    start: function () {
-        console.log("start");
-    },
-    drag: function () {
-        console.log("drag");
-    },
-    stop: function () {
-        console.log("stop");
-    }
-});
+
 
