@@ -72,7 +72,21 @@ document.getElementById('prefab3b').onclick = function() {
   mytestgame.scene.scenes[1].createPrefab3b();
 };
 
-document.getElementById('circle').onclick = function() {
-  console.log('probe', probe);
-  //mytestgame.scene.scenes[3].updateComponent(probe);
-};
+
+
+document.getElementById('motorCanvas').onchange = function () {
+    console.log("motor change");
+};  
+
+
+$('addMotor').draggable({
+    start: function () {
+        console.log("start");
+    },
+    drag: function () {
+        console.log("drag");
+    },
+    stop: function () {
+        console.log("stop");
+    }
+});
