@@ -14,7 +14,9 @@
     <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script> -->
     <script src="bootstrap-4.3.1-dist/js/bootstrap.js"></script>
     <!--DRAGGABLE-->
-    
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
     <style>
         html,
@@ -25,7 +27,7 @@
         }
     </style>
 </head>
-  <body>
+<body>
     
     <!--SETTINGS-->
     <div id="myEntitySettings" class="sidenav">
@@ -54,11 +56,9 @@
                                 <canvas id="motorCanvas"> </canvas>
                             </div>
                             <div id="addRemoveMotor" data-role="drag-drop-container" class="col-4 ui-widget ui-widget-content">
-                                <button id="addMotor" draggable="true">+</button>
+                                <div id="addMotor" draggable="true">+</div>
                             </div>
                         </div>
-                        <h4>Current Speed</h4>
-                            <div id="currentSpeed"> </div>
                         <h4>Min Speed</h4>
                             <div id="minSpeed"> </div>
                         <h4>Max Speed</h4>
@@ -188,31 +188,25 @@
         var changed = [];
 
         function openSettings(event) {
-			closeNav();
+            closeNav();
             document.getElementById("myEntitySettings").style.width = "256px";
-			document.getElementById("createEntityMenu").style.marginRight = "306px";
-            entity = event.detail;                  // die aufgerufene Entität
-            //console.log(entity);
+            document.getElementById("createEntityMenu").style.marginRight = "306px";
+            // falls Eintity bereits ausgewählt, braucht amn nichts zu updaten
+                     
+			entity = event.detail;                  // die aufgerufene Entität
+            console.log(entity);
 
             drawMotors(entity.components);
             drawSliders(entity.components);
 
-            document.addEventListener("entitySelected", switchEntity);            
+            document.addEventListener("entitySelected", switchEntity);
+
         }
 
-        $('#addMotor').draggable({
-            start: function () {
-                console.log("start");
-            },
-            drag: function () {
-                console.log("drag");
-            },
-            stop: function () {
-                console.log("stop");
-            }
-        });
-
         function switchEntity(event) {
+            if (entity && event.detail.id == entity.id) {
+                return
+            }
             closeSettings();
             console.log("switch", entity);
             openSettings(event);
@@ -228,7 +222,7 @@
                              </form>
                              <span class="font-weight-bold indigo-text ml-2 mt-1">100</span>
                          </div>`;
-            var currentSpeed = document.getElementById("currentSpeed");
+           
             var maxSpeed = document.getElementById("maxSpeed");
             var minSpeed = document.getElementById("minSpeed");
             var sliders = [];
@@ -238,7 +232,7 @@
                 }
             });
             
-            currentSpeed.innerHTML = sliders;
+           
             maxSpeed.innerHTML = sliders;
             minSpeed.innerHTML = sliders;
         }
@@ -276,7 +270,7 @@
 
             function draw() {
               context.clearRect(0, 0, width, height);
-              context.strokeRect(5, 5, width-5, height-5);
+              context.strokeRect(5, 5, width-10, height-10);
 
               for (var i = 0; i < motors.length; i += 1) {
                 context.fillStyle = color[i];
@@ -286,7 +280,8 @@
                   context.shadowOffsetX = 4;
                   context.shadowOffsetY = 4;
                   context.shadowBlur = 8;
-                }
+                  }
+                  
 
                 context.beginPath();
                 context.arc(motor.x, motor.y, motor.radius, 0, Math.PI * 2, false);
@@ -297,7 +292,9 @@
                 context.shadowOffsetX = null;
                 context.shadowOffsetY = null;
                 context.shadowBlur = null;
-              }
+                }
+                console.log("draw", motors);
+
             }
 
             canvas.addEventListener("mousedown", function (event) {
@@ -309,7 +306,8 @@
                   dragHandle = motor;
                   offset.x = event.clientX - motor.x;
                   offset.y = event.clientY - motor.y;
-                  draw();
+                    console.log("down", event.clientX);
+                    draw();
                   
                 }
               });
@@ -319,14 +317,19 @@
             function onMouseMove(event) {
               dragHandle.x = event.clientX - offset.x;
               dragHandle.y = event.clientY - offset.y;
+                console.log("move", dragHandle.x);
                 draw();
+
             }
 
             function onMouseUp(event) {
               canvas.removeEventListener("mousemove", onMouseMove);
               canvas.removeEventListener("mouseup", onMouseUp);
-              isDragging = false;
-              draw();
+                isDragging = false;
+                console.log("up", motors[0].x , startPoint.x , dragHandle.x);
+                entity.components[3].setPosition(dragHandle.x - startPoint.x, dragHandle.y - startPoint.y );
+                console.log("test_set");
+                draw();
               
             }
 
@@ -359,12 +362,9 @@
 
 
         function closeSettings() {
-            console.log("closeNav");
             document.getElementById("myEntitySettings").style.width = "0";
 			document.getElementById("createEntityMenu").style.marginRight = "60px";
-            var canvas = document.getElementById("motorCanvas");
-            var ctx = canvas.getContext("2d");
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+           
         }     
 
 		function openNav() {
@@ -378,9 +378,25 @@
         }
 
 
+
+
+
+        // funktioniert nicht in index.ts
+        $('#addMotor').draggable({
+            start: function () {
+                console.log("start");
+            },
+            drag: function () {
+                console.log("drag");
+            },
+            stop: function () {
+                console.log("stop");
+            }
+        });
+
     </script>
 
 
-  </body>
+</body>
 </html>
 
