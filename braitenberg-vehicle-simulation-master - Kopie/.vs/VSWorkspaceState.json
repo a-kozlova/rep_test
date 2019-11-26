@@ -3,8 +3,9 @@
     "",
     "\\src",
     "\\src\\components",
-    "\\src\\systems"
+    "\\src\\systems",
+    "\\webpack"
   ],
-  "SelectedNode": "\\index.html",
+  "SelectedNode": "\\src\\components\\Component.ts",
   "PreviewInSolutionExplorer": false
 }
