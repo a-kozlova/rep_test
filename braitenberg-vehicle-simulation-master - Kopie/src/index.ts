@@ -52,27 +52,16 @@ document.getElementById('motorCanvas').onchange = function () {
 
 $(function () {
 $('.draggable').draggable({
-			helper: "clone",
-			cursor: 'move',
-            cancel : '.no-drag',
-            start: function (ui) {
-                console.log("start");
-				$(ui.item).show()
-            },
-            drag: function (ui) {
-                console.log("drag");
-				$(ui.item).show()
-            },
-            stop: function () {
-                console.log("stop");
-
-            }
+	appendTo: 'body',
+	helper: "clone",
+	cursor: 'move',
+    cancel : '.no-drag'
 });
 $("#phaser").droppable({
+	over: function(ui) {
+		$(ui.draggable).show()},
 	drop: function (event, ui) {
-			const droppedItemID = ui.draggable.attr("id");
-			console.log(droppedItemID);
-            mytestgame.scene.scenes[1].createObject(event.clientX, event.clientY, droppedItemID);
+		mytestgame.scene.scenes[1].createObject(event.clientX, event.clientY, ui.draggable.attr("id"));
     }
 });
 
