@@ -80,21 +80,18 @@ document.getElementById('motorCanvas').onchange = function () {
     console.log("motor change");
 };  
 
-
-//document.getElementById("blank").addEventListener("dragstart", () => {});
-//let obj = document.getElementById("phaser");
-//obj.addEventListener("dragover", (e) => {e.preventDefault();});
-//obj.addEventListener("drop", (e) => {mytestgame.scene.scenes[1].createBlank(e.clientX, e.clientY);});
-
+$(function () {
 $('.draggable').draggable({
 			helper: "clone",
 			cursor: 'move',
             cancel : '.no-drag',
-            start: function () {
+            start: function (ui) {
                 console.log("start");
+				$(ui.item).show()
             },
-            drag: function () {
+            drag: function (ui) {
                 console.log("drag");
+				$(ui.item).show()
             },
             stop: function () {
                 console.log("stop");
@@ -103,9 +100,12 @@ $('.draggable').draggable({
 });
 $("#phaser").droppable({
 	drop: function (event, ui) {
-            mytestgame.scene.scenes[1].createBlank(event.clientX, event.clientY);
+			const droppedItemID = ui.draggable.attr("id");
+			console.log(droppedItemID);
+            mytestgame.scene.scenes[1].createObject(event.clientX, event.clientY, droppedItemID);
     }
 });
 
+}); 
 
 

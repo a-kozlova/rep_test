@@ -191,27 +191,6 @@
             document.getElementById("mySidenav").style.width = "0";
         }
 
-
-
-		function init() {
-			if (document.layers) document.captureEvents(Event.MOUSEMOVE);
-			document.onmousemove = mousemove;
-		}
-		function mousemove(event) {
-			var mouse_x = mouse_y = 0;
-			if (document.attachEvent != null) {
-				mouse_x = window.event.clientX;
-				mouse_y = window.event.clientY;
-			} else if (!document.attachEvent && document.addEventListener) {
-				mouse_x = event.clientX;
-				mouse_y = event.clientY;
-			}
-		}
-		init();
-
-
-
-
         // funktioniert nicht in index.ts
         $('#addMotor').draggable({
             start: function () {
