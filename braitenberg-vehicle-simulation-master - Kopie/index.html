@@ -214,32 +214,11 @@
               
         document.addEventListener("entitySelected", openSettings);
 
-        function drawSliders(components) {
-            var slider = `<div class="d-flex justify-content-center my-8">
-                             <span class="font-weight-bold indigo-text mr-2 mt-1">0</span>
-                             <form class="range-field w-25">
-                                 <input class="border-0" type="range" min="0" max="100" />
-                             </form>
-                             <span class="font-weight-bold indigo-text ml-2 mt-1">100</span>
-                         </div>`;
-           
-            var maxSpeed = document.getElementById("maxSpeed");
-            var minSpeed = document.getElementById("minSpeed");
-            var sliders = [];
-            components.forEach(component => {
-                if (component.name == "Motor") {
-                    sliders.push(slider);
-                }
-            });
-            
-           
-            maxSpeed.innerHTML = sliders;
-            minSpeed.innerHTML = sliders;
-        }
-
+        
 
         function drawMotors(components) {
             var motors = [];
+            var cmps = []
             var canvas = document.getElementById("motorCanvas"),
                 context = canvas.getContext("2d"),
                 width = canvas.width = components[1].size.value.width +10,
@@ -263,6 +242,7 @@
                     };
                   i++;
                   motors.push(motor);
+                  cmps.push(component);
                 }
             });
 
@@ -292,8 +272,8 @@
                 context.shadowOffsetX = null;
                 context.shadowOffsetY = null;
                 context.shadowBlur = null;
-                }
-                console.log("draw", motors);
+              }
+                //console.log("draw", motors);
 
             }
 
@@ -306,9 +286,8 @@
                   dragHandle = motor;
                   offset.x = event.clientX - motor.x;
                   offset.y = event.clientY - motor.y;
-                    console.log("down", event.clientX);
-                    draw();
-                  
+                    //console.log("down", event.clientX);
+                    draw(); 
                 }
               });
 
@@ -317,8 +296,8 @@
             function onMouseMove(event) {
               dragHandle.x = event.clientX - offset.x;
               dragHandle.y = event.clientY - offset.y;
-                console.log("move", dragHandle.x);
-                draw();
+                //console.log("move", dragHandle.x);
+              draw();
 
             }
 
@@ -326,9 +305,13 @@
               canvas.removeEventListener("mousemove", onMouseMove);
               canvas.removeEventListener("mouseup", onMouseUp);
                 isDragging = false;
-                console.log("up", motors[0].x , startPoint.x , dragHandle.x);
-                entity.components[3].setPosition(dragHandle.x - startPoint.x, dragHandle.y - startPoint.y );
-                console.log("test_set");
+                //console.log("up", motors[0].x , startPoint.x , dragHandle.x);
+                cmps.forEach(c => {
+                    if (c.id == dragHandle.id) {
+                        c.setPosition(dragHandle.x - startPoint.x, dragHandle.y - startPoint.y);
+                    }
+                });
+                //console.log("test_set");
                 draw();
               
             }
@@ -355,6 +338,28 @@
         
 
 
+        function drawSliders(components) {
+            var slider = `<div class="d-flex justify-content-center my-8">
+                             <span class="font-weight-bold indigo-text mr-2 mt-1">0</span>
+                             <form class="range-field w-25">
+                                 <input class="border-0" type="range" min="0" max="100" />
+                             </form>
+                             <span class="font-weight-bold indigo-text ml-2 mt-1">100</span>
+                         </div>`;
+
+            var maxSpeed = document.getElementById("maxSpeed");
+            var minSpeed = document.getElementById("minSpeed");
+            var sliders = [];
+            components.forEach(component => {
+                if (component.name == "Motor") {
+                    sliders.push(slider);
+                }
+            });
+
+
+            maxSpeed.innerHTML = sliders;
+            minSpeed.innerHTML = sliders;
+        }
 
         
 
