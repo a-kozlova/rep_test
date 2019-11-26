@@ -41,4 +41,9 @@ export default class SolidBodyComponent extends Component {
     );
     this.isStatic = new Attribute(data.isStatic || false, Checkbox.create({ label: 'Statisch' }));
   }
+  public setShape(shape){
+	console.log('set shape' + shape);
+	}
 }
+
+

@@ -68,3 +68,18 @@ $("#phaser").droppable({
 }); 
 
 
+//Checkbox Inputs
+
+$('input[name="farbe"]:radio').change(function () {
+        alert($("input[name='farbe']:checked").val());
+    });
+$('input[name="form"]:radio').change(function () {
+        alert($("input[name='form']:checked").val());
+    });
+$('input[name="type"]:radio').change(function () {
+        alert($("input[name='type']:checked").val());
+    });
+		
+
+
+
