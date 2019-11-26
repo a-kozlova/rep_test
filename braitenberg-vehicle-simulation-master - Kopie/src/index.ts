@@ -64,3 +64,11 @@ document.getElementById("prefab2b").onclick = function () { mytestgame.scene.sce
 document.getElementById("prefab3a").onclick = function () { mytestgame.scene.scenes[1].createPrefab3a() }
 document.getElementById("prefab3b").onclick = function () { mytestgame.scene.scenes[1].createPrefab3b() }
 document.getElementById("prefab3b").onclick = function () { mytestgame.scene.scenes[1].createPrefab3b() }
+
+
+document.getElementById("blank").addEventListener("dragstart", () => {});
+let obj = document.getElementById("phaser");
+obj.addEventListener("dragover", (e) => {e.preventDefault();});
+obj.addEventListener("drop", (e) => {mytestgame.scene.scenes[1].createBlank(e.clientX, e.clientY);});
+
+

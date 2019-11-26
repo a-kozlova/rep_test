@@ -282,18 +282,19 @@ export default class MainScene extends Phaser.Scene {
     );
 }
 
-public createBlank(): void {
+public createBlank(mouseX, mouseY): void {
 	EntityManager.createEntity(
-        new TransformableComponent({ position: { x: 300, y: 450 } }),
+	
+        new TransformableComponent({ position: { x: mouseX, y: mouseY }}),
         new RenderComponent({
             asset: 'prefab-blank',
             size: 110,
         })
     );   
 }
-public createSource(): void {
+public createSource(mouseX, mouseY): void {
 	EntityManager.createEntity(
-        new TransformableComponent({ position: { x: 300, y: 450 }}),
+        new TransformableComponent({ position: { x: mouseX, y: mouseY }}),
         new SourceComponent({
           range: 100,
         }),
