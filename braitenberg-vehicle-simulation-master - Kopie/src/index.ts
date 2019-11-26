@@ -1,3 +1,5 @@
+import $ from "jquery";
+import 'jquery-ui-dist/jquery-ui';
 import Phaser from 'phaser';
 import MainScene from './scenes/MainScene';
 import MainInterfaceScene from './scenes/MainInterfaceScene';
@@ -44,40 +46,36 @@ var mytestgame = new Phaser.Game(config);
 //Have a look at all the members of mytestgame in the console
 console.log(mytestgame);
 
-//create the callback function
-
-document.getElementById('testbutton').onclick = function() {
-  mytestgame.scene.scenes[1].createBarrier();
-};
-document.getElementById('blank').onclick = function() {
-  mytestgame.scene.scenes[1].createBlank();
-};
-document.getElementById('source').onclick = function() {
-  mytestgame.scene.scenes[1].createSource();
-};
-
-document.getElementById('prefab2a').onclick = function() {
-  mytestgame.scene.scenes[1].createPrefab2a();
-};
-document.getElementById('prefab2b').onclick = function() {
-  mytestgame.scene.scenes[1].createPrefab2b();
-};
-document.getElementById('prefab3a').onclick = function() {
-  mytestgame.scene.scenes[1].createPrefab3a();
-};
-document.getElementById('prefab3b').onclick = function() {
-  mytestgame.scene.scenes[1].createPrefab3b();
-};
-document.getElementById('prefab3b').onclick = function() {
-  mytestgame.scene.scenes[1].createPrefab3b();
-};
-
-
-
 document.getElementById('motorCanvas').onchange = function () {
     console.log("motor change");
 };  
 
+$(function () {
+$('.draggable').draggable({
+			helper: "clone",
+			cursor: 'move',
+            cancel : '.no-drag',
+            start: function (ui) {
+                console.log("start");
+				$(ui.item).show()
+            },
+            drag: function (ui) {
+                console.log("drag");
+				$(ui.item).show()
+            },
+            stop: function () {
+                console.log("stop");
 
+            }
+});
+$("#phaser").droppable({
+	drop: function (event, ui) {
+			const droppedItemID = ui.draggable.attr("id");
+			console.log(droppedItemID);
+            mytestgame.scene.scenes[1].createObject(event.clientX, event.clientY, droppedItemID);
+    }
+});
+
+}); 
 
 

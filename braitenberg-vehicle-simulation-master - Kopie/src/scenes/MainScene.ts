@@ -262,9 +262,9 @@ export default class MainScene extends Phaser.Scene {
   }
 
  // test funktion 14.11.19
- public createBarrier(): void {
+ public createBarrier(mouseX, mouseY): void {
     EntityManager.createEntity(
-        new TransformableComponent({ position: { x: 200, y: 450 } }),
+        new TransformableComponent({ position: { x: mouseX, y: mouseY } }),
         new SolidBodyComponent({
             size: { width: 20, height: 400 },
             shape: BodyShape.CIRCLE,
@@ -282,18 +282,19 @@ export default class MainScene extends Phaser.Scene {
     );
 }
 
-public createBlank(): void {
+private createBlank(mouseX, mouseY): void {
 	EntityManager.createEntity(
-        new TransformableComponent({ position: { x: 300, y: 450 } }),
+	
+        new TransformableComponent({ position: { x: mouseX, y: mouseY }}),
         new RenderComponent({
             asset: 'prefab-blank',
             size: 110,
         })
     );   
 }
-public createSource(): void {
+private createSource(mouseX, mouseY): void {
 	EntityManager.createEntity(
-        new TransformableComponent({ position: { x: 300, y: 450 }}),
+        new TransformableComponent({ position: { x: mouseX, y: mouseY }}),
         new SourceComponent({
           range: 100,
         }),
@@ -301,10 +302,10 @@ public createSource(): void {
       );
    
 }
-public createPrefab2a(): void {
+private createPrefab2a(mouseX, mouseY): void {
 	  const entity = new Entity();
       const transform = new TransformableComponent({
-        position: { x: 300, y: 450 },
+        position: { x: mouseX, y: mouseY },
         angle: Math.PI,
       });
       entity.addComponent(transform);
@@ -357,10 +358,10 @@ public createPrefab2a(): void {
       EntityManager.addExistingEntity(entity);
    
 }
-public createPrefab2b(): void {
+private createPrefab2b(mouseX, mouseY): void {
 	  const entity = new Entity();
       const transform = new TransformableComponent({
-        position: { x: 300, y: 450 },
+        position: { x: mouseX, y: mouseY },
         angle: Math.PI,
       });
       transform.angle.set(-Math.PI / 2);
@@ -414,10 +415,10 @@ public createPrefab2b(): void {
       EntityManager.addExistingEntity(entity);
    
 }
-public createPrefab3a(): void {
+private createPrefab3a(mouseX, mouseY): void {
       const entity = new Entity();
       const transform = new TransformableComponent({
-        position: { x: 300, y: 450 },
+        position: { x: mouseX, y: mouseY },
         angle: Math.PI,
       });
       transform.angle.set(-Math.PI / 2);
@@ -471,10 +472,10 @@ public createPrefab3a(): void {
       EntityManager.addExistingEntity(entity);
    
 }
-public createPrefab3b(): void {
+private createPrefab3b(mouseX, mouseY): void {
       const entity = new Entity();
       const transform = new TransformableComponent({
-        position: { x: 300, y: 450 },
+        position: { x: mouseX, y: mouseY },
         angle: Math.PI,
       });
       transform.angle.set(-Math.PI / 2);
@@ -528,5 +529,40 @@ public createPrefab3b(): void {
       );
       EntityManager.addExistingEntity(entity);
    
+}
+
+public createObject (mouseX, mouseY, droppedItemID ) {
+	switch(droppedItemID) { 
+		case 'blank': { 
+			this.createBlank(mouseX, mouseY);
+			break; 
+		}
+		case 'source': { 
+			this.createSource(mouseX, mouseY);
+			break; 
+		} 
+		case 'prefab2a': { 
+			this.createPrefab2a(mouseX, mouseY);
+			break; 
+		}		 
+		case 'prefab2b': { 
+			this.createPrefab2b(mouseX, mouseY);
+			break; 
+		} 
+		case 'prefab3a': { 
+			this.createPrefab3a(mouseX, mouseY);
+			break; 
+		} 
+		case 'prefab3b': { 
+			this.createPrefab3b(mouseX, mouseY);
+			break; 
+		} 
+		case 'barrier': { 
+			this.createBarrier(mouseX, mouseY);
+			break; 
+		}
+
+	
+}
 }
 }
