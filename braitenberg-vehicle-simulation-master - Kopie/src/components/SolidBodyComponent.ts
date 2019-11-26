@@ -43,6 +43,17 @@ export default class SolidBodyComponent extends Component {
   }
   public setShape(shape){
 	console.log('set shape' + shape);
+	switch (shape) {
+		case 'circle': {
+			this.shape = BodyShape.CIRCLE;
+			break;
+		}
+		case 'rectangle': {
+		this.shape = BodyShape.RECTANGLE;
+		break;
+		}
+	}
+	
 	}
 }
 

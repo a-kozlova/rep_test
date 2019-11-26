@@ -67,6 +67,10 @@ $("#phaser").droppable({
 
 }); 
 
+$('.prefab-btn').click(function(){
+	mytestgame.scene.scenes[1].createObject(300, 200, $(this).attr("id"));
+});
+
 
 //Checkbox Inputs
 
@@ -74,6 +78,7 @@ $('input[name="farbe"]:radio').change(function () {
         alert($("input[name='farbe']:checked").val());
     });
 $('input[name="form"]:radio').change(function () {
+		console.log(entity);
         alert($("input[name='form']:checked").val());
     });
 $('input[name="type"]:radio').change(function () {
