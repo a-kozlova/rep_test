@@ -1,11 +1,10 @@
 {
   "ExpandedNodes": [
     "",
-    "\\bootstrap-4.3.1-dist\\js",
     "\\src",
-    "\\src\\bootstrap-4.3.1-dist\\js",
     "\\src\\components",
     "\\src\\systems"
   ],
+  "SelectedNode": "\\index.html",
   "PreviewInSolutionExplorer": false
 }

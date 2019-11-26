@@ -57,7 +57,7 @@ export default class MainScene extends Phaser.Scene {
     });
 
     EntityManager.createEntity(
-      new TransformableComponent({ position: { x: 600, y: 450 } }),
+      new TransformableComponent({ position: { x: 800, y: 450 } }),
       new SolidBodyComponent({
         size: { width: 20, height: 400 },
         shape: BodyShape.RECTANGLE,

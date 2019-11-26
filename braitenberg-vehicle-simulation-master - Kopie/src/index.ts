@@ -12,8 +12,6 @@ import 'noty/lib/themes/relax.css';
 import '../assets/css/picnic.min.css';
 import '../assets/css/styling.css';
 
-
-
 const config: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
   backgroundColor: '#EAEAEA',
@@ -41,7 +39,6 @@ const config: Phaser.Types.Core.GameConfig = {
 // eslint-disable-next-line
 //create a variable
 
-
 var mytestgame = new Phaser.Game(config);
 
 //Have a look at all the members of mytestgame in the console
@@ -49,15 +46,40 @@ console.log(mytestgame);
 
 //create the callback function
 
-document.getElementById("drag-source").onclick = function () {
-    document.addEventListener("entitySelected", (e) => {
-        mytestgame.scene.scenes[3].addMotor(e.detail);
-		console.log(mytestgame.scene.scenes[4]);
-    });
-}
-document.getElementById("testbutton").onclick = function () { mytestgame.scene.scenes[1].createBarrier() }
-document.getElementById("blank").onclick = function () { mytestgame.scene.scenes[1].createBlank() }
-document.getElementById("source").onclick = function () { mytestgame.scene.scenes[1].createSource() }
+document.getElementById('testbutton').onclick = function() {
+  mytestgame.scene.scenes[1].createBarrier();
+};
+document.getElementById('blank').onclick = function() {
+  mytestgame.scene.scenes[1].createBlank();
+};
+document.getElementById('source').onclick = function() {
+  mytestgame.scene.scenes[1].createSource();
+};
+
+document.getElementById('prefab2a').onclick = function() {
+  mytestgame.scene.scenes[1].createPrefab2a();
+};
+document.getElementById('prefab2b').onclick = function() {
+  mytestgame.scene.scenes[1].createPrefab2b();
+};
+document.getElementById('prefab3a').onclick = function() {
+  mytestgame.scene.scenes[1].createPrefab3a();
+};
+document.getElementById('prefab3b').onclick = function() {
+  mytestgame.scene.scenes[1].createPrefab3b();
+};
+document.getElementById('prefab3b').onclick = function() {
+  mytestgame.scene.scenes[1].createPrefab3b();
+};
+
+
+
+document.getElementById('motorCanvas').onchange = function () {
+    console.log("motor change");
+};  
+
+
+
 
 document.getElementById("prefab2a").onclick = function () { mytestgame.scene.scenes[1].createPrefab2a() }
 document.getElementById("prefab2b").onclick = function () { mytestgame.scene.scenes[1].createPrefab2b() }

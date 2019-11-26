@@ -1,132 +1,130 @@
 ﻿<!DOCTYPE html>
 <html>
-  <head>
+<head>
     <meta charset="utf-8" />
     <link rel="stylesheet" type="text/css" href="assets/css/font-awesome.min.css" media="screen" />
-	
-	
-        <link href="https://fonts.googleapis.com/css?family=Roboto:400,500|Open+Sans" rel="stylesheet">
-        <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.css"> -->
-        <link rel="stylesheet" href="bootstrap-4.3.1-dist/css/bootstrap.css">
-        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-        <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script> -->
-        <script src="bootstrap-4.3.1-dist/js/bootstrap.js"></script>
 
-      <style>
-          html,
-          body {
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,500|Open+Sans" rel="stylesheet">
+    <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.css"> -->
+    <link rel="stylesheet" href="bootstrap-4.3.1-dist/css/bootstrap.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script> -->
+    <script src="bootstrap-4.3.1-dist/js/bootstrap.js"></script>
+    <!--DRAGGABLE-->
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+    <style>
+        html,
+        body {
             margin: 0 !important;
             padding: 0 !important;
             overflow: hidden;
-          }	 
-      </style>
-  </head>
-  <body>
+        }
+    </style>
+</head>
+<body>
     
-    
+    <!--SETTINGS-->
     <div id="myEntitySettings" class="sidenav">
-	<div class="container settings">
-		  <div class="row">
-			<div class="col-xs left">
-				Settings
-			</div>
-			<div class="col-xs right">
-				<button class="closebtn" onclick="closeSettings()">&times;</button>
-			</div>
-		  </div>
-		</div>    
-		<div id="settingsMenu">
-            <div class="nav nav-tabs nav-fil" id="myTabs" role="tablist">
-                <a class="nav-item nav-link active col-4" data-toggle="tab" href="#motor" role="tab" aria-controls="nav-home" aria-selected="true">Motor</a>
-                <a class="nav-item nav-link col-4" data-toggle="tab" href="#sensor" role="tab" aria-controls="nav-home" aria-selected="false">Sensor</a>
-                <a class="nav-item nav-link col-4" data-toggle="tab" href="#body" role="tab" aria-controls="nav-home" aria-selected="false">Body</a>
-                <a class="nav-item nav-link col-6" data-toggle="tab" href="#emission" role="tab" aria-controls="nav-home" aria-selected="false">Emission</a>
-                <a class="nav-item nav-link col-6" data-toggle="tab" href="#connection" role="tab" aria-controls="nav-home" aria-selected="false">Connection</a>
-            </div>
+		    <div class="row">
+			    <div class="col-10 left">
+				    Settings
+			    </div>
+			    <div class="col-2 right">
+				    <button class="closebtn" onclick="closeSettings()">&times;</button>
+			    </div>
+		    </div>
+		    <div id="settingsMenu">
+                <div class="nav nav-tabs nav-fil" id="myTabs" role="tablist">
+                    <a class="nav-item nav-link active col-4" data-toggle="tab" href="#motor" role="tab" aria-controls="nav-home" aria-selected="true">Motor</a>
+                    <a class="nav-item nav-link col-4" data-toggle="tab" href="#sensor" role="tab" aria-controls="nav-home" aria-selected="false">Sensor</a>
+                    <a class="nav-item nav-link col-4" data-toggle="tab" href="#body" role="tab" aria-controls="nav-home" aria-selected="false">Body</a>
+                    <a class="nav-item nav-link col-6" data-toggle="tab" href="#emission" role="tab" aria-controls="nav-home" aria-selected="false">Emission</a>
+                    <a class="nav-item nav-link col-6" data-toggle="tab" href="#connection" role="tab" aria-controls="nav-home" aria-selected="false">Connection</a>
+                </div>
 
-            <div class="tab-content" id="nav-tabContent">
-                <div role="tabpanel" class="tab-pane active" id="motor">
-                    <h4>Position</h4>
-                    <div id="drag-drop-basic">
-                        <div id="motor-container" data-role="drag-drop-container" class="col-8" style="border: 1px black solid">
-                            <canvas id="motorCanvas" width="100" height="150" style="padding: 0;"> </canvas>
+                <div class="tab-content" id="nav-tabContent">
+                    <div role="tabpanel" class="tab-pane active" id="motor">
+                        <h4>Position</h4>
+                        <div id="drag-drop-basic">
+                            <div id="motorContainer" data-role="drag-drop-container" class="col-8" style="border: 1px green dashed">
+                                <canvas id="motorCanvas"> </canvas>
+                            </div>
+                            <div id="addRemoveMotor" data-role="drag-drop-container" class="col-4 ui-widget ui-widget-content">
+                                <div id="addMotor" draggable="true">+</div>
+                            </div>
                         </div>
-                        <div id="add-remove-container" data-role="drag-drop-container" class="col-4">
-                            <button id="drag-source" draggable="true">+</button>
+                        <h4>Min Speed</h4>
+                            <div id="minSpeed"> </div>
+                        <h4>Max Speed</h4>
+                            <div id="maxSpeed"> </div>
+                    </div>
+
+                    <div role="tabpanel" class="tab-pane fade" id="sensor">
+                        <h4>Position</h4>
+                        <h4>Reichweite</h4>
+                        <h4>Winkel</h4>
+                    </div>
+
+                    <div role="tabpanel" class="tab-pane fade" id="emission">
+                        <h4>Type</h4>
+                        <div class="custom-control">
+                            <input type="radio" id="barrier" name="emission" class="custom-control-input" checked>
+                            <label class="custom-control-label" for="barrier">Barrier</label>
+                        </div>
+                        <div class="custom-control">
+                            <input type="radio" id="sour" name="emission" class="custom-control-input">
+                            <label class="custom-control-label" for="sour">Source</label>
                         </div>
                     </div>
-                    <h4>Current Speed</h4>
-                        <div id="currentSpeed"> </div>
-                    <h4>Min Speed</h4>
-                        <div id="minSpeed"> </div>
-                    <h4>Max Speed</h4>
-                        <div id="maxSpeed"> </div>
+
+                    <div role="tabpanel" class="tab-pane fade" id="body">
+                        <h4>Form</h4>
+                        <div id="shape">
+                            <div class="custom-control">
+                                <input type="radio" id="rectangle" name="form" class="custom-control-input" checked>
+                                <label class="custom-control-label" for="rectangle">Rectangle</label>
+                            </div>
+                            <div class="custom-control">
+                                <input type="radio" id="circle" name="form" class="custom-control-input">
+                                <label class="custom-control-label" for="circle">Circle</label>
+                            </div>
+                        </div>
+
+                        <h4>Breite</h4>
+                        <h4>Höhe</h4>
+                        <h4>Farbe</h4>
+                        <div class="custom-control custom-radio">
+                            <input type="radio" id="grey" name="farbe" class="custom-control-input" checked>
+                            <label class="custom-control-label" for="grey">Grey</label>
+                        </div>
+                        <div class="custom-control custom-radio">
+                            <input type="radio" id="red" name="farbe" class="custom-control-input">
+                            <label class="custom-control-label" for="red">Red</label>
+                        </div>
+                        <div class="custom-control custom-radio">
+                            <input type="radio" id="green" name="farbe" class="custom-control-input">
+                            <label class="custom-control-label" for="green">Green</label>
+                        </div>
+                        <div class="custom-control custom-radio">
+                            <input type="radio" id="blue" name="farbe" class="custom-control-input">
+                            <label class="custom-control-label" for="blue">Blue</label>
+                        </div>
+                    </div>
+
+                    <div role="tabpanel" class="tab-pane fade" id="connection">Connection</div>
+
                 </div>
-
-                <div role="tabpanel" class="tab-pane fade" id="sensor">
-                    <h4>Position</h4>
-                    <h4>Reichweite</h4>
-                    <h4>Winkel</h4>
-                </div>
-
-                <div role="tabpanel" class="tab-pane fade" id="emission">
-                    <h4>Type</h4>
-                    <div class="custom-control">
-                        <input type="radio" id="barrier" name="emission" class="custom-control-input" checked>
-                        <label class="custom-control-label" for="barrier">Barrier</label>
-                    </div>
-                    <div class="custom-control">
-                        <input type="radio" id="sour" name="emission" class="custom-control-input">
-                        <label class="custom-control-label" for="sour">Source</label>
-                    </div>
-                </div>
-
-                <div role="tabpanel" class="tab-pane fade" id="body">
-                    <h4>Form</h4>
-                    <div class="custom-control">
-                        <input type="radio" id="rectangle" name="form" class="custom-control-input" checked>
-                        <label class="custom-control-label" for="rectangle">Rectangle</label>
-                    </div>
-                    <div class="custom-control">
-                        <input type="radio" id="circle" name="form" class="custom-control-input">
-                        <label class="custom-control-label" for="circle">Circle</label>
-                    </div>
-
-                    <h4>Breite</h4>
-                    <h4>Höhe</h4>
-                    <h4>Farbe</h4>
-                    <div class="custom-control custom-radio">
-                        <input type="radio" id="grey" name="farbe" class="custom-control-input" checked>
-                        <label class="custom-control-label" for="grey">Grey</label>
-                    </div>
-                    <div class="custom-control custom-radio">
-                        <input type="radio" id="red" name="farbe" class="custom-control-input">
-                        <label class="custom-control-label" for="red">Red</label>
-                    </div>
-                    <div class="custom-control custom-radio">
-                        <input type="radio" id="green" name="farbe" class="custom-control-input">
-                        <label class="custom-control-label" for="green">Green</label>
-                    </div>
-                    <div class="custom-control custom-radio">
-                        <input type="radio" id="blue" name="farbe" class="custom-control-input">
-                        <label class="custom-control-label" for="blue">Blue</label>
-                    </div>
-                </div>
-
-                <div role="tabpanel" class="tab-pane fade" id="connection">Connection</div>
-
             </div>
-        </div>
-
-     
     </div>
+  
    
-   
-   
-   
-   
+   <!--CREATE ENTITY-->
    <div id="createEntityMenu" style="float: right; margin-right: 60px;">
         <span style="font-size:30px;cursor:pointer; position: absolute" onclick="openNav()" >&#9776;</span>
    </div>
@@ -134,10 +132,10 @@
     <div id="mySidenav" class="sidenav">
 		<div class="container create-entity">
 		  <div class="row">
-			<div class="col-xs left">
+			<div class="col-10 left">
 				Create entity
 			</div>
-			<div class="col-xs right">
+			<div class="col-2 right">
 				<button class="closebtn" onclick="closeNav()">&times;</button>
 			</div>
 		  </div>
@@ -180,57 +178,43 @@
         </div>
 	</div>   
 
-    <div id="main">
-        <div id="phaser"> 
-		<span id="x"></span> 
-		<span id="y"></span> 
-		</div>
+      <!--GAME-->
+      <div id="phaser">  </div>
        
-    </div>
+    
 
     <script>
-        // settings menu aufmachen
-        
+        var entity = null;
+        var changed = [];
+
         function openSettings(event) {
-			
-			closeNav();
+            closeNav();
             document.getElementById("myEntitySettings").style.width = "256px";
-			document.getElementById("createEntityMenu").style.marginRight = "306px";
-            var entity = event.detail;                  // die aufgerufene Entität
+            document.getElementById("createEntityMenu").style.marginRight = "306px";
+            // falls Eintity bereits ausgewählt, braucht amn nichts zu updaten
+                     
+			entity = event.detail;                  // die aufgerufene Entität
+            console.log(entity);
 
-            drawComponents(entity.components);
-            onCreate(entity.components);
+            drawMotors(entity.components);
+            drawSliders(entity.components);
 
-            /*
-            // Versuch die Taste für Hinzufügen eines Motoren draggable zu machen
-            let createMotorBtn = document.getElementById("drag-source");
-            createMotorBtn.addEventListener("dragstart", (entity) => {
-                console.log("start", entity);
-            });
+            document.addEventListener("entitySelected", switchEntity);
 
-            let obj = document.getElementById("motor-container");
-            obj.addEventListener("dragover", (e) => {
-                e.preventDefault();
-                console.log("over");
-            });
-
-            obj.addEventListener("drop", () => {
-                console.log("end");
-                // TODO addComponent?
-            });*/
-
-            document.addEventListener("entitySelected", switchEntity);            
         }
 
         function switchEntity(event) {
+            if (entity && event.detail.id == entity.id) {
+                return
+            }
             closeSettings();
-            console.log("switch", event);
+            console.log("switch", entity);
             openSettings(event);
         }
               
         document.addEventListener("entitySelected", openSettings);
 
-        function onCreate(components) {
+        function drawSliders(components) {
             var slider = `<div class="d-flex justify-content-center my-8">
                              <span class="font-weight-bold indigo-text mr-2 mt-1">0</span>
                              <form class="range-field w-25">
@@ -238,54 +222,149 @@
                              </form>
                              <span class="font-weight-bold indigo-text ml-2 mt-1">100</span>
                          </div>`;
-            var currentSpeed = document.getElementById("currentSpeed");
+           
             var maxSpeed = document.getElementById("maxSpeed");
             var minSpeed = document.getElementById("minSpeed");
             var sliders = [];
             components.forEach(component => {
                 if (component.name == "Motor") {
                     sliders.push(slider);
-                    console.log(component);
                 }
             });
             
-            currentSpeed.innerHTML = sliders;
+           
             maxSpeed.innerHTML = sliders;
             minSpeed.innerHTML = sliders;
         }
 
 
-        function drawComponents(components) {
-            var canvas = document.getElementById("motorCanvas");
-            canvas.style.border = "1px dashed";
-            var startPoint = { "x": canvas.width / 2, "y": canvas.height / 2 };
+        function drawMotors(components) {
+            var motors = [];
+            var canvas = document.getElementById("motorCanvas"),
+                context = canvas.getContext("2d"),
+                width = canvas.width = components[1].size.value.width +10,
+                height = canvas.height = components[1].size.value.height +10,
+                startPoint = { "x": canvas.width / 2, "y": canvas.height / 2 },
+                color = ["#00ffff", "#00ff00", "#ff00ff", "#cecece"],
+                offset = {},
+                isDragging = false,
+                dragHandle = null;
+            var i = 0;
 
             components.forEach(component => {
-                console.log("name", component.name);
                 if (component.name == "Motor") {
-                    var ctx = canvas.getContext('2d');
-                    console.log("component", component.position.value);
-                    var test = ctx.beginPath();
-                    ctx.arc(startPoint.x + component.position.value.x, startPoint.y + component.position.value.y, 5, 0, 2 * Math.PI);
-                    ctx.stroke();
-                    console.log("context", test);
+                  let motor = {
+                    x: startPoint.x + component.position.value.x,
+                    y: startPoint.y + component.position.value.y,
+                    radius: 5,
+                    id: component.id,
+                    color: color[i],
+                    name: "Motor"
+                    };
+                  i++;
+                  motors.push(motor);
                 }
             });
 
-            canvas.ondragstart = closeNav;
+            draw();
+
+            function draw() {
+              context.clearRect(0, 0, width, height);
+              context.strokeRect(5, 5, width-10, height-10);
+
+              for (var i = 0; i < motors.length; i += 1) {
+                context.fillStyle = color[i];
+                let motor = motors[i];
+                if (isDragging && motor === dragHandle) {
+                  context.shadowColor = "black";
+                  context.shadowOffsetX = 4;
+                  context.shadowOffsetY = 4;
+                  context.shadowBlur = 8;
+                  }
+                  
+
+                context.beginPath();
+                context.arc(motor.x, motor.y, motor.radius, 0, Math.PI * 2, false);
+                context.fill();
+                context.stroke();
+
+                context.shadowColor = null;
+                context.shadowOffsetX = null;
+                context.shadowOffsetY = null;
+                context.shadowBlur = null;
+                }
+                console.log("draw", motors);
+
+            }
+
+            canvas.addEventListener("mousedown", function (event) {
+              motors.forEach(function (motor) {
+                if (circlePointCollision(event.offsetX, event.offsetY, motor)) {
+                  isDragging = true;
+                  canvas.addEventListener("mousemove", onMouseMove);
+                  canvas.addEventListener("mouseup", onMouseUp);
+                  dragHandle = motor;
+                  offset.x = event.clientX - motor.x;
+                  offset.y = event.clientY - motor.y;
+                    console.log("down", event.clientX);
+                    draw();
+                  
+                }
+              });
+
+            });
+
+            function onMouseMove(event) {
+              dragHandle.x = event.clientX - offset.x;
+              dragHandle.y = event.clientY - offset.y;
+                console.log("move", dragHandle.x);
+                draw();
+
+            }
+
+            function onMouseUp(event) {
+              canvas.removeEventListener("mousemove", onMouseMove);
+              canvas.removeEventListener("mouseup", onMouseUp);
+                isDragging = false;
+                console.log("up", motors[0].x , startPoint.x , dragHandle.x);
+                entity.components[3].setPosition(dragHandle.x - startPoint.x, dragHandle.y - startPoint.y );
+                console.log("test_set");
+                draw();
+              
+            }
+
             
-            document.getElementById("motor-container").appendChild(canvas);
+
+            function distanceXY(x0, y0, x1, y1) {
+              var dx = x1 - x0,
+                  dy = y1 - y0;
+              return Math.sqrt(dx * dx + dy * dy);
+            }
+
+            function circlePointCollision(x, y, circle) {
+              return distanceXY(x, y, circle.x, circle.y) < circle.radius;
+            }
+
+            
+            
+
+            //canvas.ondragstart = closeNav;
+            
         }
+
+        
+
+
+
+        
+
 
 
 
         function closeSettings() {
-            console.log("closeNav");
             document.getElementById("myEntitySettings").style.width = "0";
 			document.getElementById("createEntityMenu").style.marginRight = "60px";
-            var canvas = document.getElementById("motorCanvas");
-            var ctx = canvas.getContext("2d");
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+           
         }     
 
 		function openNav() {
@@ -319,9 +398,24 @@
 		init();
 
 
+
+
+        // funktioniert nicht in index.ts
+        $('#addMotor').draggable({
+            start: function () {
+                console.log("start");
+            },
+            drag: function () {
+                console.log("drag");
+            },
+            stop: function () {
+                console.log("stop");
+            }
+        });
+
     </script>
 
 
-  </body>
+</body>
 </html>
 
