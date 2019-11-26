@@ -1,3 +1,5 @@
+import $ from "jquery";
+import 'jquery-ui-dist/jquery-ui';
 import Phaser from 'phaser';
 import MainScene from './scenes/MainScene';
 import MainInterfaceScene from './scenes/MainInterfaceScene';
@@ -46,7 +48,7 @@ console.log(mytestgame);
 
 //create the callback function
 
-document.getElementById('testbutton').onclick = function() {
+/*document.getElementById('testbutton').onclick = function() {
   mytestgame.scene.scenes[1].createBarrier();
 };
 document.getElementById('blank').onclick = function() {
@@ -70,7 +72,7 @@ document.getElementById('prefab3b').onclick = function() {
 };
 document.getElementById('prefab3b').onclick = function() {
   mytestgame.scene.scenes[1].createPrefab3b();
-};
+};*/
 
 
 
@@ -79,18 +81,31 @@ document.getElementById('motorCanvas').onchange = function () {
 };  
 
 
+//document.getElementById("blank").addEventListener("dragstart", () => {});
+//let obj = document.getElementById("phaser");
+//obj.addEventListener("dragover", (e) => {e.preventDefault();});
+//obj.addEventListener("drop", (e) => {mytestgame.scene.scenes[1].createBlank(e.clientX, e.clientY);});
 
+$('.draggable').draggable({
+			helper: "clone",
+			cursor: 'move',
+            cancel : '.no-drag',
+            start: function () {
+                console.log("start");
+            },
+            drag: function () {
+                console.log("drag");
+            },
+            stop: function () {
+                console.log("stop");
 
-document.getElementById("prefab2a").onclick = function () { mytestgame.scene.scenes[1].createPrefab2a() }
-document.getElementById("prefab2b").onclick = function () { mytestgame.scene.scenes[1].createPrefab2b() }
-document.getElementById("prefab3a").onclick = function () { mytestgame.scene.scenes[1].createPrefab3a() }
-document.getElementById("prefab3b").onclick = function () { mytestgame.scene.scenes[1].createPrefab3b() }
-document.getElementById("prefab3b").onclick = function () { mytestgame.scene.scenes[1].createPrefab3b() }
+            }
+});
+$("#phaser").droppable({
+	drop: function (event, ui) {
+            mytestgame.scene.scenes[1].createBlank(event.clientX, event.clientY);
+    }
+});
 
-
-document.getElementById("blank").addEventListener("dragstart", () => {});
-let obj = document.getElementById("phaser");
-obj.addEventListener("dragover", (e) => {e.preventDefault();});
-obj.addEventListener("drop", (e) => {mytestgame.scene.scenes[1].createBlank(e.clientX, e.clientY);});
 
 
