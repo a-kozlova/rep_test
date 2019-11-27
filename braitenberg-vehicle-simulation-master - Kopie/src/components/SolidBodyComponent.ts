@@ -16,7 +16,7 @@ export default class SolidBodyComponent extends Component {
 
   public size: Attribute<Dimensions, SizeInput>;
 
-  public shape: Attribute<BodyShape, SelectInput<BodyShape>>;
+  public shape: Attribute<BodyShape>;
 
   public isStatic: Attribute<boolean, Checkbox>;
 
@@ -36,8 +36,7 @@ export default class SolidBodyComponent extends Component {
       );
     }
     this.shape = new Attribute(
-      data.shape || BodyShape.RECTANGLE,
-      SelectInput.create<BodyShape, SelectInput<BodyShape>>({ label: 'Form', options: BodyShape }),
+      data.shape || BodyShape.RECTANGLE
     );
     this.isStatic = new Attribute(data.isStatic || false, Checkbox.create({ label: 'Statisch' }));
   }
@@ -45,14 +44,16 @@ export default class SolidBodyComponent extends Component {
 	console.log('set shape' + shape);
 	switch (shape) {
 		case 'circle': {
-			this.shape = BodyShape.CIRCLE;
+			this.shape.value = BodyShape.CIRCLE;
 			break;
 		}
 		case 'rectangle': {
-		this.shape = BodyShape.RECTANGLE;
-		break;
+			this.shape.value = BodyShape.RECTANGLE;
+			break;
 		}
 	}
+	
+	console.log(this.shape);
 	
 	}
 }

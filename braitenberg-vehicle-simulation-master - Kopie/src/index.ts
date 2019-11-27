@@ -1,4 +1,4 @@
-import $ from "jquery";
+﻿import $ from "jquery";
 import 'jquery-ui-dist/jquery-ui';
 import Phaser from 'phaser';
 import MainScene from './scenes/MainScene';
@@ -78,12 +78,20 @@ $('input[name="farbe"]:radio').change(function () {
         alert($("input[name='farbe']:checked").val());
     });
 $('input[name="form"]:radio').change(function () {
+		entity.components.forEach(component => {
+			if (component.name == "Koerper") {
+				component.setShape($("input[name='form']:checked").val());          
+			}
+		});
 		console.log(entity);
-        alert($("input[name='form']:checked").val());
+		draw();
     });
 $('input[name="type"]:radio').change(function () {
         alert($("input[name='type']:checked").val());
     });
+
+
+
 		
 
 
