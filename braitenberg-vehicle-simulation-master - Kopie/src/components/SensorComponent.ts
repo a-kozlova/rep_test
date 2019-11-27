@@ -37,4 +37,11 @@ export default class SensorComponent extends Component {
     );
     this.activation = new Attribute(0 as number, NumberInput.create({ label: 'Grad der Aktivierung', toFixed: 4 }));
   }
+
+    // Für interaktion mit html
+    public setPosition(newX: number, newY: number) {
+        //ubrat!!!!!!!!!!!!!!!!
+        console.log("set vector in component", newX, newY);
+        this.position.set({ x: newX, y: newY });
+    }
 }

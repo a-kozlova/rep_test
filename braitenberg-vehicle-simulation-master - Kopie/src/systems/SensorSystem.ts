@@ -141,6 +141,7 @@ export default class SensorSystem extends System {
       const context = texture.getContext();
       const angleValues = new Float32Array(width * height);
 
+      // zeichnet die Sensoren auf dem Canvas
       for (let y = 0; y < height; y += 1) {
         for (let x = 0; x < width; x += 1) {
           const v = f((x - halfWidth) * CORRELATION_SCALE, (y - halfHeight) * CORRELATION_SCALE, angle);

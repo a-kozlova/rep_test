@@ -67,8 +67,17 @@
 
                     <div role="tabpanel" class="tab-pane fade" id="sensor">
                         <h4>Position</h4>
+                        <div>
+                            <div data-role="drag-drop-container" class="col-8" style="border: 1px green dashed">
+                                <canvas id="sensorCanvas"> </canvas>
+                            </div>
+                            <div data-role="drag-drop-container" class="col-4 ui-widget ui-widget-content">
+                                <div id="addSensor" draggable="true">+</div>
+                            </div>
+                        </div>
                         <h4>Reichweite</h4>
                         <h4>Winkel</h4>
+                        
                     </div>
 
                     <div role="tabpanel" class="tab-pane fade" id="emission">
@@ -181,13 +190,9 @@
 	</div>   
 
       <!--GAME-->
-      <div id="phaser">
-	  </div>
+      <div id="phaser">  </div>
        
-    
-
-
-
+    <!--GUI interaktiv-->
     <script src="index.js"> </script>
 
 
