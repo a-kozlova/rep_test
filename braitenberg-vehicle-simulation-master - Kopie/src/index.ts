@@ -83,8 +83,6 @@ $('input[name="form"]:radio').change(function () {
 				component.setShape($("input[name='form']:checked").val());          
 			}
 		});
-		console.log(entity);
-		draw();
     });
 $('input[name="type"]:radio').change(function () {
         alert($("input[name='type']:checked").val());
