@@ -31,4 +31,19 @@ export default class SourceComponent extends Component {
       SelectInput.create<EmissionType, SelectInput<EmissionType>>({ label: 'Charakteristik', options: EmissionType }),
     );
   }
+
+   public setSubstanceType(substance){
+	switch (substance) {
+		case 'source': {
+			this.substance.set(SubstanceType.LIGHT);
+			break;
+		}
+		case 'barrier': {
+			this.substance.set(SubstanceType.BARRIER);
+			break;
+		}
+	}
+	
+	
+	}
 }

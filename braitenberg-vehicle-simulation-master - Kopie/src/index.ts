@@ -84,8 +84,14 @@ $('input[name="form"]:radio').change(function () {
 			}
 		});
     });
-$('input[name="type"]:radio').change(function () {
-        alert($("input[name='type']:checked").val());
+$('input[name="substance"]:radio').change(function () {
+		entity.components.forEach(component => {
+			if (component.name == "Quelle") {
+				component.setSubstanceType($("input[name='substance']:checked").val());
+			} 
+		});
+
+		console.log(entity);
     });
 
 
