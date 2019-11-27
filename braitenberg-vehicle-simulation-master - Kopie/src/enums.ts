@@ -4,7 +4,7 @@ export enum BodyShape {
 }
 
 export enum ComponentType {
-  SOLID_BODY = 'Körper',
+  SOLID_BODY = 'Koerper',
   SENSOR = 'Sensor',
   RENDER = 'Rendering',
   MOTOR = 'Motor',

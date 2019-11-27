@@ -245,4 +245,5 @@ function drawSliders(components) {
                 console.log("stop");
             }
         });
-		
+
+

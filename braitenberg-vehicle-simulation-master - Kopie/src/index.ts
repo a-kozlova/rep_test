@@ -1,4 +1,4 @@
-import $ from "jquery";
+﻿import $ from "jquery";
 import 'jquery-ui-dist/jquery-ui';
 import Phaser from 'phaser';
 import MainScene from './scenes/MainScene';
@@ -52,30 +52,45 @@ document.getElementById('motorCanvas').onchange = function () {
 
 $(function () {
 $('.draggable').draggable({
-			helper: "clone",
-			cursor: 'move',
-            cancel : '.no-drag',
-            start: function (ui) {
-                console.log("start");
-				$(ui.item).show()
-            },
-            drag: function (ui) {
-                console.log("drag");
-				$(ui.item).show()
-            },
-            stop: function () {
-                console.log("stop");
-
-            }
+	appendTo: 'body',
+	helper: "clone",
+	cursor: 'move',
+    cancel : '.no-drag'
 });
 $("#phaser").droppable({
+	over: function(ui) {
+		$(ui.draggable).show()},
 	drop: function (event, ui) {
-			const droppedItemID = ui.draggable.attr("id");
-			console.log(droppedItemID);
-            mytestgame.scene.scenes[1].createObject(event.clientX, event.clientY, droppedItemID);
+		mytestgame.scene.scenes[1].createObject(event.clientX, event.clientY, ui.draggable.attr("id"));
     }
 });
 
 }); 
+
+$('.prefab-btn').click(function(){
+	mytestgame.scene.scenes[1].createObject(300, 200, $(this).attr("id"));
+});
+
+
+//Checkbox Inputs
+
+$('input[name="farbe"]:radio').change(function () {
+        alert($("input[name='farbe']:checked").val());
+    });
+$('input[name="form"]:radio').change(function () {
+		entity.components.forEach(component => {
+			if (component.name == "Koerper") {
+				component.setShape($("input[name='form']:checked").val());          
+			}
+		});
+    });
+$('input[name="type"]:radio').change(function () {
+        alert($("input[name='type']:checked").val());
+    });
+
+
+
+		
+
 
 
