@@ -1,72 +1,80 @@
-﻿var entity = null;
+﻿
+var entity = null;
 
+document.addEventListener("entitySelected", openSettings);
 
 function openSettings(event) {
+    console.log("open");
     closeNav();
     document.getElementById("myEntitySettings").style.width = "256px";
     document.getElementById("createEntityMenu").style.marginRight = "306px";
-    // falls Eintity bereits ausgewählt, braucht amn nichts zu updaten
 
     entity = event.detail;                  // die aufgerufene Entität
     console.log(entity);
 
-    drawMotors(entity.components);
-    drawSliders(entity.components);
+    var motorComponents = entity.components.filter(component => component.name == "Motor");
+    var sensorComponents = entity.components.filter(component => component.name == "Sensor");
+    var renderComponents = entity.components.filter(component => component.name == "Rendering");
+    var solidBodyComponents = entity.components.filter(component => component.name == "Körper");
+    var sourceComponents = entity.components.filter(component => component.name == "Quelle");
+    var transformableComponents = entity.components.filter(component => component.name == "Transform");
+    var connectionComponents = entity.components.filter(component => component.name == "Verbindung");
+    
 
-    document.addEventListener("entitySelected", switchEntity);
+    drawMotors(motorComponents, "Motor");
+    drawSliders(motorComponents);
+
+    drawMotors(sensorComponents, "Sensor");
 
 }
 
-function switchEntity(event) {
-    if (entity && event.detail.id == entity.id) {
-        return
-    }
-    closeSettings();
-    console.log("switch", entity);
-    openSettings(event);
-}
-
-document.addEventListener("entitySelected", openSettings);
 
 
-
-function drawMotors(components) {
+// TODO add size from solidBody?
+function drawMotors(components, cName) {
     var motors = [];
-    var cmps = []
-    var canvas = document.getElementById("motorCanvas"),
-        context = canvas.getContext("2d"),
-        width = canvas.width = components[1].size.value.width + 10,
-        height = canvas.height = components[1].size.value.height + 10,
+
+    var canvas
+    if (cName == "Motor") {
+        canvas = document.getElementById("motorCanvas");
+    }
+    if (cName == "Sensor") {
+        canvas = document.getElementById("sensorCanvas");
+    }
+       
+    var context = canvas.getContext("2d"),
+        // TODO hier size einsetzen
+        width = canvas.width = 100 + 10,
+        height = canvas.height = 150 + 10,
         startPoint = { "x": canvas.width / 2, "y": canvas.height / 2 },
         color = ["#00ffff", "#00ff00", "#ff00ff", "#cecece"],
         offset = {},
         isDragging = false,
         dragHandle = null;
-    var i = 0;
+    let i = 0;
 
     components.forEach(component => {
-        if (component.name == "Motor") {
-            let motor = {
-                x: startPoint.x + component.position.value.x,
-                y: startPoint.y + component.position.value.y,
-                radius: 5,
-                id: component.id,
-                color: color[i],
-                name: "Motor"
-            };
-            i++;
-            motors.push(motor);
-            cmps.push(component);
-        }
+        let motor = {
+            x: startPoint.x - component.position.value.x,
+            y: startPoint.y - component.position.value.y,
+            radius: 5,
+            id: component.id,
+            color: color[i],
+            name: cName
+        };
+        i++;
+        motors.push(motor);        
     });
+
+    console.log(motors);
 
     draw();
 
     function draw() {
         context.clearRect(0, 0, width, height);
         context.strokeRect(5, 5, width - 10, height - 10);
-
-        for (var i = 0; i < motors.length; i += 1) {
+        
+        for (let i = 0; i < motors.length; i += 1) {
             context.fillStyle = color[i];
             let motor = motors[i];
             if (isDragging && motor === dragHandle) {
@@ -77,18 +85,41 @@ function drawMotors(components) {
             }
 
 
-            context.beginPath();
-            context.arc(motor.x, motor.y, motor.radius, 0, Math.PI * 2, false);
-            context.fill();
-            context.stroke();
+
+            if (motor.name == "Motor") {
+                context.beginPath();
+                context.arc(motor.x, motor.y, motor.radius, 0, Math.PI * 2, false);
+                context.fill();
+                context.stroke();
+                console.log("if", motor.name);
+
+            }
+            if (motor.name == "Sensor") {
+                context.beginPath();
+                context.moveTo(motor.x - 5, motor.y - 5);
+                context.lineTo(motor.x, motor.y);
+                context.lineTo(motor.x + 5, motor.y - 5);
+                context.closePath();
+                context.fill();
+                context.stroke();
+                console.log("if", motor.name);
+            }
 
             context.shadowColor = null;
             context.shadowOffsetX = null;
             context.shadowOffsetY = null;
             context.shadowBlur = null;
-        }
-        //console.log("draw", motors);
 
+            // Richtung anzeigen
+            context.beginPath();
+            context.moveTo(startPoint.x, 10);
+            context.lineTo(startPoint.x - 10, 17);
+            context.lineTo(startPoint.x + 10, 17);
+            context.closePath();
+            context.fillStyle = "#cccccc";
+            context.fill();
+            
+        }
     }
 
     canvas.addEventListener("mousedown", function (event) {
@@ -120,9 +151,10 @@ function drawMotors(components) {
         canvas.removeEventListener("mouseup", onMouseUp);
         isDragging = false;
         //console.log("up", motors[0].x , startPoint.x , dragHandle.x);
-        cmps.forEach(c => {
+        components.forEach(c => {
             if (c.id == dragHandle.id) {
-                c.setPosition(dragHandle.x - startPoint.x, dragHandle.y - startPoint.y);
+                //console.log("mouseup, cmps id vs draghandle id ", c.id, dragHandle.id);
+                c.setPosition( startPoint.x - dragHandle.x, startPoint.y - dragHandle.y);
             }
         });
         //console.log("test_set");
@@ -141,13 +173,14 @@ function drawMotors(components) {
     function circlePointCollision(x, y, circle) {
         return distanceXY(x, y, circle.x, circle.y) < circle.radius;
     }
-
-
-
-
-    //canvas.ondragstart = closeNav;
-
 }
+
+
+
+
+
+
+
 
 
 

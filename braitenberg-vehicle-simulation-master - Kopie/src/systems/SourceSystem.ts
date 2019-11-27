@@ -124,14 +124,15 @@ export default class SourceSystem extends System {
           transform.angle.get(),
         );
 
+    // zeichnet die Ausstrahlung auf dem Canvas
     for (let y = 0; y < height; y += 1) {
       for (let x = 0; x < width; x += 1) {
         let v = f(x * CORRELATION_SCALE, y * CORRELATION_SCALE);
         values[y * width + x] = v;
-
+        
         if (source.substance.get() === SubstanceType.BARRIER) {
           v = Math.round(v * 255);
-          context.fillStyle = `rgb(${v}, ${0}, ${0})`;
+          context.fillStyle = `rgb(${0}, ${0}, ${v})`;
           context.fillRect(x, y, 1, 1);
         } else if (source.substance.get() === SubstanceType.LIGHT) {
           v = Math.round(v * 255);
