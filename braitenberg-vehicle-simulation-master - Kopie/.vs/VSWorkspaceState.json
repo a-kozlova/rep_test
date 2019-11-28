@@ -3,9 +3,10 @@
     "",
     "\\src",
     "\\src\\components",
+    "\\src\\dynamic_input",
     "\\src\\systems",
     "\\webpack"
   ],
-  "SelectedNode": "\\src\\components\\Component.ts",
+  "SelectedNode": "\\src\\components\\SensorComponent.ts",
   "PreviewInSolutionExplorer": false
 }
