@@ -28,7 +28,6 @@ function openSettings(event) {
     drawOnCanvas(sensorComponents, "Sensor");
 
     numberInput(sensorComponents);
-    //components[6].angle.value
 
 }
 
@@ -36,12 +35,26 @@ function openSettings(event) {
 function numberInput(components) {
     let i = 0;
     components.forEach(function (component) {
-        $("#sensorRange").append('<input id = "' + component.id + '" style = "background: '+ color[i] + '"placeholder = "' + component.range.value + '"> </input>');
+        $("#sensorRange").append(
+            '<input id = "range' + component.id + '" style = "background: ' + color[i] +
+            '"placeholder = "' + component.range.value + '"> </input>');
+        $("#sensorAngle").append(
+            '<input id = "angle' + component.id + '" style = "background: ' + color[i] +
+            '"placeholder = "' + component.angle.value + '"> </input>');
+
+        //ne rabotaet
+        $("#sensorReaction").append('<input type="checkbox" data-toggle="toggle" data-on="Light" data-off="Barrier" data-onstyle="success" data-offstyle="danger">');
+
         i++;
-        $('#' + component.id).on('input', function () {
+        $('#range' + component.id).on('input', function () {
             let newValue = $(this).val(); // get the current value of the input field.
             console.log(newValue);
             component.setRange(newValue);
+        });
+        $('#angle' + component.id).on('input', function () {
+            let newValue = $(this).val(); // get the current value of the input field.
+            console.log(newValue);
+            component.setAngle(newValue);
         });
         
     });
@@ -127,8 +140,8 @@ function drawOnCanvas(components, cName) {
             // Richtung anzeigen
             context.beginPath();
             context.moveTo(startPoint.x, 20);
-            context.lineTo(startPoint.x - 20, 25);
-            context.lineTo(startPoint.x + 20, 25);
+            context.lineTo(startPoint.x - 10, 25);
+            context.lineTo(startPoint.x + 10, 25);
             context.closePath();
             context.fillStyle = "#cccccc";
             context.fill();
