@@ -17,10 +17,6 @@
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
     <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-    <!--LIGHT-BARRIER  test-->
-    <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
-
 
     <style>
         html,
@@ -35,118 +31,120 @@
     
     <!--SETTINGS-->
     <div id="myEntitySettings" class="sidenav">
-        <!--HEAD-->
+   
 		<div class="container">
-		    <div class="row">
-			    <div class="col-10 left">
-				    Settings
-			    </div>
-			    <div class="col-2 right">
-				    <button class="closebtn" onclick="closeSettings()">&times;</button>
-			    </div>
-		    </div>
+		  <div class="row">
+			<div class="col-10 left">
+				Settings
+			</div>
+			<div class="col-2 right">
+				<button class="closebtn" onclick="closeSettings()">&times;</button>
+			</div>
+		  </div>
 		</div>       
-		<div id="settingsMenu">
-            <!--TABS-->
-            <div class="nav nav-tabs nav-fil" id="myTabs" role="tablist">
-                <a class="nav-item nav-link active col-4" data-toggle="tab" href="#motor" role="tab" aria-controls="nav-home" aria-selected="true">Motor</a>
-                <a class="nav-item nav-link col-4" data-toggle="tab" href="#sensor" role="tab" aria-controls="nav-home" aria-selected="false">Sensor</a>
-                <a class="nav-item nav-link col-4" data-toggle="tab" href="#body" role="tab" aria-controls="nav-home" aria-selected="false">Body</a>
-                <a class="nav-item nav-link col-6" data-toggle="tab" href="#emission" role="tab" aria-controls="nav-home" aria-selected="false">Emission</a>
-                <a class="nav-item nav-link col-6" data-toggle="tab" href="#connection" role="tab" aria-controls="nav-home" aria-selected="false">Connection</a>
-            </div>
-            <!--CONTENT-->
-            <div class="tab-content" id="nav-tabContent">
-                <!--MOTOR-->
-                <div role="tabpanel" class="tab-pane active" id="motor">
-                    <h4>Position</h4>
-                    <div id="drag-drop-basic">
-                        <div id="motorContainer" data-role="drag-drop-container" class="col-8" style="border: 1px green dashed">
-                            <canvas id="motorCanvas"> </canvas>
-                        </div>
-                        <div id="addDeleteMotor" data-role="drag-drop-container" class="col-4 ui-widget ui-widget-content">
-                            <div id="addMotor" draggable="true">&#10010;</div>
-                            <div id="deleteMotor" draggable="true">&#10006;</div>
-                        </div>
-                    </div>
-                    <h4>Min Speed</h4>
-                    <div id="minSpeed"> </div>
-                    <h4>Max Speed</h4>
-                    <div id="maxSpeed"> </div>
+		    <div id="settingsMenu">
+                <div class="nav nav-tabs nav-fil" id="myTabs" role="tablist">
+                    <a class="nav-item nav-link active col-4" data-toggle="tab" href="#motor" role="tab" aria-controls="nav-home" aria-selected="true">Motor</a>
+                    <a class="nav-item nav-link col-4" data-toggle="tab" href="#sensor" role="tab" aria-controls="nav-home" aria-selected="false">Sensor</a>
+                    <a class="nav-item nav-link col-4" data-toggle="tab" href="#body" role="tab" aria-controls="nav-home" aria-selected="false">Body</a>
+                    <a class="nav-item nav-link col-6" data-toggle="tab" href="#emission" role="tab" aria-controls="nav-home" aria-selected="false">Emission</a>
+                    <a class="nav-item nav-link col-6" data-toggle="tab" href="#connection" role="tab" aria-controls="nav-home" aria-selected="false">Connection</a>
                 </div>
-                <!--SENSOR-->
-                <div role="tabpanel" class="tab-pane fade" id="sensor">
-                    <h4>Position</h4>
-                    <div>
-                        <div data-role="drag-drop-container" class="col-8" style="border: 1px green dashed">
-                            <canvas id="sensorCanvas"> </canvas>
+
+                <div class="tab-content" id="nav-tabContent">
+                    <div role="tabpanel" class="tab-pane active" id="motor">
+                        <h4>Position</h4>
+                        <div id="drag-drop-basic">
+                            <div id="motorContainer" data-role="drag-drop-container" class="col-8" style="border: 1px green dashed">
+                                <canvas id="motorCanvas"> </canvas>
+                            </div>
+                            <div id="addRemoveMotor" data-role="drag-drop-container" class="col-4 ui-widget ui-widget-content">
+                                <div id="addMotor" draggable="true">+</div>
+                            </div>
                         </div>
-                        <div data-role="drag-drop-container" class="col-4 ui-widget ui-widget-content">
-                            <div id="addSensor" draggable="true">+</div>
+                        <h4>Min Speed</h4>
+                            <div id="minSpeed"> </div>
+                        <h4>Max Speed</h4>
+                            <div id="maxSpeed"> </div>
+                    </div>
+
+                    <div role="tabpanel" class="tab-pane fade" id="sensor">
+                        <h4>Position</h4>
+                        <div>
+                            <div data-role="drag-drop-container" class="col-8" style="border: 1px green dashed">
+                                <canvas id="sensorCanvas"> </canvas>
+                            </div>
+                            <div data-role="drag-drop-container" class="col-4 ui-widget ui-widget-content">
+                                <div id="addSensor" draggable="true">+</div>
+                            </div>
                         </div>
+                        <h4>Reichweite</h4>
+                        <h4>Winkel</h4>
+                        
                     </div>
-                    <div class="row">
-                        <h4 class="col-4">Range</h4>
-                        <h4 class="col-4"> Angle</h4>
-                        <h4 class="col-4">Reaction</h4>
-                    </div>
-                    <div class="row" id="sensorRow">
-                        <form id="sensorRange" class="col-4"> </form>
-                        <form id="sensorAngle" class="col-4"> </form>
-                        <form id="sensorReaction" class="col-4"> </form>
-                    </div>
-                </div>
-                <!--EMISSION-->
-                <div role="tabpanel" class="tab-pane fade" id="emission">
-                    <h4>Type</h4>
-                    <div id="substance">
+
+                    <div role="tabpanel" class="tab-pane fade" id="emission">
+                        <h4>Type</h4>
+						<div id="substance">
                         <div class="custom-control">
                             <input type="radio" id="barrier" name="substance" class="custom-control-input" value="barrier">
                             <label class="custom-control-label" for="barrier">Barrier</label>
                         </div>
                         <div class="custom-control">
                             <input type="radio" id="sour" name="substance" class="custom-control-input" value="source">
-                            <label class="custom-control-label" for="sour">Source</label>
+                            <label class="custom-control-label" for="sour" >Source</label>
+                        </div>
+						</div>
+                    </div>
+
+                    <div role="tabpanel" class="tab-pane fade" id="body">
+
+					<div class="row">
+					<div class="col-6 left">
+						Fester Körper
+					</div>
+					<div class="col-6 right">
+						<div class="switch-btn switch-on"></div>
+					</div>
+					</div>
+					   <h4>Form</h4>
+						                      
+					   <div id="shape">
+                            <div class="custom-control">
+                                <input type="radio" id="rectangle" name="form" class="custom-control-input" value="rectangle">
+                                <label class="custom-control-label" for="rectangle" >Rectangle</label>
+                            </div>
+                            <div class="custom-control">
+                                <input type="radio" id="circle" name="form" class="custom-control-input"value="circle">
+                                <label class="custom-control-label" for="circle" >Circle</label>
+                            </div>
+                        </div>
+
+                        <h4>Breite</h4>
+                        <h4>Höhe</h4>
+                        <h4>Farbe</h4>
+                        <div class="custom-control custom-radio">
+                            <input type="radio" id="grey" name="farbe" class="custom-control-input" value="grey">
+                            <label class="custom-control-label" for="grey" >Grey</label>
+                        </div>
+                        <div class="custom-control custom-radio">
+                            <input type="radio" id="red" name="farbe" class="custom-control-input" value="red">
+                            <label class="custom-control-label" for="red" >Red</label>
+                        </div>
+                        <div class="custom-control custom-radio">
+                            <input type="radio" id="green" name="farbe" class="custom-control-input" value="green">
+                            <label class="custom-control-label" for="green" >Green</label>
+                        </div>
+                        <div class="custom-control custom-radio">
+                            <input type="radio" id="blue" name="farbe" class="custom-control-input" value="blue">
+                            <label class="custom-control-label" for="blue" >Blue</label>
                         </div>
                     </div>
+
+                    <div role="tabpanel" class="tab-pane fade" id="connection">Connection</div>
+
                 </div>
-                <!--BODY-->
-                <div role="tabpanel" class="tab-pane fade" id="body">
-                    <h4>Form</h4>
-                    <div id="shape">
-                        <div class="custom-control">
-                            <input type="radio" id="rectangle" name="form" class="custom-control-input" value="rectangle">
-                            <label class="custom-control-label" for="rectangle">Rectangle</label>
-                        </div>
-                        <div class="custom-control">
-                            <input type="radio" id="circle" name="form" class="custom-control-input" value="circle">
-                            <label class="custom-control-label" for="circle">Circle</label>
-                        </div>
-                    </div>
-                    <h4>Breite</h4>
-                    <h4>Höhe</h4>
-                    <h4>Farbe</h4>
-                    <div class="custom-control custom-radio">
-                        <input type="radio" id="grey" name="farbe" class="custom-control-input" value="grey">
-                        <label class="custom-control-label" for="grey">Grey</label>
-                    </div>
-                    <div class="custom-control custom-radio">
-                        <input type="radio" id="red" name="farbe" class="custom-control-input" value="red">
-                        <label class="custom-control-label" for="red">Red</label>
-                    </div>
-                    <div class="custom-control custom-radio">
-                        <input type="radio" id="green" name="farbe" class="custom-control-input" value="green">
-                        <label class="custom-control-label" for="green">Green</label>
-                    </div>
-                    <div class="custom-control custom-radio">
-                        <input type="radio" id="blue" name="farbe" class="custom-control-input" value="blue">
-                        <label class="custom-control-label" for="blue">Blue</label>
-                    </div>
-                </div>
-                <!--CONNECTION-->
-                <div role="tabpanel" class="tab-pane fade" id="connection">Connection</div>
             </div>
-        </div>
     </div>
   
    
@@ -205,8 +203,8 @@
         </div>
 	</div>   
 
-    <!--GAME-->
-    <div id="phaser">  </div>
+      <!--GAME-->
+      <div id="phaser">  </div>
        
     <!--GUI interaktiv-->
     <script src="index.js"> </script>

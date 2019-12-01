@@ -225,11 +225,6 @@ function drawOnCanvas(components, cName, size) {
 
 
 
-
-
-
-
-
 function drawSliders(components) {
     var slider = `<div class="d-flex justify-content-center my-8">
                              <span class="font-weight-bold indigo-text mr-2 mt-1">0</span>
@@ -252,12 +247,6 @@ function drawSliders(components) {
     maxSpeed.innerHTML = sliders;
     minSpeed.innerHTML = sliders;
 }
-
-
-
-
-
-        
 
 
 
@@ -294,4 +283,12 @@ function drawSliders(components) {
             }
         });
 
+$('.switch-btn').click(function(){
+    $(this).toggleClass('switch-on');
+    if ($(this).hasClass('switch-on')) {
+        $(this).trigger('on.switch');
+    } else {
+        $(this).trigger('off.switch');
+    }
+});
 
