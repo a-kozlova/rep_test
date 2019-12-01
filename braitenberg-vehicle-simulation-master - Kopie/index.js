@@ -1,10 +1,11 @@
 ﻿
 var entity = null;
+var color = ["#00ffff", "#00ff00", "#ff00ff", "#cecece"];
+
 
 document.addEventListener("entitySelected", openSettings);
 
 function openSettings(event) {
-    console.log("open");
     closeNav();
     document.getElementById("myEntitySettings").style.width = "256px";
     document.getElementById("createEntityMenu").style.marginRight = "306px";
@@ -21,17 +22,46 @@ function openSettings(event) {
     var connectionComponents = entity.components.filter(component => component.name == "Verbindung");
     
 
-    drawMotors(motorComponents, "Motor");
+    drawOnCanvas(motorComponents, "Motor");
     drawSliders(motorComponents);
 
-    drawMotors(sensorComponents, "Sensor");
+    drawOnCanvas(sensorComponents, "Sensor");
+
+    numberInput(sensorComponents);
 
 }
 
 
+function numberInput(components) {
+    let i = 0;
+    components.forEach(function (component) {
+        $("#sensorRange").append(
+            '<input id = "range' + component.id + '" style = "background: ' + color[i] +
+            '"placeholder = "' + component.range.value + '"> </input>');
+        $("#sensorAngle").append(
+            '<input id = "angle' + component.id + '" style = "background: ' + color[i] +
+            '"placeholder = "' + component.angle.value + '"> </input>');
+
+        //ne rabotaet
+        $("#sensorReaction").append('<input type="checkbox" data-toggle="toggle" data-on="Light" data-off="Barrier" data-onstyle="success" data-offstyle="danger">');
+
+        i++;
+        $('#range' + component.id).on('input', function () {
+            let newValue = $(this).val(); // get the current value of the input field.
+            console.log(newValue);
+            component.setRange(newValue);
+        });
+        $('#angle' + component.id).on('input', function () {
+            let newValue = $(this).val(); // get the current value of the input field.
+            console.log(newValue);
+            component.setAngle(newValue);
+        });
+        
+    });
+}
 
 // TODO add size from solidBody?
-function drawMotors(components, cName) {
+function drawOnCanvas(components, cName) {
     var motors = [];
 
     var canvas
@@ -44,10 +74,9 @@ function drawMotors(components, cName) {
        
     var context = canvas.getContext("2d"),
         // TODO hier size einsetzen
-        width = canvas.width = 100 + 10,
-        height = canvas.height = 150 + 10,
+        width = canvas.width = 100 + 20,
+        height = canvas.height = 150 + 20,
         startPoint = { "x": canvas.width / 2, "y": canvas.height / 2 },
-        color = ["#00ffff", "#00ff00", "#ff00ff", "#cecece"],
         offset = {},
         isDragging = false,
         dragHandle = null;
@@ -66,13 +95,13 @@ function drawMotors(components, cName) {
         motors.push(motor);        
     });
 
-    console.log(motors);
+    //console.log(motors);
 
     draw();
 
     function draw() {
         context.clearRect(0, 0, width, height);
-        context.strokeRect(5, 5, width - 10, height - 10);
+        context.strokeRect(10, 10, width - 20, height - 20);
         
         for (let i = 0; i < motors.length; i += 1) {
             context.fillStyle = color[i];
@@ -91,18 +120,16 @@ function drawMotors(components, cName) {
                 context.arc(motor.x, motor.y, motor.radius, 0, Math.PI * 2, false);
                 context.fill();
                 context.stroke();
-                console.log("if", motor.name);
 
             }
             if (motor.name == "Sensor") {
                 context.beginPath();
-                context.moveTo(motor.x - 5, motor.y - 5);
+                context.moveTo(motor.x - 10, motor.y - 10);
                 context.lineTo(motor.x, motor.y);
-                context.lineTo(motor.x + 5, motor.y - 5);
+                context.lineTo(motor.x + 10, motor.y - 10);
                 context.closePath();
                 context.fill();
                 context.stroke();
-                console.log("if", motor.name);
             }
 
             context.shadowColor = null;
@@ -112,9 +139,9 @@ function drawMotors(components, cName) {
 
             // Richtung anzeigen
             context.beginPath();
-            context.moveTo(startPoint.x, 10);
-            context.lineTo(startPoint.x - 10, 17);
-            context.lineTo(startPoint.x + 10, 17);
+            context.moveTo(startPoint.x, 20);
+            context.lineTo(startPoint.x - 10, 25);
+            context.lineTo(startPoint.x + 10, 25);
             context.closePath();
             context.fillStyle = "#cccccc";
             context.fill();

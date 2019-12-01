@@ -44,4 +44,12 @@ export default class SensorComponent extends Component {
         console.log("set vector in component", newX, newY);
         this.position.set({ x: newX, y: newY });
     }
+
+    public setRange(newValue: number) {
+        this.range.set(newValue);
+    }
+    public setAngle(newValue: number) {
+        this.angle.set(newValue);
+    }
+
 }

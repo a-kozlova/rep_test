@@ -29,6 +29,7 @@ export default class Attribute<T, S extends BaseInput<T>> implements Settable<T>
     return this.value;
   }
 
+  //4E DELAET SILENT???????????????????????????
   public set(value: T, silent: boolean = false): void {
     const oldValue = this.value;
 

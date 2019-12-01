@@ -46,10 +46,6 @@ var mytestgame = new Phaser.Game(config);
 //Have a look at all the members of mytestgame in the console
 console.log(mytestgame);
 
-document.getElementById('motorCanvas').onchange = function () {
-    console.log("motor change");
-};  
-
 $(function () {
 $('.draggable').draggable({
 	appendTo: 'body',
