@@ -37,12 +37,12 @@ function numberInput(components) {
     components.forEach(function (component) {
         $("#sensorRange").append(
             '<input id = "range' + component.id + '" style = "background: ' + color[i] +
-            '"placeholder = "' + component.range.value + '"> </input>');
+            '; margin-bottom:10px" placeholder = "' + component.range.value + '"> </input>');
         $("#sensorAngle").append(
             '<input id = "angle' + component.id + '" style = "background: ' + color[i] +
-            '"placeholder = "' + component.angle.value + '"> </input>');
+            '; margin-bottom:10px" placeholder = "' + component.angle.value + '"> </input>');
 
-        //ne rabotaet
+        //ne rabotaet podklu4it bootstrap toggle?
         $("#sensorReaction").append('<input type="checkbox" data-toggle="toggle" data-on="Light" data-off="Barrier" data-onstyle="success" data-offstyle="danger">');
 
         i++;
