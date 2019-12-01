@@ -46,13 +46,11 @@ export default class MainScene extends Phaser.Scene {
     this.matter.world.setBounds();
 
     //this.scene.add('editor', EditorScene, false);
-    this.scene.add('settings', SettingScene, false);
+    //this.scene.add('settings', SettingScene, false);
 
       EventBus.subscribe(EventType.ENTITY_SELECTED, (entity: Entity) => {
           var event = new CustomEvent("entitySelected", { detail: entity });
           document.dispatchEvent(event);
-          console.log("entity_selected");
-
         //this.scene.launch('SettingScene', entity);
     });
 
@@ -104,17 +102,24 @@ export default class MainScene extends Phaser.Scene {
         maxSpeed: 30,
         defaultSpeed: 1,
       }),
-    );
+      );
+      const motor3 = entity.addComponent(
+          new MotorComponent({
+              position: { x: 50, y: 50 },
+              maxSpeed: 30,
+              defaultSpeed: 1,
+          }),
+      );
     const sensor1 = entity.addComponent(
       new SensorComponent({
-        position: { x: -50, y: 75 },
+        position: { x: -50, y: 0 },
         range: 20,
         angle: 0.4,
       }),
     );
     const sensor2 = entity.addComponent(
       new SensorComponent({
-        position: { x: 50, y: 75 },
+        position: { x: 50, y: -75 },
         range: 20,
         angle: 0.4,
       }),
@@ -239,7 +244,7 @@ export default class MainScene extends Phaser.Scene {
       const files = importEl.files || [];
 
       if (files.length <= 0) {
-        swal('Es wurde keine korrete Datei ausgewählt.');
+        swal('Es wurde keine korrekte Datei ausgewählt.');
         return;
       }
       const fr = new FileReader();
@@ -563,6 +568,6 @@ public createObject (mouseX, mouseY, droppedItemID ) {
 		}
 
 	
-}
+    }
 }
 }
