@@ -7,6 +7,7 @@ import LoadingScene from './scenes/LoadingScene';
 import EntityManager from './EntityManager';
 import Entity from './Entity';
 import MotorComponent from './components/MotorComponent';
+import SourceComponent from './components/SourceComponent';
 
 import 'animate.css';
 import 'noty/lib/noty.css';
@@ -81,11 +82,17 @@ $('input[name="form"]:radio').change(function () {
 		});
     });
 $('input[name="substance"]:radio').change(function () {
-		entity.components.forEach(component => {
+		let hasSourceComponent = false;
+		entity.components.forEach(component => {			
 			if (component.name == "Quelle") {
 				component.setSubstanceType($("input[name='substance']:checked").val());
-			} 
+				hasSourceComponent = true;
+			} 			
 		});
+		if (!hasSourceComponent){
+				let source = new SourceComponent({range: 100,});
+				entity.addComponent(source);
+			}
 
 		console.log(entity);
     });
