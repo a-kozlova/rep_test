@@ -8,6 +8,7 @@ import EntityManager from './EntityManager';
 import Entity from './Entity';
 import MotorComponent from './components/MotorComponent';
 import SourceComponent from './components/SourceComponent';
+import SolidBodyComponent from './components/SolidBodyComponent';
 import { ComponentType } from './enums';
 
 import 'animate.css';
@@ -96,6 +97,38 @@ $('input[name="substance"]:radio').change(function () {
 		
 		console.log(entity);
     });
+
+
+//Fester Körper
+$('body').click(function(){
+	if (entity.hasComponents(ComponentType.SOLID_BODY)){
+		$('.switch-btn').addClass('switch-on');
+	}
+});
+
+$('.switch-btn').click(function(){
+	$(this).toggleClass('switch-on');
+    if ($(this).hasClass('switch-on')) {
+        $(this).trigger('on.switch');
+        console.log("включили");
+        if (!entity.hasComponents(ComponentType.SOLID_BODY)){
+			entity.addComponent(
+				new SolidBodyComponent({
+				  size: { width: 100, height: 150 },
+				}),
+			);
+			console.log(entity);
+		} 
+    } else {
+        $(this).trigger('off.switch');
+        console.log("выключили");
+		if (entity.hasComponents(ComponentType.SOLID_BODY)){
+			entity.removeComponent(entity.getComponent(ComponentType.SOLID_BODY));
+		} 
+		
+			console.log(entity);
+    }
+});
 
 
 
