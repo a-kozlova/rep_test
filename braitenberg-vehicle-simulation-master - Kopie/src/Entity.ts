@@ -60,7 +60,7 @@ export default class Entity {
     return undefined;
   }
 
-  // gibt die erste Komponentemit dem Übergebenen Component Typ zurück
+  // gibt die erste Komponente mit dem Übergebenen Component Typ zurück
   public getComponent<T extends Component>(name: ComponentType): T | undefined {
     return this.components.find(c => c.name === name) as T;
   }
