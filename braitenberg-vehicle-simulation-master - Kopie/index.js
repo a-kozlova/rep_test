@@ -27,12 +27,12 @@ function openSettings(event) {
 
     drawOnCanvas(sensorComponents, "Sensor", solidBodyComponents[0].size.value);
 
-    numberInput(sensorComponents);
+    sensorSettings(sensorComponents);
 
 }
 
 
-function numberInput(components) {
+function sensorSettings(components) {
     let i = 0;
     components.forEach(function (component) {
         $("#sensorRange").append(
@@ -76,8 +76,8 @@ function drawOnCanvas(components, cName, size) {
         height = canvas.height = 150 + 20,
         ratioX = ratioY = 1;
     if (size) {
-        ratioX = canvas.width / size.width;
-        ratioY = canvas.height / size.height;
+        ratioX = (width-20) / size.width;
+        ratioY = (height-20) / size.height;
     } 
        
     var context = canvas.getContext("2d"),

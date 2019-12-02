@@ -80,7 +80,7 @@ export default class MainScene extends Phaser.Scene {
     entity.addComponent(transform);
     entity.addComponent(
       new SolidBodyComponent({
-        size: { width: 200, height: 250 },
+        size: { width: 100, height: 150 },
       }),
     );
     entity.addComponent(
