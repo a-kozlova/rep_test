@@ -98,8 +98,16 @@ $('input[name="substance"]:radio').change(function () {
 		console.log(entity);
     });
 
+
+//Fester Körper
+$('body').click(function(){
+	if (entity.hasComponents(ComponentType.SOLID_BODY)){
+		$('.switch-btn').addClass('switch-on');
+	}
+});
+
 $('.switch-btn').click(function(){
-    $(this).toggleClass('switch-on');
+	$(this).toggleClass('switch-on');
     if ($(this).hasClass('switch-on')) {
         $(this).trigger('on.switch');
         console.log("включили");
