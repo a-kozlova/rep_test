@@ -284,14 +284,3 @@ function drawSliders(components) {
         });
 
 
-$('.switch-btn').click(function(){
-    $(this).toggleClass('switch-on');
-    if ($(this).hasClass('switch-on')) {
-        $(this).trigger('on.switch');
-        console.log("включили");
-    } else {
-        $(this).trigger('off.switch');
-        console.log("выключили");
-    }
-});
-
