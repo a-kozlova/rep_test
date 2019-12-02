@@ -21,11 +21,17 @@ function openSettings(event) {
     var transformableComponents = entity.components.filter(component => component.name == "Transform");
     var connectionComponents = entity.components.filter(component => component.name == "Verbindung");
 
+    let size = { "width": 100, "height": 150 };
+    if (solidBodyComponents[0]) {
+        size = solidBodyComponents[0].size.value;
+    }
+
+
     console.log(solidBodyComponents);
-    drawOnCanvas(motorComponents, "Motor", solidBodyComponents[0].size.value);
+    drawOnCanvas(motorComponents, "Motor", size);
     drawSliders(motorComponents);
 
-    drawOnCanvas(sensorComponents, "Sensor", solidBodyComponents[0].size.value);
+    drawOnCanvas(sensorComponents, "Sensor", size);
 
     sensorSettings(sensorComponents);
 
