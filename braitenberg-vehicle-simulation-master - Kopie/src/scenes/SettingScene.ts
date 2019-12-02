@@ -194,31 +194,7 @@ export default class SettingScene extends SidebarScene {
             return [title, deleteButton /*, ...attributes , ...attrs*/]; 
         });
 
-       
-        
-        // fuer jedes elt Node-array html-Inhalt nach tab-Inhalt kontrollieren und an tabs anhängen
-        // prm: überschneidet sich, fall mehrere Nodes
-       /* uiElements.flat(2).map((element): Element => {
-            return element.node;
-        }).forEach(element => {
-            if (element != undefined) {
-                let temp = element.outerHTML;
-                if (temp.includes("Motor") || temp.includes("deleteButton")) {
-                    tabs.getChildByID('motor').append(element);
-                } else if (temp.includes("Sensor") || temp.includes("deleteButton")) {
-                    tabs.getChildByID('sensor').append(element);
-                } else if (temp.includes("Körper") || temp.includes("deleteButton")) {
-                    tabs.getChildByID('body').append(element);
-                } else if (temp.includes("Rendering") || temp.includes("Transform") || temp.includes("deleteButton")) {
-                    tabs.getChildByID('source').append(element);
-                } else if (temp.includes("Verbindung") || temp.includes("deleteButton")) {
-                    tabs.getChildByID('connection').append(element);
-                }
-            }
-        });*/
-
-
-
+     
         this.pack([seperator, tabs]); 
     }
 
@@ -239,10 +215,26 @@ export default class SettingScene extends SidebarScene {
 
     }
 
-    public updateComponent(entity: Entity): void {
-        if (entity) {
-            console.log(entity);
-        }
+    public addSensor(entity: Entity): void {
+        EntityManager.addComponent(
+            entity.id,
+            new SensorComponent({
+                position: { x: 0, y: 0 },
+                range: 20,
+                angle: 0.3,
+            }),
+        );
+        var event = new CustomEvent("attributeAdded", { detail: entity });
+        document.dispatchEvent(event);
+
+
+    }
+
+
+
+    public deleteSensor(entity: Entity, component: SensorComponent): void {
+        EntityManager.removeComponent(entity.id, component);
+        console.log("deleteSensor in settingsscene");
        
     }
 

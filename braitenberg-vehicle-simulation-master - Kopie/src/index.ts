@@ -17,6 +17,7 @@ import 'noty/lib/themes/relax.css';
 import '../assets/css/picnic.min.css';
 import '../assets/css/styling.css';
 
+
 const config: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
   backgroundColor: '#EAEAEA',
@@ -99,8 +100,9 @@ $('input[name="substance"]:radio').change(function () {
     });
 
 
-//Fester Körper
-$('body').click(function(){
+//Fester Körper !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! NE PO KLIKU!!!!
+$('#solidBody').click(function () {
+    console.log("sb tut");
 	if (entity.hasComponents(ComponentType.SOLID_BODY)){
 		$('.switch-btn').addClass('switch-on');
 	}
@@ -132,7 +134,47 @@ $('.switch-btn').click(function(){
 
 
 
-		
+// add sensor	!!!!!!!!!!!!!!!!!!!!!! peredelat dlya vsech
+$(function () {
+    $('#addSensor').draggable({
+        appendTo: '#addDeleteSensor',
+        helper: "clone",
+        cursor: 'move',
+    });
+    $("#sensorContainer").droppable({
+        over: function (ui) {
+            $(ui.draggable).show()
+        },
+        drop: function (event, ui) {
+            console.log(event);
+            mytestgame.scene.scenes[3].addSensor(entity);
+        }
+    });
 
+});
+
+// add motor	
+$(function () {
+    $('#addMotor').draggable({
+        appendTo: '#addDeleteMotor',
+        helper: "clone",
+        cursor: 'move',
+    });
+    $("#motorContainer").droppable({
+        over: function (ui) {
+            $(ui.draggable).show()
+        },
+        drop: function (event, ui) {
+            mytestgame.scene.scenes[3].addMotor(entity);
+        }
+    });
+
+});
+
+document.addEventListener("delete", function (event) {
+    mytestgame.scene.scenes[3].deleteSensor(entity.id, event.detail);
+    console.log("delete sensor", event.detail);
+    //document.removeEventListener("delete", );
+});
 
 

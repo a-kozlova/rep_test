@@ -46,12 +46,14 @@ export default class MainScene extends Phaser.Scene {
     this.matter.world.setBounds();
 
     //this.scene.add('editor', EditorScene, false);
-    //this.scene.add('settings', SettingScene, false);
+    this.scene.add('settings', SettingScene, false);
 
-      EventBus.subscribe(EventType.ENTITY_SELECTED, (entity: Entity) => {
-          var event = new CustomEvent("entitySelected", { detail: entity });
-          document.dispatchEvent(event);
-        //this.scene.launch('SettingScene', entity);
+    
+    EventBus.subscribe(EventType.ENTITY_SELECTED, (entity: Entity) => {
+        var event = new CustomEvent("entitySelected", { detail: entity });
+        event.preventDefault();
+        // event to catch in html!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      document.dispatchEvent(event);
     });
 
     EntityManager.createEntity(
@@ -80,7 +82,7 @@ export default class MainScene extends Phaser.Scene {
     entity.addComponent(transform);
     entity.addComponent(
       new SolidBodyComponent({
-        size: { width: 100, height: 150 },
+        size: { width: 200, height: 250 },
       }),
     );
     entity.addComponent(

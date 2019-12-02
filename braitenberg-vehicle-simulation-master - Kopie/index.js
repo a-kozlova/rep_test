@@ -2,11 +2,12 @@
 var entity = null;
 var color = ["#00ffff", "#00ff00", "#ff00ff", "#cecece"];
 
-
 document.addEventListener("entitySelected", openSettings);
+document.addEventListener("attributeAdded", openSettings);
 
 function openSettings(event) {
     closeNav();
+    //closeSettings();
     document.getElementById("myEntitySettings").style.width = "256px";
     document.getElementById("createEntityMenu").style.marginRight = "306px";
 
@@ -21,7 +22,7 @@ function openSettings(event) {
     var transformableComponents = entity.components.filter(component => component.name == "Transform");
     var connectionComponents = entity.components.filter(component => component.name == "Verbindung");
 
-    let size = { "width": 100, "height": 150 };
+    var size = { "width": 100, "height": 150 };
     if (solidBodyComponents[0]) {
         size = solidBodyComponents[0].size.value;
     }
@@ -34,7 +35,7 @@ function openSettings(event) {
     drawOnCanvas(sensorComponents, "Sensor", size);
 
     sensorSettings(sensorComponents);
-
+    console.log("opensettings");
 }
 
 
@@ -193,6 +194,7 @@ function drawOnCanvas(components, cName, size) {
                 isDragging = true;
                 canvas.addEventListener("mousemove", onMouseMove);
                 canvas.addEventListener("mouseup", onMouseUp);
+                canvas.addEventListener("mouseout", onMouseOut);
                 dragHandle = motor;
                 offset.x = event.clientX - motor.x;
                 offset.y = event.clientY - motor.y;
@@ -213,6 +215,38 @@ function drawOnCanvas(components, cName, size) {
        
     }
 
+    function onMouseOut(event) {
+        console.log("out event", event);
+        let deleteButton = $("#deleteSensor");
+        //if (component.isDeletable()) {
+        let cmp, idx;
+        components.forEach((component, index) => {
+            if (component.id === dragHandle.id) {
+                cmp = component;
+                console.log("deleteble cmp", cmp);
+            }
+        });
+
+       components.splice(idx,1);
+
+        deleteButton.on("mouseenter", function () {
+            canvas.removeEventListener("mouseout", onMouseOut);
+            canvas.removeEventListener("mousemove", onMouseMove);
+            canvas.removeEventListener("mouseup", onMouseUp);
+
+            console.log("test")
+            let deleteEvent = new CustomEvent("delete", { detail: cmp });
+            document.dispatchEvent(deleteEvent);  
+            canvas.removeEventListener("mousemove", onMouseMove);
+            canvas.removeEventListener("mouseup", onMouseUp);
+           
+        });
+        drawOnCanvas(components, "Sensor", size);
+
+       
+    }
+
+
     function onMouseUp(event) {
         canvas.removeEventListener("mousemove", onMouseMove);
         canvas.removeEventListener("mouseup", onMouseUp);
@@ -229,8 +263,14 @@ function drawOnCanvas(components, cName, size) {
 
             if (m.id == dragHandle.id) {
                 m.x = startPoint.x - newX;
-                m.y = startPoint.y -  newY;
+                m.y = startPoint.y - newY;
+
+
             }
+
+
+
+
         });
 
         components.forEach(c => {
@@ -240,6 +280,10 @@ function drawOnCanvas(components, cName, size) {
                
             }
         });
+
+        
+
+
         //console.log("test_set");
         draw();
 
@@ -259,6 +303,7 @@ function drawOnCanvas(components, cName, size) {
         return distanceXY(x, y, circle.x, circle.y) < circle.radius;
     }
 }
+
 
 
 
@@ -290,37 +335,20 @@ function drawSliders(components) {
 
 
 
+function closeSettings() {
+    document.getElementById("myEntitySettings").style.width = "0";
+    document.getElementById("createEntityMenu").style.marginRight = "60px";
+}     
 
-        function closeSettings() {
-            document.getElementById("myEntitySettings").style.width = "0";
-            document.getElementById("createEntityMenu").style.marginRight = "60px";
+function openNav() {
+    closeSettings();
+    document.getElementById("mySidenav").style.width = "256px";		
+}
 
-            //document.getElementById("sensorRange").remove("input");
-            // $("#").remove("input");
-            
-        }     
+function closeNav() {
+    document.getElementById("mySidenav").style.width = "0";
+}
 
-		function openNav() {
-			closeSettings();
-            document.getElementById("mySidenav").style.width = "256px";		
-
-        }
-
-        function closeNav() {
-            document.getElementById("mySidenav").style.width = "0";
-        }
-
-        // funktioniert nicht in index.ts
-        $('#addMotor').draggable({
-            start: function () {
-                console.log("start");
-            },
-            drag: function () {
-                console.log("drag");
-            },
-            stop: function () {
-                console.log("stop");
-            }
-        });
+       
 
 

@@ -51,7 +51,7 @@
             <div class="nav nav-tabs nav-fil" id="myTabs" role="tablist">
                 <a class="nav-item nav-link active col-4" data-toggle="tab" href="#motor" role="tab" aria-controls="nav-home" aria-selected="true">Motor</a>
                 <a class="nav-item nav-link col-4" data-toggle="tab" href="#sensor" role="tab" aria-controls="nav-home" aria-selected="false">Sensor</a>
-                <a class="nav-item nav-link col-4" data-toggle="tab" href="#body" role="tab" aria-controls="nav-home" aria-selected="false">Body</a>
+                <a class="nav-item nav-link col-4" data-toggle="tab" href="#solidBody" role="tab" aria-controls="nav-home" aria-selected="false">Body</a>
                 <a class="nav-item nav-link col-6" data-toggle="tab" href="#emission" role="tab" aria-controls="nav-home" aria-selected="false">Emission</a>
                 <a class="nav-item nav-link col-6" data-toggle="tab" href="#connection" role="tab" aria-controls="nav-home" aria-selected="false">Connection</a>
             </div>
@@ -60,7 +60,7 @@
                 <!--MOTOR-->
                 <div role="tabpanel" class="tab-pane active" id="motor">
                     <h4>Position</h4>
-                    <div id="drag-drop-basic">
+                    <div id="drag-drop-basic" class="row">
                         <div id="motorContainer" data-role="drag-drop-container" class="col-8" style="border: 1px green dashed">
                             <canvas id="motorCanvas"> </canvas>
                         </div>
@@ -77,8 +77,8 @@
                 <!--SENSOR-->
                 <div role="tabpanel" class="tab-pane fade" id="sensor">
                     <h4>Position</h4>
-                    <div>
-                        <div data-role="drag-drop-container" class="col-8" style="border: 1px green dashed">
+                    <div id="drag-drop-basic2" class="row">
+                        <div id="sensorContainer" data-role="drag-drop-container" class="col-8" style="border: 1px green dashed">
                             <canvas id="sensorCanvas"> </canvas>
                         </div>
                         <div id="addDeleteSensor" data-role="drag-drop-container" class="col-4 ui-widget ui-widget-content">
@@ -112,7 +112,7 @@
                     </div>
                 </div>
                 <!--BODY-->
-                <div role="tabpanel" class="tab-pane fade" id="body">
+                <div role="tabpanel" class="tab-pane fade" id="solidBody">
                     <div class="row">
                         <div class="col-6 left">
                             Fester Körper
