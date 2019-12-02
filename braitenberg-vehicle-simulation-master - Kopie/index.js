@@ -64,7 +64,7 @@ function numberInput(components) {
 function drawOnCanvas(components, cName, size) {
     var motors = [];
 
-    var canvas
+    var canvas;
     if (cName == "Motor") {
         canvas = document.getElementById("motorCanvas");
     }
@@ -128,9 +128,9 @@ function drawOnCanvas(components, cName, size) {
 
             if (motor.name == "Sensor") {
                 context.beginPath();
-                context.moveTo(motor.x - 10, motor.y - 10);
+                context.moveTo(motor.x - 7, motor.y - 10);
                 context.lineTo(motor.x, motor.y);
-                context.lineTo(motor.x + 10, motor.y - 10);
+                context.lineTo(motor.x + 7, motor.y - 10);
                 context.closePath();
                 context.fill();
                 context.stroke();
@@ -151,6 +151,33 @@ function drawOnCanvas(components, cName, size) {
             context.fill();            
         }
 
+        // Grid motor
+        if (cName === "Motor") {
+            for (let i = 10; i < width; i += 10) {
+                for (let j = 10; j < height; j += 10) {
+                    context.fillStyle = "#cccccc";
+                    context.beginPath();
+                    context.arc(i, j, 1, 0, 2 * Math.PI, true);
+                    context.fill();
+                    context.stroke();
+                }
+            }
+        }
+        // show possible points for sensor
+        if (cName === "Sensor") {
+            for (let i = 10; i < width; i += 10) {
+                for (let j = 10; j < height; j += 10) {
+                    if (i == 10 || i == width - 10 || j == 10 || j == height - 10) {
+                        context.fillStyle = "#cccccc";
+                        context.beginPath();
+                        context.arc(i, j, 1, 0, 2 * Math.PI, true);
+                        context.fill();
+                        context.stroke();
+                    }
+
+                }
+            }
+        }
        
     }
 
@@ -165,6 +192,7 @@ function drawOnCanvas(components, cName, size) {
                 offset.y = event.clientY - motor.y;
                 //console.log("down", event.clientX);
                 draw();
+
             }
         });
 
@@ -176,17 +204,7 @@ function drawOnCanvas(components, cName, size) {
         //console.log("move", dragHandle.x);
 
         draw();
-        // Grid
-        for (let i = 10; i < width; i += 10) {
-            for (let j = 10; j < height; j += 10) {
-                context.fillStyle = "#cccccc";
-                context.beginPath();
-                context.arc(i, j, 1, 0, 2 * Math.PI, true);
-                context.fill();
-                context.stroke();
-            }
-        }
-
+       
     }
 
     function onMouseUp(event) {
@@ -194,12 +212,26 @@ function drawOnCanvas(components, cName, size) {
         canvas.removeEventListener("mouseup", onMouseUp);
         isDragging = false;
         console.log("up", startPoint.x , dragHandle.x);
+        let newX = nearest(startPoint.x - dragHandle.x, 10);
+        let newY = nearest(startPoint.y - dragHandle.y, 10)-5;
+        console.log("mouseup, cmps id vs draghandle id ", newX, newY);
+        motors.forEach(m => {
+            if (dragHandle != m && m.x == dragHandle.x && m.y == dragHandle.y) {
+                newX += 10; 
+                newY += 10;
+            }
+
+            if (m.id == dragHandle.id) {
+                m.x = startPoint.x - newX;
+                m.y = startPoint.y -  newY;
+            }
+        });
+
         components.forEach(c => {
             if (c.id == dragHandle.id) {
-                //if () {
-                    //console.log("mouseup, cmps id vs draghandle id ", c.id, dragHandle.id);
-                    c.setPosition((startPoint.x - dragHandle.x) / ratioX, (startPoint.y - dragHandle.y) / ratioY);
-                //}
+                
+                c.setPosition(newX / ratioX, newY / ratioY);
+               
             }
         });
         //console.log("test_set");
@@ -207,7 +239,9 @@ function drawOnCanvas(components, cName, size) {
 
     }
 
-
+    function nearest(value, n) {
+        return Math.round(value / n) * n;
+    }
 
     function distanceXY(x0, y0, x1, y1) {
         var dx = x1 - x0,
