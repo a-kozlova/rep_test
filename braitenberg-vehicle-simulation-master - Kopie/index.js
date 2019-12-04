@@ -45,6 +45,7 @@ function bodySettings(components) {
     if (components.length) {
          $('.switch-btn').addClass("switch-on");
     } else {
+        $('.switch-btn').removeClass("switch-on");
        return
     }
 }
