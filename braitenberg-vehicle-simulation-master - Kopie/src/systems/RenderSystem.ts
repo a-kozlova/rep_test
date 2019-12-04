@@ -69,6 +69,7 @@ export default class RenderSystem extends System {
       const transform = entity.getComponent(ComponentType.TRANSFORMABLE) as TransformableComponent;
       const renderObject = this.renderObjects[entity.id];
 
+      //  console.log("render sys trangsf set", transform.position.get().x, transform.position.get().y);
       renderObject.setPosition(transform.position.get().x, transform.position.get().y);
       renderObject.setRotation(transform.angle.get());
     });

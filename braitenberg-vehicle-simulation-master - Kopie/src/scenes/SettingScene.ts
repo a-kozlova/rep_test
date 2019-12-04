@@ -205,7 +205,7 @@ export default class SettingScene extends SidebarScene {
             new MotorComponent({
                 position: { x: 0, y: 0 },
                 maxSpeed: 50,
-                defaultSpeed: 5,
+                defaultSpeed: 20,
             }),
         );
         

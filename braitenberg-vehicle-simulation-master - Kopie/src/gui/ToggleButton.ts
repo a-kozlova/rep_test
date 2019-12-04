@@ -31,6 +31,7 @@ export default class ToggleButton extends Button {
     }
   }
 
+  // wird nicht aufgerufen
   public isPressed(): boolean {
     return this.pressed;
   }

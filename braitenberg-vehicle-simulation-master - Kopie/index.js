@@ -41,21 +41,19 @@ function openSettings(event) {
 
 function sensorSettings(components) {
 
-    console.log("test update settings", $('#sensorRow  > form').children());
-    // wenn inputs gesetzt sind, entfernen
-    if ($('#sensorRow  > form').has('input').length) {
-        $('#sensorRow  > form').has('input').forEach(() => {
-            $(this).remove('input');
-        });
-        console.log("child delete", $('#sensorRow  > form').has('input').length);
+    // wenn inputs bereits vorhanden sind, entfernen
+    if ($('#sensorRow  > form').children().length) {
+        $('#sensorRow > form').children().each((idx, child) => {
+            child.remove('input');
+        });    
     }
-    if (!components) { return }
 
+    // falls Entity keine Sensoren hat
+    if (!components.length) {
+        return
+    }
 
-    //let ranges = [];
-    //let angles = [];
     components.forEach((component, index) => {
-
         $("#sensorRange").append(
             '<input id = "range' + component.id + '" style = "background: ' + color[index] +
             '; margin-bottom:10px" placeholder = "' + component.range.value + '"> </input>');
@@ -68,15 +66,14 @@ function sensorSettings(components) {
             
         $('#range' + component.id).on('input', function () {
             let newValue = $(this).val(); // get the current value of the input field.
-            console.log(newValue);
+            //console.log(newValue);
             component.setRange(newValue);
         });
         $('#angle' + component.id).on('input', function () {
             let newValue = $(this).val(); // get the current value of the input field.
-            console.log(newValue);
+            //console.log(newValue);
             component.setAngle(newValue);
         });
-
     });
     
 }
