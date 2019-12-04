@@ -56,6 +56,8 @@ export default class MainScene extends Phaser.Scene {
       document.dispatchEvent(event);
     });
 
+
+	//Barrier
     EntityManager.createEntity(
       new TransformableComponent({ position: { x: 800, y: 450 } }),
       new SolidBodyComponent({
@@ -105,13 +107,7 @@ export default class MainScene extends Phaser.Scene {
         defaultSpeed: 1,
       }),
       );
-      const motor3 = entity.addComponent(
-          new MotorComponent({
-              position: { x: 50, y: 50 },
-              maxSpeed: 30,
-              defaultSpeed: 1,
-          }),
-      );
+
     const sensor1 = entity.addComponent(
       new SensorComponent({
         position: { x: -50, y: 0 },
