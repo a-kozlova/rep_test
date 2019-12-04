@@ -74,6 +74,10 @@ $('.prefab-btn').click(function(){
 
 //Checkbox Inputs
 
+$("#deleteEmission").on('click', function(){
+	console.log('delete emission');
+});
+
 $('input[name="farbe"]:radio').change(function () {
         alert($("input[name='farbe']:checked").val());
     });
