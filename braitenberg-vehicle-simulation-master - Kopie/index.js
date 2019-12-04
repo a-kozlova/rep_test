@@ -43,9 +43,9 @@ function openSettings(event) {
 function bodySettings(components) {
     console.log(components);
     if (components.length) {
-        return
+         $('.switch-btn').addClass("switch-on");
     } else {
-        $('.switch-btn').addClass("switch-on");
+       return
     }
 }
 
