@@ -36,8 +36,18 @@ function openSettings(event) {
 
     sensorSettings(sensorComponents);
     console.log("opensettings");
+    bodySettings(solidBodyComponents);
 }
 
+
+function bodySettings(components) {
+    console.log(components);
+    if (components.length) {
+        return
+    } else {
+        $('.switch-btn').addClass("switch-on");
+    }
+}
 
 function sensorSettings(components) {
 

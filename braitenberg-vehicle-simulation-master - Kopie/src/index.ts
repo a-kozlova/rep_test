@@ -112,27 +112,26 @@ $('#solidBody').click(function () {
 	}
 });
 
+
+// add remove solid body
 $('.switch-btn').click(function(){
 	$(this).toggleClass('switch-on');
     if ($(this).hasClass('switch-on')) {
         $(this).trigger('on.switch');
         console.log("включили");
-        if (!entity.hasComponents(ComponentType.SOLID_BODY)){
+        mytestgame.scene.scenes[3].addSolidBody(entity);
+        /*if (!entity.hasComponents(ComponentType.SOLID_BODY)){
 			entity.addComponent(
 				new SolidBodyComponent({
 				  size: { width: 100, height: 150 },
 				}),
 			);
 			console.log(entity);
-		} 
+		} */
     } else {
         $(this).trigger('off.switch');
         console.log("выключили");
-		if (entity.hasComponents(ComponentType.SOLID_BODY)){
-			entity.removeComponent(entity.getComponent(ComponentType.SOLID_BODY));
-		} 
-		
-			console.log(entity);
+        mytestgame.scene.scenes[3].deleteSolidBody(entity);
     }
 });
 
