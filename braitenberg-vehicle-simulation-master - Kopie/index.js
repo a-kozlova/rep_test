@@ -40,19 +40,32 @@ function openSettings(event) {
 
 
 function sensorSettings(components) {
-    let i = 0;
-    components.forEach(function (component) {
+
+    console.log("test update settings", $('#sensorRow  > form').children());
+    // wenn inputs gesetzt sind, entfernen
+    if ($('#sensorRow  > form').has('input').length) {
+        $('#sensorRow  > form').has('input').forEach(() => {
+            $(this).remove('input');
+        });
+        console.log("child delete", $('#sensorRow  > form').has('input').length);
+    }
+    if (!components) { return }
+
+
+    //let ranges = [];
+    //let angles = [];
+    components.forEach((component, index) => {
+
         $("#sensorRange").append(
-            '<input id = "range' + component.id + '" style = "background: ' + color[i] +
+            '<input id = "range' + component.id + '" style = "background: ' + color[index] +
             '; margin-bottom:10px" placeholder = "' + component.range.value + '"> </input>');
         $("#sensorAngle").append(
-            '<input id = "angle' + component.id + '" style = "background: ' + color[i] +
+            '<input id = "angle' + component.id + '" style = "background: ' + color[index] +
             '; margin-bottom:10px" placeholder = "' + component.angle.value + '"> </input>');
 
         //ne rabotaet podklu4it bootstrap toggle?
-        $("#sensorReaction").append('<input type="checkbox" data-toggle="toggle" data-on="Light" data-off="Barrier" data-onstyle="success" data-offstyle="danger">');
-
-        i++;
+        $("#sensorReaction").append('<input type="checkbox" data-toggle="toggle" data-on="on" data-off="off" data-onstyle="success" data-offstyle="danger">');
+            
         $('#range' + component.id).on('input', function () {
             let newValue = $(this).val(); // get the current value of the input field.
             console.log(newValue);
@@ -63,8 +76,9 @@ function sensorSettings(components) {
             console.log(newValue);
             component.setAngle(newValue);
         });
-        
+
     });
+    
 }
 
 // TODO  size from solidBody? render??
@@ -216,6 +230,10 @@ function drawOnCanvas(components, cName, size) {
     }
 
     function onMouseOut(event) {
+        canvas.removeEventListener("mousemove", onMouseMove);
+        canvas.removeEventListener("mouseup", onMouseUp);
+        canvas.removeEventListener("mouseout", onMouseOut);
+      
         console.log("out event", event);
         let deleteButton = $("#deleteSensor");
         //if (component.isDeletable()) {
@@ -230,17 +248,15 @@ function drawOnCanvas(components, cName, size) {
        components.splice(idx,1);
 
         deleteButton.on("mouseenter", function () {
-            canvas.removeEventListener("mouseout", onMouseOut);
-            canvas.removeEventListener("mousemove", onMouseMove);
-            canvas.removeEventListener("mouseup", onMouseUp);
+           
 
             console.log("test")
             let deleteEvent = new CustomEvent("delete", { detail: cmp });
             document.dispatchEvent(deleteEvent);  
-            canvas.removeEventListener("mousemove", onMouseMove);
-            canvas.removeEventListener("mouseup", onMouseUp);
+            
            
         });
+       
         drawOnCanvas(components, "Sensor", size);
 
        
@@ -250,6 +266,7 @@ function drawOnCanvas(components, cName, size) {
     function onMouseUp(event) {
         canvas.removeEventListener("mousemove", onMouseMove);
         canvas.removeEventListener("mouseup", onMouseUp);
+        canvas.removeEventListener("mouseout", onMouseOut);
         isDragging = false;
         console.log("up", startPoint.x , dragHandle.x);
         let newX = nearest(startPoint.x - dragHandle.x, 10);
