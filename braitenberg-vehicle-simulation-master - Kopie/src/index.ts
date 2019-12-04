@@ -120,18 +120,12 @@ $('.switch-btn').click(function(){
         $(this).trigger('on.switch');
         console.log("включили");
         mytestgame.scene.scenes[3].addSolidBody(entity);
-        /*if (!entity.hasComponents(ComponentType.SOLID_BODY)){
-			entity.addComponent(
-				new SolidBodyComponent({
-				  size: { width: 100, height: 150 },
-				}),
-			);
-			console.log(entity);
-		} */
+        
     } else {
         $(this).trigger('off.switch');
         console.log("выключили");
-        mytestgame.scene.scenes[3].deleteSolidBody(entity);
+       
+        mytestgame.scene.scenes[3].deleteSolidBody(entity,  entity.getComponent("Koerper"));
     }
 });
 

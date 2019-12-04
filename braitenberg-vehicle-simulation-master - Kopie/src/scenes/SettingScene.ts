@@ -243,14 +243,16 @@ export default class SettingScene extends SidebarScene {
     public deleteSolidBody(entity: Entity, component: SolidBodyComponent): void {
         EntityManager.removeComponent(entity.id, component);
         console.log("delete SolidBody in settingsscene");
-
+        var event = new CustomEvent("attributeAdded", { detail: entity });
+        document.dispatchEvent(event);
     }
 
 
     public deleteSensor(entity: Entity, component: SensorComponent): void {
         EntityManager.removeComponent(entity.id, component);
         console.log("deleteSensor in settingsscene");
-       
+        var event = new CustomEvent("attributeAdded", { detail: entity });
+        document.dispatchEvent(event);
     }
 
 }

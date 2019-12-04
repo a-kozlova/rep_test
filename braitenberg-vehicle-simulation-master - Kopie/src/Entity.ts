@@ -52,7 +52,8 @@ export default class Entity {
   // entfernt die übergebene Komponente falls vorhanden
   // gibt entfernte Komponentezurück
   public removeComponent(component: Component): Component | undefined {
-    const index = this.components.indexOf(component);
+      const index = this.components.indexOf(component);
+      console.log("remove component in entity", component);
     if (index >= 0) {
       return this.components.splice(index, 1)[0];
     }
@@ -61,7 +62,7 @@ export default class Entity {
   }
 
   // gibt die erste Komponente mit dem Übergebenen Component Typ zurück
-  public getComponent<T extends Component>(name: ComponentType): T | undefined {
+  public getComponent<T extends Component>(name: ComponentType | string): T | undefined {
     return this.components.find(c => c.name === name) as T;
   }
 

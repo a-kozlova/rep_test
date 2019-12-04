@@ -28,7 +28,6 @@ function openSettings(event) {
     }
 
 
-    console.log(solidBodyComponents);
     drawOnCanvas(motorComponents, "Motor", size);
     drawSliders(motorComponents);
 
@@ -42,10 +41,19 @@ function openSettings(event) {
 
 function bodySettings(components) {
     console.log(components);
+    //wenn SolidBodyComponent vorhanden, den Button auf on setzten
     if (components.length) {
-         $('.switch-btn').addClass("switch-on");
+        $('.switch-btn').addClass("switch-on");
+        if (components[0].shape.value === "Rechteck") {
+            $("#rectangle")[0].checked = true;
+        } else if (components[0].shape.value === "Kreis") {
+            $("#circle")[0].checked = true;
+        }
     } else {
         $('.switch-btn').removeClass("switch-on");
+        $("#rectangle")[0].checked = false;
+        $("#circle")[0].checked = false;
+
        return
     }
 }
