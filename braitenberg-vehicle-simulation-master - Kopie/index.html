@@ -116,12 +116,23 @@
                 <div role="tabpanel" class="tab-pane fade" id="solidBody">
                     <div class="row">
                         <div class="col-6 left">
-                            Fester Körper
+                            Solid Body
                         </div>
                         <div class="col-6 right">
                             <div class="switch-btn"></div>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-6 left">
+                            Static
+                        </div>
+                        <!--NE RABOTAET!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!-->
+                        <div class="col-6 right ">
+                            <input type="checkbox" id="exampleCheck1">
+                            <label for="exampleCheck1">Static</label>
+                        </div>
+                    </div>
+
                     <h4>Form</h4>
 
                     <div id="shape">
@@ -135,10 +146,15 @@
                         </div>
                     </div>
 
-                    <h4>Breite</h4>
+                    <div class="row">
+                        <div id="bodyWidth" class="col-3">Width</div>
+                        <input class="col-3" placeholder="0"> 
 
-                    <h4>Höhe</h4>
-                    <h4>Farbe</h4>
+                        <div id="bodyHeight" class="col-3">Height</div>
+                        <input class="col-3" placeholder="0">
+                    </div>
+
+                    <h4>Color</h4>
                     <div class="custom-control custom-radio">
                         <input type="radio" id="grey" name="farbe" class="custom-control-input" value="grey">
                         <label class="custom-control-label" for="grey">Grey</label>

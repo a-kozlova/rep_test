@@ -104,13 +104,7 @@ $('input[name="substance"]:radio').change(function () {
     });
 
 
-//Fester Körper !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! NE PO KLIKU!!!!
-$('#solidBody').click(function () {
-    console.log("sb tut");
-	if (entity.hasComponents(ComponentType.SOLID_BODY)){
-		$('.switch-btn').addClass('switch-on');
-	}
-});
+
 
 
 // add remove solid body
@@ -145,6 +139,9 @@ $(function () {
         drop: function (event, ui) {
             console.log(event);
             mytestgame.scene.scenes[3].addSensor(entity);
+            var x = event.pageX - $(this).offset().left;
+            var y = event.pageY - $(this).offset().top;
+            console.log('drop: ' + x + ', ' + y);
         }
     });
 

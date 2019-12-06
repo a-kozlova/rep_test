@@ -51,9 +51,15 @@ export default class SolidBodyComponent extends Component {
 		this.shape.set(BodyShape.RECTANGLE);
 		break;
 		}
-	}
+    }
 	
-	}
+    }
+    public setSize(size: Dimensions) {
+        console.log("set width", size.width);
+        this.size.set(size)
+        console.log("set size", this.size);
+    }
+   
 }
 
 

@@ -1,6 +1,6 @@
 ﻿
 var entity = null;
-var color = ["#00ffff", "#00ff00", "#ff00ff", "#cecece"];
+var color = ["#00ffff", "#00ff00", "#ff00ff", "#cecece", "#cece00", "#ce00ce", "#00cece", "#c00ece", "#cec00e", "#0000ce"];
 
 document.addEventListener("entitySelected", openSettings);
 document.addEventListener("attributeAdded", openSettings);
@@ -40,7 +40,6 @@ function openSettings(event) {
 
 
 function bodySettings(components) {
-    console.log(components);
     //wenn SolidBodyComponent vorhanden, den Button auf on setzten
     if (components.length) {
         $('.switch-btn').addClass("switch-on");
@@ -49,6 +48,21 @@ function bodySettings(components) {
         } else if (components[0].shape.value === "Kreis") {
             $("#circle")[0].checked = true;
         }
+
+        $("#bodyWidth input").attr({ "id": 'width'+components[0].id, "placeholder": components[0].size.value.width });
+        $("#bodyHeight input").attr({ "id": components[0].id, "placeholder": components[0].size.value.height });
+
+        console.log(components[0].size.value.width);
+        $("#width" + components[0].id).on('input', function () {
+            let newValue = $(this).val(); // get the current value of the input field.
+            components[0].setSize({ width: newValue, height: components[0].size.value.height});
+        });
+        $("#bodyHeight").on('input', function () {
+            let newValue = $(this).val(); // get the current value of the input field.
+            components[0].setSize({ width: components[0].size.value.width, height:  newValue});
+        });
+
+
     } else {
         $('.switch-btn').removeClass("switch-on");
         $("#rectangle")[0].checked = false;
@@ -75,10 +89,10 @@ function sensorSettings(components) {
     components.forEach((component, index) => {
         $("#sensorRange").append(
             '<input id = "range' + component.id + '" style = "background: ' + color[index] +
-            '; margin-bottom:10px" placeholder = "' + component.range.value + '"> </input>');
+            '; margin-bottom:10px" placeholder = "' + component.range.value + '">');
         $("#sensorAngle").append(
             '<input id = "angle' + component.id + '" style = "background: ' + color[index] +
-            '; margin-bottom:10px" placeholder = "' + component.angle.value + '"> </input>');
+            '; margin-bottom:10px" placeholder = "' + component.angle.value + '">');
 
         //ne rabotaet podklu4it bootstrap toggle?
         $("#sensorReaction").append('<input type="checkbox" data-toggle="toggle" data-on="on" data-off="off" data-onstyle="success" data-offstyle="danger">');
@@ -90,7 +104,6 @@ function sensorSettings(components) {
         });
         $('#angle' + component.id).on('input', function () {
             let newValue = $(this).val(); // get the current value of the input field.
-            //console.log(newValue);
             component.setAngle(newValue);
         });
     });
@@ -138,7 +151,7 @@ function drawOnCanvas(components, cName, size) {
         motors.push(motor);        
     });
 
-    //console.log(motors);
+    console.log("motors on canvas", motors);
 
     draw();
 
@@ -224,11 +237,10 @@ function drawOnCanvas(components, cName, size) {
                 isDragging = true;
                 canvas.addEventListener("mousemove", onMouseMove);
                 canvas.addEventListener("mouseup", onMouseUp);
-                canvas.addEventListener("mouseout", onMouseOut);
+               // canvas.addEventListener("mouseout", onMouseOut);
                 dragHandle = motor;
                 offset.x = event.clientX - motor.x;
                 offset.y = event.clientY - motor.y;
-                //console.log("down", event.clientX);
                 draw();
 
             }
@@ -239,10 +251,7 @@ function drawOnCanvas(components, cName, size) {
     function onMouseMove(event) {
         dragHandle.x = event.clientX - offset.x;
         dragHandle.y = event.clientY - offset.y;
-        //console.log("move", dragHandle.x);
-
         draw();
-       
     }
 
     function onMouseOut(event) {
@@ -264,18 +273,11 @@ function drawOnCanvas(components, cName, size) {
        components.splice(idx,1);
 
         deleteButton.on("mouseenter", function () {
-           
-
-            console.log("test")
             let deleteEvent = new CustomEvent("delete", { detail: cmp });
-            document.dispatchEvent(deleteEvent);  
-            
-           
+            //document.dispatchEvent(deleteEvent);           
         });
        
         drawOnCanvas(components, "Sensor", size);
-
-       
     }
 
 
@@ -284,10 +286,10 @@ function drawOnCanvas(components, cName, size) {
         canvas.removeEventListener("mouseup", onMouseUp);
         canvas.removeEventListener("mouseout", onMouseOut);
         isDragging = false;
-        console.log("up", startPoint.x , dragHandle.x);
+
         let newX = nearest(startPoint.x - dragHandle.x, 10);
-        let newY = nearest(startPoint.y - dragHandle.y, 10)-5;
-        console.log("mouseup, cmps id vs draghandle id ", newX, newY);
+        let newY = nearest(startPoint.y - dragHandle.y, 10) - 5;
+        console.log("mouseup, cmps id vs draghandle id ", newX, dragHandle.id);
         motors.forEach(m => {
             if (dragHandle != m && m.x == dragHandle.x && m.y == dragHandle.y) {
                 newX += 10; 
@@ -301,9 +303,6 @@ function drawOnCanvas(components, cName, size) {
 
             }
 
-
-
-
         });
 
         components.forEach(c => {
@@ -313,10 +312,7 @@ function drawOnCanvas(components, cName, size) {
                
             }
         });
-
         
-
-
         //console.log("test_set");
         draw();
 
@@ -381,7 +377,3 @@ function openNav() {
 function closeNav() {
     document.getElementById("mySidenav").style.width = "0";
 }
-
-       
-
-
