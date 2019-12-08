@@ -112,13 +112,10 @@ $('.switch-btn').click(function(){
 	$(this).toggleClass('switch-on');
     if ($(this).hasClass('switch-on')) {
         $(this).trigger('on.switch');
-        console.log("включили");
         mytestgame.scene.scenes[3].addSolidBody(entity);
         
     } else {
-        $(this).trigger('off.switch');
-        console.log("выключили");
-       
+        $(this).trigger('off.switch');       
         mytestgame.scene.scenes[3].deleteSolidBody(entity,  entity.getComponent("Koerper"));
     }
 });

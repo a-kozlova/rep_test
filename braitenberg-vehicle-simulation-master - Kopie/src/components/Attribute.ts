@@ -64,7 +64,7 @@ export default class Attribute<T, S extends BaseInput<T>> implements Settable<T>
     return this.el;
   }
 
-    // 4E DELAET - NE PONYATNO!!!!!
+    // wird nicht aufgerufen
   public renderedAs(type: any): boolean {
     return this.createElement === type;
   }

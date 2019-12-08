@@ -40,33 +40,53 @@ function openSettings(event) {
 
 
 function bodySettings(components) {
-    //wenn SolidBodyComponent vorhanden, den Button auf on setzten
+
+  $('#bodySize').children("input").each((idx, child) => {
+      child.remove();
+  });
+  
+
+    $('#bodyWidth').after('<input id="width" class="col-3">');
+    $('#bodyHeight').after('<input id="height" class="col-3">');
+    console.log("bodysize div chld", $('#bodySize').children());
+    //wenn SolidBodyComponent vorhanden, den Button auf ON setzten
+   // console.log("sb id", sb.id);
+
     if (components.length) {
         $('.switch-btn').addClass("switch-on");
+
+       
+
+        $("#rectangle").prop('disabled', false); 
+        $("#circle").prop('disabled', false); 
+
+        console.log("tut", $("#width") );
         if (components[0].shape.value === "Rechteck") {
-            $("#rectangle")[0].checked = true;
+            $("#rectangle").prop('checked', true);
         } else if (components[0].shape.value === "Kreis") {
-            $("#circle")[0].checked = true;
+            $("#circle").prop('checked', true);
         }
 
-        $("#bodyWidth input").attr({ "id": 'width'+components[0].id, "placeholder": components[0].size.value.width });
-        $("#bodyHeight input").attr({ "id": components[0].id, "placeholder": components[0].size.value.height });
+        // die aktuelle Breite und Hoehe der Entität anzeigen
+        $("#width").val(components[0].size.value.width);
+        $("#height").val(components[0].size.value.height);
 
-        console.log(components[0].size.value.width);
-        $("#width" + components[0].id).on('input', function () {
-            let newValue = $(this).val(); // get the current value of the input field.
-            components[0].setSize({ width: newValue, height: components[0].size.value.height});
+        $("#width").change(function () {
+            let newValue = $("#width").val(); // get the current value of the input field.
+            components[0].setSize({ width: parseInt(newValue), height: components[0].size.value.height });
         });
-        $("#bodyHeight").on('input', function () {
-            let newValue = $(this).val(); // get the current value of the input field.
-            components[0].setSize({ width: components[0].size.value.width, height:  newValue});
+        $("#height").change(function () {
+            let newValue = $("#height").val(); // get the current value of the input field.
+            components[0].setSize({ width: components[0].size.value.width, height: parseInt(newValue)});
         });
 
 
     } else {
         $('.switch-btn').removeClass("switch-on");
-        $("#rectangle")[0].checked = false;
-        $("#circle")[0].checked = false;
+        $("#rectangle").prop('checked', false);
+        $("#rectangle").prop('disabled', true); 
+        $("#circle").prop('checked', false);
+        $("#circle").prop('disabled', true); 
 
        return
     }
