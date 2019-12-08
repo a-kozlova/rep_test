@@ -79,7 +79,12 @@ $("#deleteEmission").on('click', function(){
 });
 
 $('input[name="farbe"]:radio').change(function () {
-        alert($("input[name='farbe']:checked").val());
+	entity.components.forEach(component => {
+			if (component.name == "Rendering") {
+				component.setColor($("input[name='farbe']:checked").val());            
+			}
+		});
+		       
     });
 $('input[name="form"]:radio').change(function () {
 		entity.components.forEach(component => {
