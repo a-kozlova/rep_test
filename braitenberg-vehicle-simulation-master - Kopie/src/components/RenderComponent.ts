@@ -63,7 +63,7 @@ export default class RenderComponent extends Component {
 
   public setColor (color: string) {
 	  switch (color){
-  		  case 'gray': {
+  		  case 'grey': {
 			this.asset.set(0xcccccc);
 			break;
 		  }
