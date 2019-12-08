@@ -48,7 +48,6 @@ function bodySettings(components) {
 
     $('#bodyWidth').after('<input id="width" class="col-3">');
     $('#bodyHeight').after('<input id="height" class="col-3">');
-    console.log("bodysize div chld", $('#bodySize').children());
     //wenn SolidBodyComponent vorhanden, den Button auf ON setzten
    // console.log("sb id", sb.id);
 
@@ -60,7 +59,6 @@ function bodySettings(components) {
         $("#rectangle").prop('disabled', false); 
         $("#circle").prop('disabled', false); 
 
-        console.log("tut", $("#width") );
         if (components[0].shape.value === "Rechteck") {
             $("#rectangle").prop('checked', true);
         } else if (components[0].shape.value === "Kreis") {
@@ -360,26 +358,34 @@ function drawOnCanvas(components, cName, size) {
 
 
 function drawSliders(components) {
-    var slider = `<div class="d-flex justify-content-center my-8">
-                             <span class="font-weight-bold indigo-text mr-2 mt-1">0</span>
-                             <form class="range-field w-25">
-                                 <input class="border-0" type="range" min="0" max="100" />
-                             </form>
-                             <span class="font-weight-bold indigo-text ml-2 mt-1">100</span>
-                         </div>`;
-
-    var maxSpeed = document.getElementById("maxSpeed");
-    var minSpeed = document.getElementById("minSpeed");
-    var sliders = [];
+   
     components.forEach(component => {
-        if (component.name == "Motor") {
-            sliders.push(slider);
-        }
+        $("#slider-range").append('<input id = "' + component.id + '"  readonly style="border:0; color:#f6931f; font-weight:bold;" >');
+        console.log(component);
     });
 
 
-    maxSpeed.innerHTML = sliders;
-    minSpeed.innerHTML = sliders;
+ 
+components.forEach(component => {
+        var slider = $(function () {
+            $("#slider-range").slider({
+                range: true,
+                min: 0,
+                max: 100,
+                values: [component.defaultSpeed.value, component.maxSpeed.value],
+                slide: function (event, ui) {
+
+                    $("#" + component.id).val("$" + ui.values[0] + " - $" + ui.values[1]);
+                    console.log("slovo", $("#amount").val());
+                }
+            });
+            
+            });
+        });
+    
+
+
+    
 }
 
 
