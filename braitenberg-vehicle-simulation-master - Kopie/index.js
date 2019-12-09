@@ -50,12 +50,18 @@ function emissionSettings(sourceComponents) {
             $("#barrier").prop('checked', true);
         }
 
-
-        
+        if(sourceComponents[0].emissionType.value ==="GAUSSIAN") {
+            $("#gaus").prop('checked', true);
+            $("#flat").prop('checked', false);
+        }
+        if(sourceComponents[0].emissionType.value ==="FLAT") {
+            $("#gaus").prop('checked', false);
+            $("#flat").prop('checked', true);
+        }        
     } else {
         $("#barrier").prop('checked', false);
         $("#sour").prop('checked', false);
-        $("#gaussian").prop('checked', false);
+        $("#gaus").prop('checked', false);
         $("#flat").prop('checked', false);
         $("#deleteEmission").prop('disabled', true);
     }

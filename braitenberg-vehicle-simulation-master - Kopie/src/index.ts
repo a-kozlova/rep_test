@@ -76,6 +76,11 @@ $('.prefab-btn').click(function(){
 
 $("#deleteEmission").on('click', function(){
 	console.log('delete emission');
+	    $("#barrier").prop('checked', false);
+        $("#sour").prop('checked', false);
+        $("#gaus").prop('checked', false);
+        $("#flat").prop('checked', false);
+		mytestgame.scene.scenes[3].deleteSource(entity);
 });
 
 $('input[name="farbe"]:radio').change(function () {
@@ -96,13 +101,28 @@ $('input[name="form"]:radio').change(function () {
 $('input[name="substance"]:radio').change(function () {		
         $("#deleteEmission").prop('disabled', false);
 		if (!entity.hasComponents(ComponentType.SOURCE)){
-			let source = new SourceComponent({range: 100,});				
-			entity.addComponent(source);
+			mytestgame.scene.scenes[3].addSource(entity);
 		} 
 		
 		entity.components.forEach(component => {			
 			if (component.name == "Quelle") {
 				component.setSubstanceType($("input[name='substance']:checked").val());
+			} 			
+		});				
+		
+		console.log(entity);
+    });
+
+$('input[name="emission"]:radio').change(function () {		
+        $("#deleteEmission").prop('disabled', false);
+		if (!entity.hasComponents(ComponentType.SOURCE)){
+			mytestgame.scene.scenes[3].addSource(entity);
+
+		} 
+		
+		entity.components.forEach(component => {			
+			if (component.name == "Quelle") {
+				component.setEmissionType($("input[name='emission']:checked").val());
 			} 			
 		});				
 		
