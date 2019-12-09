@@ -35,11 +35,11 @@ function openSettings(event) {
 
     sensorSettings(sensorComponents);
     console.log("opensettings");
-    bodySettings(solidBodyComponents);
+    bodySettings(solidBodyComponents, renderComponents);
 }
 
 
-function bodySettings(components) {
+function bodySettings(components, renderComponents) {
 
   $('#bodySize').children("input").each((idx, child) => {
       child.remove();
@@ -55,12 +55,9 @@ function bodySettings(components) {
     if (components.length) {
         $('.switch-btn').addClass("switch-on");
 
-       
-
         $("#rectangle").prop('disabled', false); 
         $("#circle").prop('disabled', false); 
 
-        console.log("tut", $("#width") );
         if (components[0].shape.value === "Rechteck") {
             $("#rectangle").prop('checked', true);
         } else if (components[0].shape.value === "Kreis") {
@@ -90,6 +87,31 @@ function bodySettings(components) {
 
        return
     }
+
+console.log(renderComponents[0].asset.value);
+
+switch (renderComponents[0].asset.value) {
+    case 13421772: {
+        $("#grey").prop('checked', true);
+        break;
+    }
+    case 13713746: {
+        $("#red").prop('checked', true);
+        console.log('red');
+        break;
+    }
+    case 5744185: {
+        $("#green").prop('checked', true);
+        break;
+    }
+    case 1791363: {
+        $("#blue").prop('checked', true);
+        break;
+    }  
+    }  
+
+}
+
 }
 
 function sensorSettings(components) {

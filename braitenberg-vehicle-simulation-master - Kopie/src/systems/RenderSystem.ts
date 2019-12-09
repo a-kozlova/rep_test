@@ -108,8 +108,6 @@ export default class RenderSystem extends System {
         render.asset.get() as number,
 		0.3,
       );
-	  console.log(render.asset.get());
-	  image.strokeColor = render.asset.get() as string;
     } else {
       image = this.scene.add.image(
         transform.position.get().x,
