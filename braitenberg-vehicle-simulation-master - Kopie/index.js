@@ -52,7 +52,7 @@ function bodySettings(components, renderComponents) {
    // console.log("sb id", sb.id);
 
     if (components.length) {
-        $('.switch-btn').addClass("switch-on");
+        $('#solidBody.switch-btn').addClass("switch-on");
 
         $("#rectangle").prop('disabled', false); 
         $("#circle").prop('disabled', false); 
@@ -78,7 +78,7 @@ function bodySettings(components, renderComponents) {
 
 
     } else {
-        $('.switch-btn').removeClass("switch-on");
+        $('#solidBody.switch-btn').removeClass("switch-on");
         $("#rectangle").prop('checked', false);
         $("#rectangle").prop('disabled', true); 
         $("#circle").prop('checked', false);
@@ -90,25 +90,22 @@ function bodySettings(components, renderComponents) {
 console.log(renderComponents[0].asset.value);
 
 switch (renderComponents[0].asset.value) {
-    case 13421772: {
+    case 13421772: 
         $("#grey").prop('checked', true);
         break;
-    }
-    case 13713746: {
+    
+    case 13713746: 
         $("#red").prop('checked', true);
         console.log('red');
         break;
-    }
-    case 5744185: {
+    
+    case 5744185: 
         $("#green").prop('checked', true);
         break;
-    }
-    case 1791363: {
+    
+    case 1791363: 
         $("#blue").prop('checked', true);
         break;
-    
-    }  
-
 }
 
 }

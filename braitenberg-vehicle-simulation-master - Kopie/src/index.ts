@@ -113,7 +113,7 @@ $('input[name="substance"]:radio').change(function () {
 
 
 // add remove solid body
-$('.switch-btn').click(function(){
+$('#solidBody.switch-btn').click(function(){
 	$(this).toggleClass('switch-on');
     if ($(this).hasClass('switch-on')) {
         $(this).trigger('on.switch');
@@ -125,6 +125,18 @@ $('.switch-btn').click(function(){
     }
 });
 
+//static
+$('#static.switch-btn').click(function(){
+	$(this).toggleClass('switch-on');
+    if ($(this).hasClass('switch-on')) {
+        $(this).trigger('on.switch');
+        
+        
+    } else {
+        $(this).trigger('off.switch');       
+        
+    }
+});
 
 
 // add sensor	!!!!!!!!!!!!!!!!!!!!!! peredelat dlya vsech
