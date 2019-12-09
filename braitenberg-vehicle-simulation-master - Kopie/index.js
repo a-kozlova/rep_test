@@ -106,7 +106,7 @@ switch (renderComponents[0].asset.value) {
     case 1791363: {
         $("#blue").prop('checked', true);
         break;
-    }  
+    
     }  
 
 }
