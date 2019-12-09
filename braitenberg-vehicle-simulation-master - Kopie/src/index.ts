@@ -126,16 +126,21 @@ $('#solidBody.switch-btn').click(function(){
 });
 
 //static
-$('#static.switch-btn').click(function(){
+$('#static.switch-btn').click(function(){ 
+if(entity.getComponent("Koerper")){
 	$(this).toggleClass('switch-on');
     if ($(this).hasClass('switch-on')) {
         $(this).trigger('on.switch');
-        
+        entity.getComponent("Koerper").setStatic(true);
+		console.log(entity);
         
     } else {
         $(this).trigger('off.switch');       
-        
+        entity.getComponent("Koerper").setStatic(false);
+		console.log(entity);
     }
+}
+	
 });
 
 

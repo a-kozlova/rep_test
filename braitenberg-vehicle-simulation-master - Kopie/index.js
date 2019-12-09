@@ -52,7 +52,13 @@ function bodySettings(components, renderComponents) {
    // console.log("sb id", sb.id);
 
     if (components.length) {
+        $("#static").prop('disabled', false); 
         $('#solidBody.switch-btn').addClass("switch-on");
+        if (components[0].isStatic.get()){
+            $('#static.switch-btn').addClass("switch-on");
+        } else {
+            $('#static.switch-btn').removeClass("switch-on");
+        }
 
         $("#rectangle").prop('disabled', false); 
         $("#circle").prop('disabled', false); 
@@ -83,11 +89,11 @@ function bodySettings(components, renderComponents) {
         $("#rectangle").prop('disabled', true); 
         $("#circle").prop('checked', false);
         $("#circle").prop('disabled', true); 
+        
+        $('#static.switch-btn').removeClass("switch-on");
 
        return
     }
-
-console.log(renderComponents[0].asset.value);
 
 switch (renderComponents[0].asset.value) {
     case 13421772: 
