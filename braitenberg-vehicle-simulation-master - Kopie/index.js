@@ -36,6 +36,30 @@ function openSettings(event) {
     sensorSettings(sensorComponents);
     console.log("opensettings");
     bodySettings(solidBodyComponents, renderComponents);
+    emissionSettings(sourceComponents);
+}
+
+function emissionSettings(sourceComponents) {
+    if (sourceComponents.length){
+        if(sourceComponents[0].substance.value ==="Licht") {
+            $("#sour").prop('checked', true);
+            $("#barrier").prop('checked', false);
+        }
+        if(sourceComponents[0].substance.value ==="Hindernis") {
+            $("#sour").prop('checked', false);
+            $("#barrier").prop('checked', true);
+        }
+
+
+        
+    } else {
+        $("#barrier").prop('checked', false);
+        $("#sour").prop('checked', false);
+        $("#gaussian").prop('checked', false);
+        $("#flat").prop('checked', false);
+        $("#deleteEmission").prop('disabled', true);
+    }
+
 }
 
 

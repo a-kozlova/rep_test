@@ -94,6 +94,7 @@ $('input[name="form"]:radio').change(function () {
 		});
     });
 $('input[name="substance"]:radio').change(function () {		
+        $("#deleteEmission").prop('disabled', false);
 		if (!entity.hasComponents(ComponentType.SOURCE)){
 			let source = new SourceComponent({range: 100,});				
 			entity.addComponent(source);

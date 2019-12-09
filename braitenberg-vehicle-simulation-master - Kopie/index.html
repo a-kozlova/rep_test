@@ -102,7 +102,7 @@
                 </div>
                 <!--EMISSION-->
                 <div role="tabpanel" class="tab-pane fade" id="emission">
-                    <h4>Type</h4>
+                    <h4>Substance type</h4>
                     <div id="substance">
                         <div class="custom-control">
                             <input type="radio" id="barrier" name="substance" class="custom-control-input" value="barrier">
@@ -113,7 +113,19 @@
                             <label class="custom-control-label" for="sour">Source</label>
                         </div>
                     </div>
-					<div > <button id = "deleteEmission" disabled>Delete emission </button></div>
+					<h4>Emission type</h4>
+                    <div id="emission">
+                        <div class="custom-control">
+                            <input type="radio" id="gaus" name="emission" class="custom-control-input" value="gaus">
+                            <label class="custom-control-label" for="gaussian">Gaussian</label>
+                        </div>
+						<!--FLAT??????? -->
+                        <div class="custom-control">
+                            <input type="radio" id="flat" name="emission" class="custom-control-input" value="flat">
+                            <label class="custom-control-label" for="flat">Flat</label>
+                        </div>
+                    </div>
+					<div > <button id = "deleteEmission">Delete emission </button></div>
                 </div>
                 <!--BODY-->
                 <div role="tabpanel" class="tab-pane fade" id="solidBody">
@@ -126,6 +138,7 @@
                         </div>
                     </div>
                     
+
 					<div class="row">
                         <div class="col-6 left">
                             Static
