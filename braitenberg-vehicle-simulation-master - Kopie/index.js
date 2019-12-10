@@ -446,12 +446,11 @@ components.forEach((component,index) => {
                 max: 100,
                 values: [component.defaultSpeed.get(), component.maxSpeed.get()],
                 slide: function (event, ui) {
-
-                $("#" + component.id).val("$" + ui.values[0] + " - $" + ui.values[1]);
+                
                 component.setDefaultSpeed(ui.values[0]);
-                component.setDefaultSpeed(ui.values[1]);
-                    console.log(component.defaultSpeed.get());
-                    console.log(component.maxSpeed.get());
+                component.setMaxSpeed(ui.values[1]);
+                $("#" + component.id).val("$" + ui.values[0] + " - $" + ui.values[1]);
+
                 }
             });
             $("#" + component.id).css('background', color[index]);
