@@ -72,8 +72,6 @@ $('.prefab-btn').click(function(){
 });
 
 
-//Checkbox Inputs
-
 
 // add remove emission
 $('#emis.switch-btn').click(function(){
@@ -88,6 +86,7 @@ $('#emis.switch-btn').click(function(){
     }
 });
 
+//Farbe
 $('input[name="farbe"]:radio').change(function () {
 	entity.components.forEach(component => {
 			if (component.name == "Rendering") {
@@ -96,6 +95,8 @@ $('input[name="farbe"]:radio').change(function () {
 		});
 		       
     });
+
+//Form
 $('input[name="form"]:radio').change(function () {
 		entity.components.forEach(component => {
 			if (component.name == "Koerper") {
@@ -103,38 +104,33 @@ $('input[name="form"]:radio').change(function () {
 			}
 		});
     });
+
+//SubstanceType
 $('input[name="substance"]:radio').change(function () {	
 		if (!entity.hasComponents(ComponentType.SOURCE)){
 			mytestgame.scene.scenes[3].addSource(entity);
-		} 
-		
+		} 		
 		entity.components.forEach(component => {			
 			if (component.name == "Quelle") {
 				component.setSubstanceType($("input[name='substance']:checked").val());
 			} 			
 		});				
 		
-		console.log(entity);
     });
 
+//Emission type
 $('input[name="emission"]:radio').change(function () {		
         $("#deleteEmission").prop('disabled', false);
 		if (!entity.hasComponents(ComponentType.SOURCE)){
 			mytestgame.scene.scenes[3].addSource(entity);
 
-		} 
-		
+		} 		
 		entity.components.forEach(component => {			
 			if (component.name == "Quelle") {
 				component.setEmissionType($("input[name='emission']:checked").val());
 			} 			
 		});				
-		
-		console.log(entity);
     });
-
-
-
 
 
 // add remove solid body

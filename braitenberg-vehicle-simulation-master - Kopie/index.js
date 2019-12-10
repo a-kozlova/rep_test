@@ -430,18 +430,15 @@ function drawOnCanvas(components, cName, size) {
 
 
 
-
-
-
-
 function drawSliders(components) {
+$('#sliders').children().each((idx, child) => {
+            child.remove('div');
+        });  
    
     components.forEach(component => {
-        $("#slider-range").append('<input id = "' + component.id + '"  readonly style="border:0; color:#f6931f; font-weight:bold;" >');
+        $("#sliders").append('<div id="slider-range">');
         console.log(component);
     });
-
-
  
 components.forEach(component => {
         var slider = $(function () {
@@ -459,9 +456,6 @@ components.forEach(component => {
             
             });
         });
-    
-
-
     
 }
 
