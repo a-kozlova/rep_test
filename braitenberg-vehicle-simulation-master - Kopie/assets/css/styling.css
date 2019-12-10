@@ -337,6 +337,8 @@ h4 {
 }
 
 
+/*Switch on*/
+
 .switch-btn {
     display: inline-block;
     width: 50px; /* ширина */
@@ -367,3 +369,40 @@ h4 {
 .switch-on::after {
     left: 26px;
 }
+
+/*slider*/
+.slidecontainer {
+	width: 100%; /* Width of the outside container */
+}
+
+/* The slider itself */
+.slider {
+	align: center;
+	-webkit-appearance: none;  /* Override default CSS styles */
+	appearance: none;
+	width: 80%; 
+	height: 25px; /* Specified height */
+	background: #efefef; 
+	outline: none; /* Remove outline */
+	opacity: 0.5; /* Set transparency (for mouse-over effects on hover) */
+	-webkit-transition: .2s; /* 0.2 seconds transition on hover */
+	transition: opacity .2s;
+	margin: 15px;
+	margin-left: 10%;
+	color: red;
+}
+
+.ui-widget-header  {
+	background: #ededed !important;
+}
+
+
+/* Mouse-over effects */
+.slider:hover {
+    opacity: 0.7;
+}
+
+
+
+
+

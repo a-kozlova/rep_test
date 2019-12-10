@@ -55,4 +55,12 @@ export default class MotorComponent extends Component {
         console.log("set vector in component", newX, newY);
         this.position.set({ x: newX, y: newY });
     }
+
+	public setDefaultSpeed(speed: number) {        
+        this.defaultSpeed.set(speed);
+    }
+	public setMaxSpeed(speed: number) {        
+        this.maxSpeed.set(speed);
+    }
+
 }

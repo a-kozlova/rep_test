@@ -431,27 +431,30 @@ function drawOnCanvas(components, cName, size) {
 
 
 function drawSliders(components) {
-   $('#slider').children().each((idx, child) => {
+   $('#slidecontainer').children().each((idx, child) => {
             child.remove('div');
         }); 
     components.forEach(component => {
-        $("#slider").append('<div id = "' + component.id + '">');
-
+        $("#slidecontainer").append('<div id = "' + component.id + '" class="slider">');
     });
  
-components.forEach(component => {
+components.forEach((component,index) => {
         var slider = $(function () {
             $("#" + component.id).slider({
                 range: true,
                 min: 0,
                 max: 100,
-                values: [component.defaultSpeed.value, component.maxSpeed.value],
+                values: [component.defaultSpeed.get(), component.maxSpeed.get()],
                 slide: function (event, ui) {
 
-                    $("#" + component.id).val("$" + ui.values[0] + " - $" + ui.values[1]);
-                    console.log("slovo", $("#amount").val());
+                $("#" + component.id).val("$" + ui.values[0] + " - $" + ui.values[1]);
+                component.setDefaultSpeed(ui.values[0]);
+                component.setDefaultSpeed(ui.values[1]);
+                    console.log(component.defaultSpeed.get());
+                    console.log(component.maxSpeed.get());
                 }
             });
+            $("#" + component.id).css('background', color[index]);
             
             });
         });
