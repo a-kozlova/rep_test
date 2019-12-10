@@ -35,16 +35,49 @@ function openSettings(event) {
 
     sensorSettings(sensorComponents);
     console.log("opensettings");
-    bodySettings(solidBodyComponents);
+    bodySettings(solidBodyComponents, renderComponents);
+    emissionSettings(sourceComponents);
+}
+
+function emissionSettings(sourceComponents) {
+    if (sourceComponents.length){
+        if(sourceComponents[0].substance.value ==="Licht") {
+            $("#sour").prop('checked', true);
+            $("#barrier").prop('checked', false);
+        }
+        if(sourceComponents[0].substance.value ==="Hindernis") {
+            $("#sour").prop('checked', false);
+            $("#barrier").prop('checked', true);
+        }
+
+        if(sourceComponents[0].emissionType.value ==="GAUSSIAN") {
+            $("#gaus").prop('checked', true);
+            $("#flat").prop('checked', false);
+        }
+        if(sourceComponents[0].emissionType.value ==="FLAT") {
+            $("#gaus").prop('checked', false);
+            $("#flat").prop('checked', true);
+        }        
+    } else {
+        $("#barrier").prop('checked', false);
+        $("#sour").prop('checked', false);
+        $("#gaus").prop('checked', false);
+        $("#flat").prop('checked', false);
+        $("#deleteEmission").prop('disabled', true);
+    }
+
 }
 
 
-function bodySettings(components) {
+
+    
+
+function bodySettings(components, renderComponents) {
     // Zuerst alle input-Kindknoten löschen, 
     // damit keine Abhaengigkeiten zwischen Komponenten der verschiedenen Entitäten entstehen
-  $('#bodySize').children("input").each((idx, child) => {
-      child.remove();
-  });
+    $('#bodySize').children("input").each((idx, child) => {
+        child.remove();
+    });
   
     // input erneut erzeugen
     $('#bodyWidth').after('<input id="width" class="col-3">');
@@ -52,7 +85,17 @@ function bodySettings(components) {
 
     // wenn SolidBodyComponent vorhanden, den Button auf ON setzten
     if (components.length) {
+
         $('.switch-btn').addClass("switch-on");
+
+        $("#static").prop('disabled', false); 
+        $('#solidBody.switch-btn').addClass("switch-on");
+        if (components[0].isStatic.get()){
+            $('#static.switch-btn').addClass("switch-on");
+        } else {
+            $('#static.switch-btn').removeClass("switch-on");
+        }
+
 
         $("#rectangle").prop('disabled', false); 
         $("#circle").prop('disabled', false); 
@@ -78,12 +121,37 @@ function bodySettings(components) {
         });
 
     } else {
-        $('.switch-btn').removeClass("switch-on");
+        $('#solidBody.switch-btn').removeClass("switch-on");
         $("#rectangle").prop('checked', false);
         $("#rectangle").prop('disabled', true); 
         $("#circle").prop('checked', false);
         $("#circle").prop('disabled', true); 
+
+        
+        $('#static.switch-btn').removeClass("switch-on");
+
+       return
     }
+
+switch (renderComponents[0].asset.value) {
+    case 13421772: 
+        $("#grey").prop('checked', true);
+        break;
+    
+    case 13713746: 
+        $("#red").prop('checked', true);
+        console.log('red');
+        break;
+    
+    case 5744185: 
+        $("#green").prop('checked', true);
+        break;
+    
+    case 1791363: 
+        $("#blue").prop('checked', true);
+        break;
+    }
+
 }
 
 function sensorSettings(components) {
@@ -360,26 +428,34 @@ function drawOnCanvas(components, cName, size) {
 
 
 function drawSliders(components) {
-    var slider = `<div class="d-flex justify-content-center my-8">
-                             <span class="font-weight-bold indigo-text mr-2 mt-1">0</span>
-                             <form class="range-field w-25">
-                                 <input class="border-0" type="range" min="0" max="100" />
-                             </form>
-                             <span class="font-weight-bold indigo-text ml-2 mt-1">100</span>
-                         </div>`;
-
-    var maxSpeed = document.getElementById("maxSpeed");
-    var minSpeed = document.getElementById("minSpeed");
-    var sliders = [];
+   
     components.forEach(component => {
-        if (component.name == "Motor") {
-            sliders.push(slider);
-        }
+        $("#slider-range").append('<input id = "' + component.id + '"  readonly style="border:0; color:#f6931f; font-weight:bold;" >');
+        console.log(component);
     });
 
 
-    maxSpeed.innerHTML = sliders;
-    minSpeed.innerHTML = sliders;
+ 
+components.forEach(component => {
+        var slider = $(function () {
+            $("#slider-range").slider({
+                range: true,
+                min: 0,
+                max: 100,
+                values: [component.defaultSpeed.value, component.maxSpeed.value],
+                slide: function (event, ui) {
+
+                    $("#" + component.id).val("$" + ui.values[0] + " - $" + ui.values[1]);
+                    console.log("slovo", $("#amount").val());
+                }
+            });
+            
+            });
+        });
+    
+
+
+    
 }
 
 

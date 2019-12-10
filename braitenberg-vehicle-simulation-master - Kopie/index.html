@@ -60,15 +60,25 @@
                 <!--MOTOR-->
                 <div role="tabpanel" class="tab-pane active" id="motor">
                     <h4>Position</h4>
-                    
-                    <div id="motorContainer"  class="col-12" style="border: 1px green dashed">
+
+                    <div id="motorContainer" class="col-12" style="border: 1px green dashed">
                         <canvas id="motorCanvas"> </canvas>
                     </div>
-                        
+
+
                     <h4>Min Speed</h4>
                     <div id="minSpeed"> </div>
                     <h4>Max Speed</h4>
                     <div id="maxSpeed"> </div>
+                    
+                    <h4>Speed</h4>
+                    <div id="slider-range" class="col-8 center"></div>
+
+                    <!--<h4>Min Speed</h4>
+    <div id="minSpeed"> </div>
+    <h4>Max Speed</h4>
+    <div id="maxSpeed"> </div>-->
+                    
                 </div>
                 <!--SENSOR-->
                 <div role="tabpanel" class="tab-pane fade" id="sensor">
@@ -90,7 +100,7 @@
                 </div>
                 <!--EMISSION-->
                 <div role="tabpanel" class="tab-pane fade" id="emission">
-                    <h4>Type</h4>
+                    <h4>Substance type</h4>
                     <div id="substance">
                         <div class="custom-control">
                             <input type="radio" id="barrier" name="substance" class="custom-control-input" value="barrier">
@@ -101,7 +111,19 @@
                             <label class="custom-control-label" for="sour">Source</label>
                         </div>
                     </div>
-					<div > <button id = "deleteEmission" disabled>Delete emission </button></div>
+					<h4>Emission type</h4>
+                    <div id="emission">
+                        <div class="custom-control">
+                            <input type="radio" id="gaus" name="emission" class="custom-control-input" value="gaus">
+                            <label class="custom-control-label" for="gaus">Gaussian</label>
+                        </div>
+						<!--FLAT??????? -->
+                        <div class="custom-control">
+                            <input type="radio" id="flat" name="emission" class="custom-control-input" value="flat">
+                            <label class="custom-control-label" for="flat">Flat</label>
+                        </div>
+                    </div>
+					<div > <button id = "deleteEmission">Delete emission </button></div>
                 </div>
                 <!--BODY-->
                 <div role="tabpanel" class="tab-pane fade" id="solidBody">
@@ -110,14 +132,18 @@
                             Solid Body
                         </div>
                         <div class="col-6 right">
-                            <div class="switch-btn"></div>
+                            <div class="switch-btn" id="solidBody"></div>
                         </div>
                     </div>
                     
-                    <!--NE RABOTAET!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!-->
-                    <div class="col-6 left ">
-                        <input type="checkbox" id="exampleCheck1">
-                        <label for="exampleCheck1">Static</label>
+
+					<div class="row">
+                        <div class="col-6 left">
+                            Static
+                        </div>
+                        <div class="col-6 right">
+                            <div class="switch-btn" id="static"></div>
+                        </div>
                     </div>
                     
 
@@ -140,7 +166,7 @@
                     </div>
 
                     <h4>Color</h4>
-                    <div class="custom-control custom-radio">
+                    <div class="custom-control custom-radio" id="color">
                         <input type="radio" id="grey" name="farbe" class="custom-control-input" value="grey">
                         <label class="custom-control-label" for="grey">Grey</label>
                     </div>
