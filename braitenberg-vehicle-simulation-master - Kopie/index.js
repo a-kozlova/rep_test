@@ -40,27 +40,23 @@ function openSettings(event) {
 
 
 function bodySettings(components) {
-
+    // Zuerst alle input-Kindknoten löschen, 
+    // damit keine Abhaengigkeiten zwischen Komponenten der verschiedenen Entitäten entstehen
   $('#bodySize').children("input").each((idx, child) => {
       child.remove();
   });
   
-
+    // input erneut erzeugen
     $('#bodyWidth').after('<input id="width" class="col-3">');
     $('#bodyHeight').after('<input id="height" class="col-3">');
-    console.log("bodysize div chld", $('#bodySize').children());
-    //wenn SolidBodyComponent vorhanden, den Button auf ON setzten
-   // console.log("sb id", sb.id);
 
+    // wenn SolidBodyComponent vorhanden, den Button auf ON setzten
     if (components.length) {
         $('.switch-btn').addClass("switch-on");
-
-       
 
         $("#rectangle").prop('disabled', false); 
         $("#circle").prop('disabled', false); 
 
-        console.log("tut", $("#width") );
         if (components[0].shape.value === "Rechteck") {
             $("#rectangle").prop('checked', true);
         } else if (components[0].shape.value === "Kreis") {
@@ -75,11 +71,11 @@ function bodySettings(components) {
             let newValue = $("#width").val(); // get the current value of the input field.
             components[0].setSize({ width: parseInt(newValue), height: components[0].size.value.height });
         });
+
         $("#height").change(function () {
             let newValue = $("#height").val(); // get the current value of the input field.
             components[0].setSize({ width: components[0].size.value.width, height: parseInt(newValue)});
         });
-
 
     } else {
         $('.switch-btn').removeClass("switch-on");
@@ -87,14 +83,12 @@ function bodySettings(components) {
         $("#rectangle").prop('disabled', true); 
         $("#circle").prop('checked', false);
         $("#circle").prop('disabled', true); 
-
-       return
     }
 }
 
 function sensorSettings(components) {
 
-    // wenn inputs bereits vorhanden sind, entfernen
+    // wenn inputs bereits vorhanden sind, entfernen (sonst werden sie bei jedem ENTITY_SELECTED angehängt)
     if ($('#sensorRow  > form').children().length) {
         $('#sensorRow > form').children().each((idx, child) => {
             child.remove('input');
@@ -114,7 +108,7 @@ function sensorSettings(components) {
             '<input id = "angle' + component.id + '" style = "background: ' + color[index] +
             '; margin-bottom:10px" placeholder = "' + component.angle.value + '">');
 
-        //ne rabotaet podklu4it bootstrap toggle?
+        // ne rabotaet podklu4it bootstrap toggle?
         $("#sensorReaction").append('<input type="checkbox" data-toggle="toggle" data-on="on" data-off="off" data-onstyle="success" data-offstyle="danger">');
             
         $('#range' + component.id).on('input', function () {
@@ -134,6 +128,10 @@ function sensorSettings(components) {
 function drawOnCanvas(components, cName, size) {
     var motors = [];
 
+    console.log($("#sensorContainer").child);
+    //$("#sensorContainer").append('<canvas id="sensorCanvas"> </canvas>');
+
+
     var canvas;
     if (cName == "Motor") {
         canvas = document.getElementById("motorCanvas");
@@ -142,8 +140,10 @@ function drawOnCanvas(components, cName, size) {
         canvas = document.getElementById("sensorCanvas");
     }
 
-    var width = canvas.width = 100 + 20,
-        height = canvas.height = 150 + 20,
+    canvas.width = 256;
+    canvas.height = 256;
+    var width = 100 + 20,
+        height =  150 + 20,
         ratioX = ratioY = 1;
     if (size) {
         ratioX = (width-20) / size.width;
@@ -152,7 +152,7 @@ function drawOnCanvas(components, cName, size) {
        
     var context = canvas.getContext("2d"),
         // TODO hier size einsetzen
-        startPoint = { "x": canvas.width / 2, "y": canvas.height / 2 },
+        startPoint = { "x": width / 2, "y": height / 2 },
         offset = {},
         isDragging = false,
         dragHandle = null;
@@ -162,7 +162,7 @@ function drawOnCanvas(components, cName, size) {
         let motor = {
             x: startPoint.x - ratioX * component.position.value.x,
             y: startPoint.y - ratioY * component.position.value.y,
-            radius: 5,
+            radius: 7,
             id: component.id,
             color: color[i],
             name: cName
