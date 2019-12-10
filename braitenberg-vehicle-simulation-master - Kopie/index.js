@@ -41,6 +41,12 @@ function openSettings(event) {
 
 function emissionSettings(sourceComponents) {
     if (sourceComponents.length){
+        $('#static.switch-btn').addClass("switch-on");
+
+        $("#barrier").prop('disabled', false);
+        $("#sour").prop('disabled', false);
+        $("#gaus").prop('disabled', false);
+        $("#flat").prop('disabled', false);
         if(sourceComponents[0].substance.value ==="Licht") {
             $("#sour").prop('checked', true);
             $("#barrier").prop('checked', false);
@@ -59,15 +65,20 @@ function emissionSettings(sourceComponents) {
             $("#flat").prop('checked', true);
         }        
     } else {
+        $('#static.switch-btn').removeClass("switch-on");
+
         $("#barrier").prop('checked', false);
         $("#sour").prop('checked', false);
         $("#gaus").prop('checked', false);
         $("#flat").prop('checked', false);
+
+        $("#barrier").prop('disabled', true);
+        $("#sour").prop('disabled', true);
+        $("#gaus").prop('disabled', true);
+        $("#flat").prop('disabled', true);
     }
 
 }
-
-
 
     
 
@@ -84,17 +95,14 @@ function bodySettings(components, renderComponents) {
 
     // wenn SolidBodyComponent vorhanden, den Button auf ON setzten
     if (components.length) {
-
-        $('.switch-btn').addClass("switch-on");
-
         $("#static").prop('disabled', false); 
         $('#solidBody.switch-btn').addClass("switch-on");
+
         if (components[0].isStatic.get()){
             $('#static.switch-btn').addClass("switch-on");
         } else {
             $('#static.switch-btn').removeClass("switch-on");
         }
-
 
         $("#rectangle").prop('disabled', false); 
         $("#circle").prop('disabled', false); 
