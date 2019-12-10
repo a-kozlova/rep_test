@@ -81,8 +81,8 @@ $('#emis.switch-btn').click(function(){
         mytestgame.scene.scenes[3].addSource(entity);
         
     } else {
-        $(this).trigger('off.switch');       
-        mytestgame.scene.scenes[3].deleteSource(entity,  entity.getComponent("Source"));
+        $(this).trigger('off.switch');
+        mytestgame.scene.scenes[3].deleteSource(entity, entity.getComponent(ComponentType.SOURCE));
     }
 });
 
@@ -141,8 +141,8 @@ $('#solidBody.switch-btn').click(function(){
         mytestgame.scene.scenes[3].addSolidBody(entity);
         
     } else {
-        $(this).trigger('off.switch');       
-        mytestgame.scene.scenes[3].deleteSolidBody(entity,  entity.getComponent("Koerper"));
+        $(this).trigger('off.switch');
+        mytestgame.scene.scenes[3].deleteSolidBody(entity, entity.getComponent(ComponentType.SOLID_BODY));
     }
 });
 
