@@ -63,7 +63,6 @@ function emissionSettings(sourceComponents) {
         $("#sour").prop('checked', false);
         $("#gaus").prop('checked', false);
         $("#flat").prop('checked', false);
-        $("#deleteEmission").prop('disabled', true);
     }
 
 }

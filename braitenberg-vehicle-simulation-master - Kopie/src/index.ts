@@ -74,13 +74,18 @@ $('.prefab-btn').click(function(){
 
 //Checkbox Inputs
 
-$("#deleteEmission").on('click', function(){
-	console.log('delete emission');
-	    $("#barrier").prop('checked', false);
-        $("#sour").prop('checked', false);
-        $("#gaus").prop('checked', false);
-        $("#flat").prop('checked', false);
-		mytestgame.scene.scenes[3].deleteSource(entity);
+
+// add remove emission
+$('#emis.switch-btn').click(function(){
+	$(this).toggleClass('switch-on');
+    if ($(this).hasClass('switch-on')) {
+        $(this).trigger('on.switch');
+        mytestgame.scene.scenes[3].addSource(entity);
+        
+    } else {
+        $(this).trigger('off.switch');       
+        mytestgame.scene.scenes[3].deleteSource(entity,  entity.getComponent("Source"));
+    }
 });
 
 $('input[name="farbe"]:radio').change(function () {
@@ -98,8 +103,7 @@ $('input[name="form"]:radio').change(function () {
 			}
 		});
     });
-$('input[name="substance"]:radio').change(function () {		
-        $("#deleteEmission").prop('disabled', false);
+$('input[name="substance"]:radio').change(function () {	
 		if (!entity.hasComponents(ComponentType.SOURCE)){
 			mytestgame.scene.scenes[3].addSource(entity);
 		} 
