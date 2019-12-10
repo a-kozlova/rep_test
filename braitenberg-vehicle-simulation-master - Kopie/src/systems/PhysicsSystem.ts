@@ -62,7 +62,7 @@ export default class PhysicsSystem extends System {
         }
 
         graphics.lineStyle(1, bodyColor, part.render.opacity);
-        graphics.fillStyle(bodyColor, part.render.opacity);
+        //graphics.fillStyle(bodyColor, part.render.opacity);
 
         //  Part polygon
         if (part.circleRadius) {
