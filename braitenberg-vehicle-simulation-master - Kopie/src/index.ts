@@ -76,10 +76,20 @@ $('.prefab-btn').click(function(){
 
 $("#deleteEmission").on('click', function(){
 	console.log('delete emission');
+	    $("#barrier").prop('checked', false);
+        $("#sour").prop('checked', false);
+        $("#gaus").prop('checked', false);
+        $("#flat").prop('checked', false);
+		mytestgame.scene.scenes[3].deleteSource(entity);
 });
 
 $('input[name="farbe"]:radio').change(function () {
-        alert($("input[name='farbe']:checked").val());
+	entity.components.forEach(component => {
+			if (component.name == "Rendering") {
+				component.setColor($("input[name='farbe']:checked").val());            
+			}
+		});
+		       
     });
 $('input[name="form"]:radio').change(function () {
 		entity.components.forEach(component => {
@@ -89,9 +99,9 @@ $('input[name="form"]:radio').change(function () {
 		});
     });
 $('input[name="substance"]:radio').change(function () {		
+        $("#deleteEmission").prop('disabled', false);
 		if (!entity.hasComponents(ComponentType.SOURCE)){
-			let source = new SourceComponent({range: 100,});				
-			entity.addComponent(source);
+			mytestgame.scene.scenes[3].addSource(entity);
 		} 
 		
 		entity.components.forEach(component => {			
@@ -103,12 +113,28 @@ $('input[name="substance"]:radio').change(function () {
 		console.log(entity);
     });
 
+$('input[name="emission"]:radio').change(function () {		
+        $("#deleteEmission").prop('disabled', false);
+		if (!entity.hasComponents(ComponentType.SOURCE)){
+			mytestgame.scene.scenes[3].addSource(entity);
+
+		} 
+		
+		entity.components.forEach(component => {			
+			if (component.name == "Quelle") {
+				component.setEmissionType($("input[name='emission']:checked").val());
+			} 			
+		});				
+		
+		console.log(entity);
+    });
+
 
 
 
 
 // add remove solid body
-$('.switch-btn').click(function(){
+$('#solidBody.switch-btn').click(function(){
 	$(this).toggleClass('switch-on');
     if ($(this).hasClass('switch-on')) {
         $(this).trigger('on.switch');
@@ -120,6 +146,23 @@ $('.switch-btn').click(function(){
     }
 });
 
+//static
+$('#static.switch-btn').click(function(){ 
+if(entity.getComponent("Koerper")){
+	$(this).toggleClass('switch-on');
+    if ($(this).hasClass('switch-on')) {
+        $(this).trigger('on.switch');
+        entity.getComponent("Koerper").setStatic(true);
+		console.log(entity);
+        
+    } else {
+        $(this).trigger('off.switch');       
+        entity.getComponent("Koerper").setStatic(false);
+		console.log(entity);
+    }
+}
+	
+});
 
 
 // add sensor	!!!!!!!!!!!!!!!!!!!!!! peredelat dlya vsech

@@ -106,6 +106,7 @@ export default class RenderSystem extends System {
         body ? body.size.get().width : render.size.get().width,
         body ? body.size.get().height : renderHeight,
         render.asset.get() as number,
+		0.3,
       );
     } else {
       image = this.scene.add.image(

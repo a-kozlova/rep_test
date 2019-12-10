@@ -42,8 +42,20 @@ export default class SourceComponent extends Component {
 			this.substance.set(SubstanceType.BARRIER);
 			break;
 		}
+	}	
+	
 	}
-	
-	
+
+	public setEmissionType(emission){
+	switch (emission) {
+		case 'gaus': {
+			this.emissionType.set(EmissionType.GAUSSIAN);
+			break;
+		}
+		case 'flat': {
+			this.emissionType.set(EmissionType.FLAT);
+			break;
+		}
+	}
 	}
 }

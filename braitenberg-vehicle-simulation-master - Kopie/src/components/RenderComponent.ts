@@ -60,4 +60,27 @@ export default class RenderComponent extends Component {
       );
     }
   }
+
+  public setColor (color: string) {
+	  switch (color){
+  		  case 'grey': {
+			this.asset.set(0xcccccc);
+			break;
+		  }
+		  case 'red': {
+			this.asset.set(0xd14152);
+			break;
+		  }
+		  case 'green': {
+			this.asset.set(0x57a639);
+			break;
+		  }
+		  case 'blue': {
+			this.asset.set(0x1b5583);
+			break;
+		  }
+  }
+  
+  
+  }
 }
