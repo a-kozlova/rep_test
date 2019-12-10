@@ -156,7 +156,7 @@ export default class PhysicsSystem extends System {
 
   // überprüft ob fälschlicherweise die Körper Komponente gelöscht wurde,
   // falls nicht wird die onEntityDestroyed aufgerufen
-  protected onEntityComponentRemoved(entity: Entity, component: Component): void {
+    protected onEntityComponentRemoved(entity: Entity, component: Component): void {
     if (component.name !== ComponentType.SOLID_BODY) return;
 
     this.onEntityDestroyed(entity);

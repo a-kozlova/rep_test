@@ -7,7 +7,7 @@ export default abstract class Component {
   // iteriert werden kann.
   [key: string]: number | boolean | string | Attribute<any, any> | Function;
 
-  public abstract name: ComponentType | string;
+  public abstract name: ComponentType;
 
   public id: number;
 
