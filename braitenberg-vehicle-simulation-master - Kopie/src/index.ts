@@ -78,12 +78,13 @@ $('#emis.switch-btn').click(function(){
 	$(this).toggleClass('switch-on');
     if ($(this).hasClass('switch-on')) {
         $(this).trigger('on.switch');
-		entity.getComponent("Quelle").activateSourceComponent();        
-        
+		entity.getComponent("Quelle").activateSourceComponent();           
     } else {
         $(this).trigger('off.switch');
         entity.getComponent("Quelle").deactivateSourceComponent();
     }
+	$('#emRange').attr('placeholder',  entity.getComponent("Quelle").range.value);
+	$('#emRange').attr('value',  entity.getComponent("Quelle").range.value);
 	var event = new CustomEvent("componentChanged", { detail: entity });
     document.dispatchEvent(event);
 });

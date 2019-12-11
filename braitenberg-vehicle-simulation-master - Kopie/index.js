@@ -29,21 +29,26 @@ function openSettings(event) {
         size = solidBodyComponents[0].size.value;
     }
 
-
     drawOnCanvas(motorComponents, "Motor", size);
     drawSliders(motorComponents);
 
     drawOnCanvas(sensorComponents, "Sensor", size);
 
     sensorSettings(sensorComponents);
-    console.log("opensettings");
     bodySettings(solidBodyComponents, renderComponents);
     emissionSettings(sourceComponents);
 }
 
 function emissionSettings(sourceComponents) {
+
+	$('#emRange').attr('value', sourceComponents[0].range.value);
     if (sourceComponents[0].isActive){
         $('#static.switch-btn').addClass("switch-on");
+
+        $("#emRange").prop('disabled', false);
+        $('#emRange').on('input', function () {
+            sourceComponents[0].setRange($(this).val());
+        });
 
         $("#barrier").prop('disabled', false);
         $("#sour").prop('disabled', false);
@@ -68,6 +73,8 @@ function emissionSettings(sourceComponents) {
         }        
     } else {
         $('#static.switch-btn').removeClass("switch-on");
+
+        $("#emRange").prop('disabled', true);
 
         $("#barrier").prop('checked', false);
         $("#sour").prop('checked', false);
