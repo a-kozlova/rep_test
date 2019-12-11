@@ -444,7 +444,7 @@ components.forEach((component,index) => {
                 range: true,
                 min: 0,
                 max: 100,
-                step: 5,
+                step: 10,
                 values: [component.defaultSpeed.get(), component.maxSpeed.get()],
                 slide: function (event, ui) {
                 
@@ -455,7 +455,7 @@ components.forEach((component,index) => {
                 }
             });
             $("#" + component.id).css('background', color[index]);
-$('.slider .ui-slider-handle').text('min').css({width:40,'text-align': 'center', 'font-size': '15px', 'p-bottom': '4px'});
+$('.slider .ui-slider-handle').text('min').css({width:40,'text-align': 'center', 'font-size': '15px', 'margin-bottom': '4px'});
             
             });
         });
