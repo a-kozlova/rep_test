@@ -87,6 +87,11 @@ export default class MainScene extends Phaser.Scene {
         size: { width: 200, height: 250 },
       }),
     );
+	entity.addComponent(
+      new SourceComponent({
+        range: 0,
+      }),
+    );
     entity.addComponent(
       new RenderComponent({
         asset: 'vehicle',
@@ -147,6 +152,8 @@ export default class MainScene extends Phaser.Scene {
     );
     EntityManager.addExistingEntity(entity);
 
+
+	//Source
     EntityManager.createEntity(
       new TransformableComponent({ position: { x: 950, y: 350 } }),
       new RenderComponent({
@@ -292,6 +299,9 @@ private createBlank(mouseX, mouseY): void {
         new RenderComponent({
             asset: 'prefab-blank',
             size: 110,
+        }),
+		new SourceComponent({
+        range: 0,
         })
     );   
 }
@@ -312,6 +322,11 @@ private createPrefab2a(mouseX, mouseY): void {
         angle: Math.PI,
       });
       entity.addComponent(transform);
+	  entity.addComponent(
+      new SourceComponent({
+        range: 0,
+      }),
+      );
       entity.addComponent(
         new SolidBodyComponent({
           size: { width: 100, height: 150 },
@@ -369,6 +384,11 @@ private createPrefab2b(mouseX, mouseY): void {
       });
       transform.angle.set(-Math.PI / 2);
       entity.addComponent(transform);
+	  entity.addComponent(
+      new SourceComponent({
+        range: 0,
+      }),
+      );
       entity.addComponent(
         new SolidBodyComponent({
           size: { width: 100, height: 150 },
@@ -426,6 +446,11 @@ private createPrefab3a(mouseX, mouseY): void {
       });
       transform.angle.set(-Math.PI / 2);
       entity.addComponent(transform);
+	  entity.addComponent(
+      new SourceComponent({
+        range: 0,
+      }),
+      );
       entity.addComponent(
         new SolidBodyComponent({
           size: { width: 100, height: 150 },
@@ -483,6 +508,11 @@ private createPrefab3b(mouseX, mouseY): void {
       });
       transform.angle.set(-Math.PI / 2);
       entity.addComponent(transform);
+	  entity.addComponent(
+      new SourceComponent({
+        range: 0,
+      }),
+      );
       entity.addComponent(
         new SolidBodyComponent({
           size: { width: 100, height: 150 },

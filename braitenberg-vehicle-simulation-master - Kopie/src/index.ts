@@ -78,12 +78,14 @@ $('#emis.switch-btn').click(function(){
 	$(this).toggleClass('switch-on');
     if ($(this).hasClass('switch-on')) {
         $(this).trigger('on.switch');
-        mytestgame.scene.scenes[3].addSource(entity);
+		entity.getComponent("Quelle").activateSourceComponent();        
         
     } else {
         $(this).trigger('off.switch');
-        mytestgame.scene.scenes[3].deleteSource(entity, entity.getComponent(ComponentType.SOURCE));
+        entity.getComponent("Quelle").deactivateSourceComponent();
     }
+	var event = new CustomEvent("componentChanged", { detail: entity });
+    document.dispatchEvent(event);
 });
 
 //Farbe
@@ -107,9 +109,6 @@ $('input[name="form"]:radio').change(function () {
 
 //SubstanceType
 $('input[name="substance"]:radio').change(function () {	
-		if (!entity.hasComponents(ComponentType.SOURCE)){
-			mytestgame.scene.scenes[3].addSource(entity);
-		} 		
 		entity.components.forEach(component => {			
 			if (component.name == "Quelle") {
 				component.setSubstanceType($("input[name='substance']:checked").val());
@@ -119,12 +118,7 @@ $('input[name="substance"]:radio').change(function () {
     });
 
 //Emission type
-$('input[name="emission"]:radio').change(function () {		
-        $("#deleteEmission").prop('disabled', false);
-		if (!entity.hasComponents(ComponentType.SOURCE)){
-			mytestgame.scene.scenes[3].addSource(entity);
-
-		} 		
+$('input[name="emission"]:radio').change(function () {			
 		entity.components.forEach(component => {			
 			if (component.name == "Quelle") {
 				component.setEmissionType($("input[name='emission']:checked").val());
@@ -153,12 +147,10 @@ if(entity.getComponent("Koerper")){
     if ($(this).hasClass('switch-on')) {
         $(this).trigger('on.switch');
         entity.getComponent("Koerper").setStatic(true);
-		console.log(entity);
         
     } else {
         $(this).trigger('off.switch');       
         entity.getComponent("Koerper").setStatic(false);
-		console.log(entity);
     }
 }
 	

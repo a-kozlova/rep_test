@@ -18,10 +18,15 @@ export default class SourceComponent extends Component {
   public substance: Attribute<SubstanceType, SelectInput<SubstanceType>>;
 
   public emissionType: Attribute<EmissionType, SelectInput<EmissionType>>;
+  
+  public originalRange: Attribute<number, NumberInput>;
+
+  public isActive: boolean;
 
   public constructor(data: SourceComponentData) {
     super();
     this.range = new Attribute(data.range, NumberInput.create({ label: 'Reichweite' }));
+	this.originalRange = new Attribute(data.range, NumberInput.create({ label: 'Reichweite' }));
     this.substance = new Attribute(
       data.substance || SubstanceType.LIGHT,
       SelectInput.create<SubstanceType, SelectInput<SubstanceType>>({ label: 'Substanz', options: SubstanceType }),
@@ -30,7 +35,26 @@ export default class SourceComponent extends Component {
       data.emissionType || EmissionType.GAUSSIAN,
       SelectInput.create<EmissionType, SelectInput<EmissionType>>({ label: 'Charakteristik', options: EmissionType }),
     );
+	this.isActive = this.range.value === 0 ? false : true;
+	
   }
+	
+	public activateSourceComponent (){
+		if(this.originalRange.value === 0){
+			this.range.set(100);
+		} else {
+			this.range.set(this.originalRange.get());
+		}
+		this.isActive = true;		
+	}
+	public deactivateSourceComponent (){
+		this.originalRange.set(this.range.get());
+		this.range.set(0);
+		this.isActive = false;
+	}
+   public setRange (range: number){
+		this.range.set(range);
+   }
 
    public setSubstanceType(substance){
 	switch (substance) {

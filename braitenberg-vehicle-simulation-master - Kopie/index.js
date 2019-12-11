@@ -5,6 +5,8 @@ var color = ["#00ffff", "#00ff00", "#ff00ff", "#cecece", "#cece00", "#ce00ce", "
 document.addEventListener("entitySelected", openSettings);
 document.addEventListener("attributeAdded", openSettings);
 
+document.addEventListener("componentChanged", openSettings);
+
 function openSettings(event) {
     closeNav();
     //closeSettings();
@@ -40,7 +42,7 @@ function openSettings(event) {
 }
 
 function emissionSettings(sourceComponents) {
-    if (sourceComponents.length){
+    if (sourceComponents[0].isActive){
         $('#static.switch-btn').addClass("switch-on");
 
         $("#barrier").prop('disabled', false);
@@ -458,11 +460,7 @@ components.forEach((component,index) => {
             
            });
         });
-
-
-    
 }
-
 
 
 function closeSettings() {
