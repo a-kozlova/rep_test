@@ -201,7 +201,77 @@ function sensorSettings(components) {
 
 // TODO  size from solidBody? render??
 function drawOnCanvas(components, cName, size) {
-    var motors = [];
+    (function () {
+        var canvas = this.__canvas = new fabric.Canvas('motorCanvas', { selection: false });
+        fabric.Object.prototype.originX = fabric.Object.prototype.originY = 'center';
+        console.log("sdfsd", fabric.Object.prototype.originX);
+
+        function makeCircle(left, top, id) {
+            var c = new fabric.Triangle({
+                left: left,
+                top: top,
+                strokeWidth: 2,
+                width: 10, height: 10, angle: 180,
+                id: id,
+                fill: '#ccc',
+                stroke: '#666'
+            });
+            c.hasControls = false;
+            c.hasBorders = true;
+
+
+
+            return c;
+        }
+
+        function makeLine(coords) {
+            return new fabric.Line(coords, {
+                fill: 'red',
+                stroke: 'red',
+                strokeWidth: 5,
+                selectable: false,
+                evented: false,
+            });
+        }
+
+        //var line = makeLine([ 250, 125, 250, 175 ]),
+        //  line2 = makeLine([ 250, 175, 250, 250 ]),
+        //line3 = makeLine([ 250, 250, 300, 350]),
+        //line4 = makeLine([ 250, 250, 200, 350]),
+        //line5 = makeLine([ 250, 175, 175, 225 ]),
+        //line6 = makeLine([ 250, 175, 325, 225 ]);
+        var c1 = makeCircle(0, 0, 1),
+            c2 = makeCircle(0, 50, 2),
+            c3 = makeCircle(50, 0, 3)
+
+        canvas.add(c1, c2, c3);
+
+        canvas.on({
+            'mouse:down': function (e) {
+                if (e.target) {
+                    e.target.opacity = 0.5;
+                    canvas.renderAll();
+                }
+            },
+            'mouse:up': function (e) {
+                if (e.target) {
+                    e.target.opacity = 1;
+                    console.log(e.target.id);
+                    e.target.top = 200;
+                    canvas.renderAll();
+                }
+            },
+            'object:moved': function (e) {
+                e.target.opacity = 0.5;
+            },
+            'object:modified': function (e) {
+                e.target.opacity = 1;
+            }
+        });
+    })();
+
+
+    /*var motors = [];
 
     console.log($("#sensorContainer").child);
     //$("#sensorContainer").append('<canvas id="sensorCanvas"> </canvas>');
@@ -425,7 +495,7 @@ function drawOnCanvas(components, cName, size) {
 
     function circlePointCollision(x, y, circle) {
         return distanceXY(x, y, circle.x, circle.y) < circle.radius;
-    }
+    }*/
 }
 
 
