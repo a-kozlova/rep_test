@@ -433,7 +433,7 @@ function drawOnCanvas(components, cName, size) {
 function drawSliders(components) {
    $('#slidecontainer').children().each((idx, child) => {
             child.remove('div');
-        }); 
+        });
     components.forEach(component => {
         $("#slidecontainer").append('<div id = "' + component.id + '" class="slider">');
     });
@@ -454,11 +454,11 @@ components.forEach((component,index) => {
 
                 }
             });
-            $("#" + component.id).css('background', color[index]);
-$('.slider .ui-slider-handle').text('min').css({width:40,'text-align': 'center', 'font-size': '15px', 'margin-bottom': '4px'});
+        $("#" + component.id + " .ui-widget-header").css('background', color[index]);
             
-            });
+           });
         });
+
 
     
 }
