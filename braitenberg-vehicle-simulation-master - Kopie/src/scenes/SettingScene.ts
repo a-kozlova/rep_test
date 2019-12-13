@@ -255,21 +255,4 @@ export default class SettingScene extends SidebarScene {
 
    
 
-	public addSource(entity: Entity): void {
-		EntityManager.addComponent(entity.id, new SourceComponent({range: 100,}));
-
-		var event = new CustomEvent("attributeAdded", { detail: entity });
-		document.dispatchEvent(event);
-    }
-
-
-	//ne rabotaet!
-
-	public deleteSource(entity: Entity, component: SourceComponent): void {
-        EntityManager.removeComponent(entity.id, component);
-        console.log("delete Source in settingsscene");
-        var event = new CustomEvent("attributeAdded", { detail: entity });
-        document.dispatchEvent(event);
-    }
-
 }

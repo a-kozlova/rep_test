@@ -5,6 +5,8 @@ var color = ["#00ffff", "#00ff00", "#ff00ff", "#cecece", "#cece00", "#ce00ce", "
 document.addEventListener("entitySelected", openSettings);
 document.addEventListener("attributeAdded", openSettings);
 
+document.addEventListener("componentChanged", openSettings);
+
 function openSettings(event) {
     closeNav();
     //closeSettings();
@@ -27,21 +29,26 @@ function openSettings(event) {
         size = solidBodyComponents[0].size.value;
     }
 
-
     drawOnCanvas(motorComponents, "Motor", size);
     drawSliders(motorComponents);
 
     drawOnCanvas(sensorComponents, "Sensor", size);
 
     sensorSettings(sensorComponents);
-    console.log("opensettings");
     bodySettings(solidBodyComponents, renderComponents);
     emissionSettings(sourceComponents);
 }
 
 function emissionSettings(sourceComponents) {
-    if (sourceComponents.length){
+
+	$('#emRange').attr('value', sourceComponents[0].range.value);
+    if (sourceComponents[0].isActive){
         $('#static.switch-btn').addClass("switch-on");
+
+        $("#emRange").prop('disabled', false);
+        $('#emRange').on('input', function () {
+            sourceComponents[0].setRange($(this).val());
+        });
 
         $("#barrier").prop('disabled', false);
         $("#sour").prop('disabled', false);
@@ -66,6 +73,8 @@ function emissionSettings(sourceComponents) {
         }        
     } else {
         $('#static.switch-btn').removeClass("switch-on");
+
+        $("#emRange").prop('disabled', true);
 
         $("#barrier").prop('checked', false);
         $("#sour").prop('checked', false);
@@ -560,7 +569,7 @@ function drawOnCanvas(components, cName, size) {
 function drawSliders(components) {
    $('#slidecontainer').children().each((idx, child) => {
             child.remove('div');
-        }); 
+        });
     components.forEach(component => {
         $("#slidecontainer").append('<div id = "' + component.id + '" class="slider">');
     });
@@ -571,6 +580,7 @@ components.forEach((component,index) => {
                 range: true,
                 min: 0,
                 max: 100,
+                step: 10,
                 values: [component.defaultSpeed.get(), component.maxSpeed.get()],
                 slide: function (event, ui) {
 
@@ -581,13 +591,11 @@ components.forEach((component,index) => {
                     console.log(component.maxSpeed.get());
                 }
             });
-            $("#" + component.id).css('background', color[index]);
+        $("#" + component.id + " .ui-widget-header").css('background', color[index]);
             
-            });
+           });
         });
-    
 }
-
 
 
 function closeSettings() {
