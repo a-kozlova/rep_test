@@ -201,51 +201,64 @@ function sensorSettings(components) {
 
 // TODO  size from solidBody? render??
 function drawOnCanvas(components, cName, size) {
-    (function () {
+    /* (function () {
         var canvas = this.__canvas = new fabric.Canvas('motorCanvas', { selection: false });
         fabric.Object.prototype.originX = fabric.Object.prototype.originY = 'center';
-        console.log("sdfsd", fabric.Object.prototype.originX);
+        canvas.setDimensions({ width: "256px", height: "200ox" });
 
-        function makeCircle(left, top, id) {
+
+        canvas.add(new fabric.Rect({
+            left: 20,
+            top: 20,
+            strokeWidth: 2,
+            width: 100,
+            height: 150,
+            fill: "#fff",
+            stroke: '#000'
+        }));
+
+        var green = new fabric.Rect({
+            top: 100, left: 100, width: 60, height: 60, fill: 'green'
+        });
+        canvas.add(green);
+
+        function makeMotor(top, left, id, color) {
+            var c = new fabric.Circle({
+                left: left,
+                top: top,
+                strokeWidth: 2,
+                radius: 5,
+                id: id,
+                fill: color,
+                stroke: '#666'
+            });
+            c.hasControls = false;
+            c.hasBorders = true;
+            return c;
+        }
+
+        function makeSensor(top, left, id, color) {
             var c = new fabric.Triangle({
                 left: left,
                 top: top,
                 strokeWidth: 2,
                 width: 10, height: 10, angle: 180,
                 id: id,
-                fill: '#ccc',
+                fill: color,
                 stroke: '#666'
             });
             c.hasControls = false;
             c.hasBorders = true;
-
-
-
             return c;
         }
 
-        function makeLine(coords) {
-            return new fabric.Line(coords, {
-                fill: 'red',
-                stroke: 'red',
-                strokeWidth: 5,
-                selectable: false,
-                evented: false,
-            });
-        }
-
-        //var line = makeLine([ 250, 125, 250, 175 ]),
-        //  line2 = makeLine([ 250, 175, 250, 250 ]),
-        //line3 = makeLine([ 250, 250, 300, 350]),
-        //line4 = makeLine([ 250, 250, 200, 350]),
-        //line5 = makeLine([ 250, 175, 175, 225 ]),
-        //line6 = makeLine([ 250, 175, 325, 225 ]);
-        var c1 = makeCircle(0, 0, 1),
-            c2 = makeCircle(0, 50, 2),
-            c3 = makeCircle(50, 0, 3)
-
-        canvas.add(c1, c2, c3);
-
+        var motors = [];
+        components.forEach(function(idx, component) {
+            let motor = makeMotor(50, 50, component.id, color[idx]);
+            motors.push(motor);
+           // canvas.add(motor);
+        });
+       
         canvas.on({
             'mouse:down': function (e) {
                 if (e.target) {
@@ -268,10 +281,10 @@ function drawOnCanvas(components, cName, size) {
                 e.target.opacity = 1;
             }
         });
-    })();
+    })();*/
 
 
-    /*var motors = [];
+    var motors = [];
 
     console.log($("#sensorContainer").child);
     //$("#sensorContainer").append('<canvas id="sensorCanvas"> </canvas>');
@@ -285,10 +298,11 @@ function drawOnCanvas(components, cName, size) {
         canvas = document.getElementById("sensorCanvas");
     }
 
-    canvas.width = 256;
-    canvas.height = 256;
-    var width = 100 + 20,
-        height =  150 + 20,
+    canvas.width = 240;
+    canvas.height = 200;
+    var step = 20,
+        width = step*6 + 20,
+        height =  step*8 + 20,
         ratioX = ratioY = 1;
     if (size) {
         ratioX = (width-20) / size.width;
@@ -297,7 +311,7 @@ function drawOnCanvas(components, cName, size) {
        
     var context = canvas.getContext("2d"),
         // TODO hier size einsetzen
-        startPoint = { "x": width / 2, "y": height / 2 },
+        startPoint = { "x": (width +20) / 2, "y": (height+20) / 2 },
         offset = {},
         isDragging = false,
         dragHandle = null;
@@ -313,16 +327,25 @@ function drawOnCanvas(components, cName, size) {
             name: cName
         };
         i++;
-        motors.push(motor);        
+        motors.push(motor);
+        //component.setPosition(newX, newY);
+        
     });
+    var addButton = {
+        x: canvas.width - 20,
+        y: 20,
+        radius: 9,
+        color: '#aaa',
+        name: "add"
+    };
 
-    console.log("motors on canvas", motors);
+    //console.log("motors on canvas", motors);
 
     draw();
 
     function draw() {
-        context.clearRect(0, 0, width, height);
-        context.strokeRect(10, 10, width - 20, height - 20);
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        context.strokeRect(20, 20, width - 20, height - 20);
         
         for (let i = 0; i < motors.length; i += 1) {
             context.fillStyle = color[i];
@@ -358,18 +381,19 @@ function drawOnCanvas(components, cName, size) {
 
             // Richtungsanzeige
             context.beginPath();
-            context.moveTo(startPoint.x, 20);
-            context.lineTo(startPoint.x - 10, 25);
-            context.lineTo(startPoint.x + 10, 25);
+            context.moveTo(startPoint.x, 27);
+            context.lineTo(startPoint.x - 10, 34);
+            context.lineTo(startPoint.x + 10, 34);
             context.closePath();
             context.fillStyle = "#cccccc";
-            context.fill();            
+            context.fill();           
         }
+       
 
         // Grid motor
         if (cName === "Motor") {
-            for (let i = 10; i < width; i += 10) {
-                for (let j = 10; j < height; j += 10) {
+            for (let i = 20; i <= width; i += step) {
+                for (let j = 20; j <= height; j += step) {
                     context.fillStyle = "#cccccc";
                     context.beginPath();
                     context.arc(i, j, 1, 0, 2 * Math.PI, true);
@@ -377,23 +401,36 @@ function drawOnCanvas(components, cName, size) {
                     context.stroke();
                 }
             }
+
+            // Add component button
+            context.beginPath();
+            context.arc(addButton.x, addButton.y, addButton.radius, 0, Math.PI * 2, false);
+            context.fill();
+            context.stroke();
         }
         // show possible points for sensor
         if (cName === "Sensor") {
-            for (let i = 10; i < width; i += 10) {
-                for (let j = 10; j < height; j += 10) {
-                    if (i == 10 || i == width - 10 || j == 10 || j == height - 10) {
+            for (let i = 20; i <= width; i += step) {
+                for (let j = 20; j <= height; j += step) {
+                    if (i == 20 || i == width  || j == 20 || j == height ) {
                         context.fillStyle = "#cccccc";
                         context.beginPath();
                         context.arc(i, j, 1, 0, 2 * Math.PI, true);
                         context.fill();
                         context.stroke();
                     }
-
                 }
             }
+            // Add component button
+            context.beginPath();
+            context.moveTo(addButton.x - 7, addButton.y - 10);
+            context.lineTo(addButton.x, addButton.y);
+            context.lineTo(addButton.x + 7, addButton.y - 10);
+            context.closePath();
+            context.fill();
+            context.stroke();
         }
-       
+        make_base();
     }
 
     canvas.addEventListener("mousedown", function (event) {
@@ -402,89 +439,109 @@ function drawOnCanvas(components, cName, size) {
                 isDragging = true;
                 canvas.addEventListener("mousemove", onMouseMove);
                 canvas.addEventListener("mouseup", onMouseUp);
-               // canvas.addEventListener("mouseout", onMouseOut);
                 dragHandle = motor;
                 offset.x = event.clientX - motor.x;
                 offset.y = event.clientY - motor.y;
                 draw();
-
             }
         });
-
+        if (circlePointCollision(event.offsetX, event.offsetY, addButton)) {
+            isDragging = true;
+            canvas.addEventListener("mousemove", onMouseMove);
+            canvas.addEventListener("mouseup", onMouseUp);
+            dragHandle = addButton;
+            offset.x = event.clientX - addButton.x;
+            offset.y = event.clientY - addButton.y;
+            draw();
+        }
     });
 
     function onMouseMove(event) {
         dragHandle.x = event.clientX - offset.x;
         dragHandle.y = event.clientY - offset.y;
+        console.log("mouse move clientX", event.offsetX);
+        if (dragHandle.name !== "add" && event.offsetX > width || event.offsetY > height
+                                      || event.offsetX < 10 || event.offsetY < 10) {
+            onMouseUp();
+        } 
         draw();
     }
-
-    function onMouseOut(event) {
-        canvas.removeEventListener("mousemove", onMouseMove);
-        canvas.removeEventListener("mouseup", onMouseUp);
-        canvas.removeEventListener("mouseout", onMouseOut);
-      
-        console.log("out event", event);
-        let deleteButton = $("#deleteSensor");
-        //if (component.isDeletable()) {
-        let cmp, idx;
-        components.forEach((component, index) => {
-            if (component.id === dragHandle.id) {
-                cmp = component;
-                console.log("deleteble cmp", cmp);
-            }
-        });
-
-       components.splice(idx,1);
-
-        deleteButton.on("mouseenter", function () {
-            let deleteEvent = new CustomEvent("delete", { detail: cmp });
-            //document.dispatchEvent(deleteEvent);           
-        });
-       
-        drawOnCanvas(components, "Sensor", size);
-    }
-
 
     function onMouseUp(event) {
         canvas.removeEventListener("mousemove", onMouseMove);
         canvas.removeEventListener("mouseup", onMouseUp);
-        canvas.removeEventListener("mouseout", onMouseOut);
+       
+
+        console.log("UPPPPPPP name", dragHandle.name);
+
         isDragging = false;
+        if (dragHandle.name === "add" && event.offsetX < width && event.offsetY < height) {
+            let ev = new CustomEvent("addMotor", { detail: entity, bubbles: true  });
+            canvas.dispatchEvent(ev);
+            ev.stopPropagation();
+            dragHandle = addButton;
+        } else {
 
-        let newX = nearest(startPoint.x - dragHandle.x, 10);
-        let newY = nearest(startPoint.y - dragHandle.y, 10) - 5;
-        console.log("mouseup, cmps id vs draghandle id ", newX, dragHandle.id);
-        motors.forEach(m => {
-            if (dragHandle != m && m.x == dragHandle.x && m.y == dragHandle.y) {
-                newX += 10; 
-                newY += 10;
+
+            let newX = nearest(startPoint.x - dragHandle.x, 20, startPoint.x, dragHandle.name);
+            let newY = nearest(startPoint.y - dragHandle.y, 20, startPoint.y, dragHandle.name);
+
+            if (dragHandle.name === "Sensor") {
+                if (Math.abs(newX - dragHandle.x) < Math.abs(newY - dragHandle.y)) {
+                    newY = nearest(startPoint.y - dragHandle.y, 20, startPoint.y, "Motor");
+                } else {
+                    newX = nearest(startPoint.x - dragHandle.x, 20, startPoint.x, "Motor");
+                }
+
             }
 
-            if (m.id == dragHandle.id) {
-                m.x = startPoint.x - newX;
-                m.y = startPoint.y - newY;
+            console.log("mouseup, cmps id vs draghandle id ", newX, dragHandle.id);
+            motors.forEach(m => {
+                if (dragHandle !== m && m.x === dragHandle.x && m.y === dragHandle.y) {
+                    newX += 10; 
+                    newY += 10;
+                }
 
+                if (m.id == dragHandle.id) {
+                    m.x = startPoint.x - newX;
+                    m.y = startPoint.y - newY;
+                }
+            });
 
-            }
-
-        });
-
-        components.forEach(c => {
-            if (c.id == dragHandle.id) {
-                
-                c.setPosition(newX / ratioX, newY / ratioY);
-               
-            }
-        });
+            components.forEach(c => {
+                if (c.id == dragHandle.id) {
+                    c.setPosition(newX / ratioX, newY / ratioY);
+                }
+            });
+        }
+       
         
         //console.log("test_set");
         draw();
 
     }
+    function make_base() {
+        base_image = new Image();
+        base_image.src = 'assets/delBtn.png';
+        base_image.onload = function () {
+            context.drawImage(base_image, canvas.width - 40, canvas.height-40, 30, 30);
+        }
+    }
 
-    function nearest(value, n) {
-        return Math.round(value / n) * n;
+    function nearest(value, n, border, name) {
+        let temp;
+        if (name === "Motor") {
+           temp = Math.round(value / n) * n;
+        } else if (name === "Sensor") {
+            temp = value > 0? border-20: -(border-20);
+        }
+
+        // beim Erreichen der oberen (linken) Kante muss abgezogen werden, sonst wird auf Kante gesetzt und w nicht mehr bewegt
+        if (temp === border) {
+            console.log("nearest", temp);
+            temp -= 20;
+        }
+        return temp;
     }
 
     function distanceXY(x0, y0, x1, y1) {
@@ -495,7 +552,7 @@ function drawOnCanvas(components, cName, size) {
 
     function circlePointCollision(x, y, circle) {
         return distanceXY(x, y, circle.x, circle.y) < circle.radius;
-    }*/
+    }
 }
 
 

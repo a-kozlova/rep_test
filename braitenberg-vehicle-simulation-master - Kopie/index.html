@@ -21,8 +21,7 @@
     <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
 
-    <!--Fabric-->
-    https://cdnjs.cloudflare.com/ajax/libs/fabric.js/3.5.0/fabric.min.js
+   
 
 
     <style>
@@ -64,20 +63,20 @@
                 <!--MOTOR-->
                 <div role="tabpanel" class="tab-pane active" id="motor">
                     <h4>Position</h4>
-
-                    <div id="motorContainer" class="col-12" style="border: 1px green dashed">
-                        <canvas id="motorCanvas"> </canvas>
+           
+                    <div id="motorContainer" class="col-12" style="border: 1px green dashed; padding: 0">
+                        <canvas id="motorCanvas" style=" border: 1px black solid; margin: 0"> </canvas>
                     </div>
-                    
+
                     <h4>Speed</h4>
-					<div id="slidecontainer"></div>
+                    <div id="slidecontainer"></div>
                 </div>
                 <!--SENSOR-->
                 <div role="tabpanel" class="tab-pane fade" id="sensor">
                     <h4>Position</h4>
-                    <div id="sensorContainer" class="col-12" style="border: 1px green dashed">
-                        <canvas id="sensorCanvas"> </canvas>
-                     </div>
+                    <div id="sensorContainer" class="col-12" style="border: 1px green dashed; padding: 0">
+                        <canvas id="sensorCanvas" style=" border: 1px black solid; margin: 0"> </canvas>
+                    </div>
                         
                     <div class="row">
                         <h4 class="col-4">Range</h4>

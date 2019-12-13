@@ -166,43 +166,24 @@ if(entity.getComponent("Koerper")){
 
 
 // add sensor	!!!!!!!!!!!!!!!!!!!!!! peredelat dlya vsech
-$(function () {
-    $('#addSensor').draggable({
-        appendTo: '#addDeleteSensor',
-        helper: "clone",
-        cursor: 'move',
+document.addEventListener("addSensor", function () {
+        console.log(event);
+        mytestgame.scene.scenes[3].addSensor(entity);
+        var x = event.pageX - $(this).offset().left;
+        var y = event.pageY - $(this).offset().top;
+        console.log('drop: ' + x + ', ' + y);
     });
-    $("#sensorContainer").droppable({
-        over: function (ui) {
-            $(ui.draggable).show()
-        },
-        drop: function (event, ui) {
-            console.log(event);
-            mytestgame.scene.scenes[3].addSensor(entity);
-            var x = event.pageX - $(this).offset().left;
-            var y = event.pageY - $(this).offset().top;
-            console.log('drop: ' + x + ', ' + y);
-        }
-    });
+ 
 
-});
 
 // add motor	
-$(function () {
-    $('#addMotor').draggable({
-        appendTo: '#addDeleteMotor',
-        helper: "clone",
-        cursor: 'move',
-    });
-    $("#motorContainer").droppable({
-        over: function (ui) {
-            $(ui.draggable).show()
-        },
-        drop: function (event, ui) {
-            mytestgame.scene.scenes[3].addMotor(entity);
-        }
-    });
-
+document.addEventListener("addMotor", function () {
+    //document.removeEventListener("addMotor");
+    //alert("buble");
+   
+    console.log("in add motor", event);
+    mytestgame.scene.scenes[3].addMotor(entity);
+    
 });
 
 document.addEventListener("delete", function (event) {

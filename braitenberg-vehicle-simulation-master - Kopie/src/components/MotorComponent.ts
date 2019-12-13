@@ -50,7 +50,7 @@ export default class MotorComponent extends Component {
 
 
     // Für interaktion mit html
-    public setPosition(newX: number, newY: number) {
+    public setPosition( newX: number, newY: number ) {
         //ubrat!!!!!!!!!!!!!!!!
         console.log("set vector in component", newX, newY);
         this.position.set({ x: newX, y: newY });

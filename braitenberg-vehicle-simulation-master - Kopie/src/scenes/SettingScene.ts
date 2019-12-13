@@ -230,7 +230,12 @@ export default class SettingScene extends SidebarScene {
 
     }
 
-
+ public deleteSensor(entity: Entity, component: SensorComponent): void {
+        EntityManager.removeComponent(entity.id, component);
+        console.log("deleteSensor in settingsscene");
+        var event = new CustomEvent("attributeAdded", { detail: entity });
+        document.dispatchEvent(event);
+    }
    
 
     public addSolidBody(entity: Entity): void {
@@ -248,12 +253,7 @@ export default class SettingScene extends SidebarScene {
     }
 
 
-    public deleteSensor(entity: Entity, component: SensorComponent): void {
-        EntityManager.removeComponent(entity.id, component);
-        console.log("deleteSensor in settingsscene");
-        var event = new CustomEvent("attributeAdded", { detail: entity });
-        document.dispatchEvent(event);
-    }
+   
 
 	public addSource(entity: Entity): void {
 		EntityManager.addComponent(entity.id, new SourceComponent({range: 100,}));
