@@ -459,7 +459,6 @@ function drawOnCanvas(components, cName, size, shape) {
         
         //console.log("test_set");
         draw();
-        event.stopImmediatePropagation();
 
     }
     function make_base() {
