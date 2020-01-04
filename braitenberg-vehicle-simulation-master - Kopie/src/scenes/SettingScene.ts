@@ -199,11 +199,11 @@ export default class SettingScene extends SidebarScene {
     }
 
 
-    public addMotor(entity: Entity): void {
+    public addMotor(entity: Entity, position: Vector2D): void {
         EntityManager.addComponent(
             entity.id,
             new MotorComponent({
-                position: { x: 0, y: 0 },
+                position: { x: position.x, y: position.y },
                 maxSpeed: 50,
                 defaultSpeed: 20,
             }),
@@ -215,24 +215,21 @@ export default class SettingScene extends SidebarScene {
 
     }
 
-    public addSensor(entity: Entity): void {
+    public addSensor(entity: Entity, position: Vector2D): void {
         EntityManager.addComponent(
             entity.id,
             new SensorComponent({
-                position: { x: 0, y: 0 },
+                position: { x: position.x, y: position.y },
                 range: 20,
                 angle: 0.3,
             }),
         );
         var event = new CustomEvent("attributeAdded", { detail: entity });
         document.dispatchEvent(event);
-
-
     }
 
  public deleteSensor(entity: Entity, component: SensorComponent): void {
         EntityManager.removeComponent(entity.id, component);
-        console.log("deleteSensor in settingsscene");
         var event = new CustomEvent("attributeAdded", { detail: entity });
         document.dispatchEvent(event);
     }

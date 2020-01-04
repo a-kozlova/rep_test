@@ -47,8 +47,9 @@ const config: Phaser.Types.Core.GameConfig = {
 var mytestgame = new Phaser.Game(config);
 
 //Have a look at all the members of mytestgame in the console
-console.log(mytestgame);
+//console.log(mytestgame);
 
+// Create objects from sidebar menu by drag and drop
 $(function() {
   $('.draggable').draggable({
     appendTo: 'body',
@@ -149,25 +150,18 @@ $('#static.switch-btn').click(function() {
 });
 
 // add sensor	!!!!!!!!!!!!!!!!!!!!!! peredelat dlya vsech
-document.addEventListener('addSensor', function() {
-  console.log(event);
-  mytestgame.scene.scenes[3].addSensor(entity);
-  var x = event.pageX - $(this).offset().left;
-  var y = event.pageY - $(this).offset().top;
-  console.log('drop: ' + x + ', ' + y);
+document.addEventListener('addSensor', function(event) {
+  mytestgame.scene.scenes[3].addSensor(entity, event.detail.position);
 });
 
 // add motor
 document.addEventListener('addMotor', function() {
-  //document.removeEventListener("addMotor");
-  //alert("buble");
-
-  console.log('in add motor', event);
-  mytestgame.scene.scenes[3].addMotor(entity);
+  mytestgame.scene.scenes[3].addMotor(entity, event.detail.position);
 });
 
-document.addEventListener('delete', function(event) {
-  mytestgame.scene.scenes[3].deleteSensor(entity.id, event.detail);
-  console.log('delete sensor', event.detail);
-  //document.removeEventListener("delete", );
+document.addEventListener('deleteSensor', function(event) {
+    mytestgame.scene.scenes[3].deleteSensor(entity, event.detail.component);
 });
+
+
+

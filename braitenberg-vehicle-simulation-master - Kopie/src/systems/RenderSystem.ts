@@ -46,12 +46,17 @@ export default class RenderSystem extends System {
       if (image instanceof Phaser.GameObjects.Rectangle) {
         this.selected.setData('originalColor', image.fillColor);
         image.setFillStyle(0xddddff);
-        }
-        this.scene.add.arc(entity.getComponent(ComponentType.TRANSFORMABLE).position.get().x,
-            entity.getComponent(ComponentType.TRANSFORMABLE).position.get().x,
-            10
-        )
-    }
+      }
+        
+      }
+      if (entity) {
+          console.log("highlight", entity);
+          const transform = entity.getComponent(ComponentType.TRANSFORMABLE) as TransformableComponent;
+        this.scene.add.circle(transform.position.get().x-50,
+            transform.position.get().y-50,
+            10, 'black', 1).setOrigin(1);
+      }
+      
   }
 
   private removeHighlight(): void {

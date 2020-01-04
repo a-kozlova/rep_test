@@ -1,6 +1,8 @@
 ﻿
 var entity = null;
-var color = ["#00ffff", "#00ff00", "#ff00ff", "#cecece", "#cece00", "#ce00ce", "#00cece", "#c00ece", "#cec00e", "#0000ce"];
+//var color = ["#00ffff", "#00ff00", "#ff00ff", "#cecece", "#cece00", "#ce00ce", "#00cece", "#c00ece", "#cec00e", "#0000ce"];
+let motorcomponents = [];
+let size = { "width": 200, "height": 250 };
 
 document.addEventListener("entitySelected", openSettings);
 document.addEventListener("attributeAdded", openSettings);
@@ -16,7 +18,7 @@ function openSettings(event) {
     entity = event.detail;                  // die aufgerufene Entität
     console.log(entity);
 
-    var motorComponents = entity.components.filter(component => component.name == "Motor");
+    motorcomponents = entity.components.filter(component => component.name == "Sensor");
     var sensorComponents = entity.components.filter(component => component.name == "Sensor");
     var renderComponents = entity.components.filter(component => component.name == "Rendering");
     var solidBodyComponents = entity.components.filter(component => component.name == "Koerper");
@@ -24,17 +26,24 @@ function openSettings(event) {
     var transformableComponents = entity.components.filter(component => component.name == "Transform");
     var connectionComponents = entity.components.filter(component => component.name == "Verbindung");
 
-    var size = { "width": 100, "height": 150 };
+
+
+
+
+
+
+
+    paintMotorCanvas();
+
+    /*var size = { "width": 100, "height": 150 };
     var shape = "circle";
     if (solidBodyComponents[0]) {
         size = solidBodyComponents[0].size.value;
-    }
+    }*/
 
 
-    drawOnCanvas(motorComponents, "Motor", size, shape);
-    drawSliders(motorComponents);
+    //drawSliders(motorcomponents);
 
-    drawOnCanvas(sensorComponents, "Sensor", size);
 
     sensorSettings(sensorComponents);
     bodySettings(solidBodyComponents, renderComponents);
@@ -210,294 +219,11 @@ function sensorSettings(components) {
     
 }
 
-// TODO  size from solidBody? render??
-function drawOnCanvas(components, cName, size, shape) {
+/* TODO  size from solidBody? render??
+function drawOnCanvas(motorcomponents, cName) {
 
-    
-    //$('#motorCanvas').remove();
-    
-  
-    var motors = [];
-
-    var canvas; // = document.createElement('<canvas id="motorCanvas" style=" border: 1px black solid; margin: 0;" width="240" height="240"> </canvas>');
    
-
-    if (cName == "Motor") {
-        canvas = document.getElementById("motorCanvas");
-    }
-    if (cName == "Sensor") {
-        canvas = document.getElementById("sensorCanvas");
-    }
-
-
-
-
-    canvas.width = 240;
-    canvas.height = 200;
-    var step = 20,
-        width = step*6 + 20,
-        height =  step*8 + 20,
-        ratioX = ratioY = 1;
-    if (size) {
-        ratioX = (width-20) / size.width;
-        ratioY = (height-20) / size.height;
-    } 
-       
-    var context = canvas.getContext("2d"),
-        // TODO hier size einsetzen
-        startPoint = { "x": (width +20) / 2, "y": (height+20) / 2 },
-        offset = {},
-        isDragging = false,
-        dragHandle = null;
-    let i = 0;
-
-    components.forEach(component => {
-        let motor = {
-            x: startPoint.x - ratioX * component.position.value.x,
-            y: startPoint.y - ratioY * component.position.value.y,
-            radius: 7,
-            id: component.id,
-            color: color[i],
-            name: cName
-        };
-        i++;
-        motors.push(motor);
-        //component.setPosition(newX, newY);
-        
-    });
-    var addButton = {
-        x: canvas.width - 20,
-        y: 20,
-        radius: 9,
-        color: '#aaa',
-        name: "add"
-    };
-
-    //console.log("motors on canvas", motors);
-
-    motors.push(addButton);
-
-    draw();
-
-    function draw() {
-
-        context.clearRect(0, 0, canvas.width, canvas.height);
-        if (shape === "rect") {
-            context.strokeRect(20, 20, width - 20, height - 20);
-        } else if (shape === 'circle') {
-            context.beginPath();
-            context.arc(startPoint.x, startPoint.y, (width+10)/2, 0, 2 * Math.PI);
-            context.stroke();
-        }        
-
-        
-        for (let i = 0; i < motors.length; i += 1) {
-            context.fillStyle = color[i];
-            let motor = motors[i];
-
-            if (isDragging && motor === dragHandle) {
-                context.shadowColor = "black";
-                context.shadowOffsetX = 4;
-                context.shadowOffsetY = 4;
-                context.shadowBlur = 8;
-            }
-
-            if (motor.name == "Motor") {
-                context.beginPath();
-                context.arc(motor.x, motor.y, motor.radius, 0, Math.PI * 2, false);
-                context.fill();
-                context.stroke();
-            }
-
-            if (motor.name == "Sensor") {
-                context.beginPath();
-                context.moveTo(motor.x - 7, motor.y - 10);
-                context.lineTo(motor.x, motor.y);
-                context.lineTo(motor.x + 7, motor.y - 10);
-                context.closePath();
-                context.fill();
-                context.stroke();
-            }
-
-            context.shadowColor = null;
-            context.shadowOffsetX = null;
-            context.shadowOffsetY = null;
-            context.shadowBlur = null;
-
-            // Richtungsanzeige
-            context.beginPath();
-            context.moveTo(startPoint.x, 27);
-            context.lineTo(startPoint.x - 10, 34);
-            context.lineTo(startPoint.x + 10, 34);
-            context.closePath();
-            context.fillStyle = "#cccccc";
-            context.fill();           
-        }
-       
-
-        // Grid motor
-        if (cName === "Motor") {
-            for (let i = 20; i <= width; i += step) {
-                for (let j = 20; j <= height; j += step) {
-                    context.fillStyle = "#cccccc";
-                    context.beginPath();
-                    context.arc(i, j, 1, 0, 2 * Math.PI, true);
-                    context.fill();
-                    context.stroke();
-                }
-            }
-
-            // Add component button
-            context.beginPath();
-            context.arc(addButton.x, addButton.y, addButton.radius, 0, Math.PI * 2, false);
-            context.fill();
-            context.stroke();
-        }
-        // show possible points for sensor
-        if (cName === "Sensor") {
-            for (let i = 20; i <= width; i += step) {
-                for (let j = 20; j <= height; j += step) {
-                    if (i == 20 || i == width  || j == 20 || j == height ) {
-                        context.fillStyle = "#cccccc";
-                        context.beginPath();
-                        context.arc(i, j, 1, 0, 2 * Math.PI, true);
-                        context.fill();
-                        context.stroke();
-                    }
-                }
-            }
-            // Add component button
-            context.beginPath();
-            context.moveTo(addButton.x - 7, addButton.y - 10);
-            context.lineTo(addButton.x, addButton.y);
-            context.lineTo(addButton.x + 7, addButton.y - 10);
-            context.closePath();
-            context.fill();
-            context.stroke();
-        }
-        make_base();
-    }
-
-    canvas.addEventListener("mousedown", function (event) {
-        motors.forEach(function (motor) {
-            if (circlePointCollision(event.offsetX, event.offsetY, motor)) {
-                isDragging = true;
-                canvas.addEventListener("mousemove", onMouseMove);
-                canvas.addEventListener("mouseup", onMouseUp);
-                dragHandle = motor;
-                offset.x = event.clientX - motor.x;
-                offset.y = event.clientY - motor.y;
-                 
-                draw();
-              
-               
-            }
-        });
-        console.log("mousedown", motor.id);
-        event.stopPropagation();
-    });
-
-    function onMouseMove(event) {
-        dragHandle.x = event.clientX - offset.x;
-        dragHandle.y = event.clientY - offset.y;
-        console.log("mouse move clientX", event.offsetX);
-        if (dragHandle.name !== "add" && event.offsetX > width || event.offsetY > height
-                                      || event.offsetX < 10 || event.offsetY < 10) {
-            onMouseUp();
-        } 
-        draw();
-    }
-
-    function onMouseUp(event) {
-        canvas.removeEventListener("mousemove", onMouseMove);
-        canvas.removeEventListener("mouseup", onMouseUp);
-       
-
-        console.log("UPPPPPPP name", dragHandle.name);
-
-        isDragging = false;
-        if (dragHandle.name === "add" && event.offsetX < width && event.offsetY < height) {
-            let ev = new CustomEvent("addMotor", { detail: entity, bubbles: true  });
-            canvas.dispatchEvent(ev);
-            ev.stopPropagation();
-            dragHandle = addButton;
-        } else {
-
-
-            let newX = nearest(startPoint.x - dragHandle.x, 20, startPoint.x, dragHandle.name);
-            let newY = nearest(startPoint.y - dragHandle.y, 20, startPoint.y, dragHandle.name);
-
-            if (dragHandle.name === "Sensor") {
-                if (Math.abs(newX - dragHandle.x) < Math.abs(newY - dragHandle.y)) {
-                    newY = nearest(startPoint.y - dragHandle.y, 20, startPoint.y, "Motor");
-                } else {
-                    newX = nearest(startPoint.x - dragHandle.x, 20, startPoint.x, "Motor");
-                }
-
-            }
-
-            console.log("mouseup, cmps id vs draghandle id ", newX, dragHandle.id);
-            motors.forEach(m => {
-                if (dragHandle !== m && m.x === dragHandle.x && m.y === dragHandle.y) {
-                    newX += 10; 
-                    newY += 10;
-                }
-
-                if (m.id == dragHandle.id) {
-                    m.x = startPoint.x - newX;
-                    m.y = startPoint.y - newY;
-                }
-            });
-
-            components.forEach(c => {
-                if (c.id == dragHandle.id) {
-                    c.setPosition(newX / ratioX, newY / ratioY);
-                }
-            });
-        }
-       
-        
-        //console.log("test_set");
-        draw();
-
-    }
-    function make_base() {
-        base_image = new Image();
-        base_image.src = 'assets/delBtn.png';
-        base_image.onload = function () {
-            context.drawImage(base_image, canvas.width - 40, canvas.height-40, 30, 30);
-        }
-    }
-
-    function nearest(value, n, border, name) {
-        let temp;
-        if (name === "Motor") {
-           temp = Math.round(value / n) * n;
-        } else if (name === "Sensor") {
-            temp = value > 0? border-20: -(border-20);
-        }
-
-        // beim Erreichen der oberen (linken) Kante muss abgezogen werden, sonst wird auf Kante gesetzt und w nicht mehr bewegt
-        if (temp === border) {
-            console.log("nearest", temp);
-            temp -= 20;
-        }
-        return temp;
-    }
-
-    function distanceXY(x0, y0, x1, y1) {
-        var dx = x1 - x0,
-            dy = y1 - y0;
-        return Math.sqrt(dx * dx + dy * dy);
-    }
-
-    function circlePointCollision(x, y, circle) {
-        return distanceXY(x, y, circle.x, circle.y) < circle.radius;
-    }
-
-
-    $('motorContainer').append(canvas);
-}
+}*/
 
 
 
@@ -546,3 +272,305 @@ function openNav() {
 function closeNav() {
     document.getElementById("mySidenav").style.width = "0";
 }
+
+
+
+
+
+
+
+
+
+
+/*
+* GLOBAL EVENTS
+*/
+
+//add motor event
+$(document).on("motor:add", function (event, options) {
+
+    let ev = new CustomEvent("addSensor", {
+        detail: {
+            position: options
+        }
+    });
+    document.dispatchEvent(ev);
+    
+});
+
+//del motor event
+$(document).on("motor:del", function (event, options) {
+
+    var index = motorcomponents.map(x => {
+        return x.id;
+    }).indexOf(options.id);
+
+
+    console.log("delete motor", motorcomponents[index]);
+
+
+    let ev = new CustomEvent("deleteSensor", {
+        detail: {
+            component:  motorcomponents[index]
+        }
+    });
+    document.dispatchEvent(ev);
+
+});
+
+//update motor event
+$(document).on("motor:upd", function (event, options) {
+
+    var index = motorcomponents.map(x => {
+        return x.id;
+    }).indexOf(options.id);
+
+    motorcomponents[index].setPosition(options.x, options.y);
+});
+
+
+
+
+
+
+
+/*
+* GLOBAL VARS
+*/
+
+//color array this is unsafe because the array is of fixed size!
+//this needs a better solution!
+var color = ["#00ffff", "#00ff00", "#ff00ff", "#cecece", "#cece00", "#ce00ce", "#00cece", "#c00ece", "#cec00e", "#0000ce"];
+
+var motorCanvasStage = new Konva.Stage({
+    container: 'sensorCanvasContainer'
+});
+
+/*
+* FUNCTIONS
+*/
+
+function paintMotorCanvas() {
+    drawMotorCanvas({
+        components: motorcomponents, //entity.components.filter(component => component.name == "Motor"),
+        size: size, //real: solidBodyComponents[0].size.value; ?
+        width: 240,
+        height: 200,
+        grid: {
+            offset: {
+                x: 20,
+                y: 20
+            },
+            padding: 20,
+            size: {
+                x: 6,
+                y: 8
+            }
+        }
+    });
+}
+
+function drawMotorCanvas(options) {
+    motorCanvasStage.destroyChildren();
+    motorCanvasStage.width(options.width);
+    motorCanvasStage.height(options.height);
+
+    let gridHeight = options.grid.size.y * options.grid.padding;
+    let gridWidth = options.grid.size.x * options.grid.padding;
+    let corners = {
+        x: {
+            min: options.grid.offset.x,
+            max: gridWidth + options.grid.padding,
+        },
+        y: {
+            min: options.grid.offset.y,
+            max: gridHeight + options.grid.padding,
+        },
+    };
+    let startPoint = { 'x': (gridWidth) / 2 + options.grid.padding, 'y': (gridHeight) / 2 + options.grid.padding };
+    let ratioX = 1;
+    let ratioY = 1;
+    if (options.size) {
+        ratioX = (gridWidth) / options.size.width;
+        ratioY = (gridHeight) / options.size.height;
+    }
+
+    let gridLayer = new Konva.Layer();
+    for (let i = 0; i <= options.grid.size.x; i++) {
+        gridLayer.add(new Konva.Line({
+            points: [options.grid.offset.x + i * options.grid.padding, options.grid.offset.y, options.grid.offset.x + i * options.grid.padding, gridHeight + options.grid.offset.y],
+            stroke: '#ddd',
+            strokeWidth: 0.5,
+        }));
+    }
+    for (let j = 0; j <= options.grid.size.y; j++) {
+        gridLayer.add(new Konva.Line({
+            points: [options.grid.offset.x, options.grid.offset.y + j * options.grid.padding, gridWidth + options.grid.offset.x, options.grid.offset.y + j * options.grid.padding],
+            stroke: '#ddd',
+            strokeWidth: 0.5,
+        }));
+    }
+    motorCanvasStage.add(gridLayer);
+
+    let pointLayer = new Konva.Layer();
+    for (let i = 0; i <= options.grid.size.x; i++) {
+        for (let j = 0; j <= options.grid.size.y; j++) {
+            let x = options.grid.offset.x + options.grid.padding * i;
+            let y = options.grid.offset.y + options.grid.padding * j;
+            pointLayer.add(new Konva.Circle({
+                x: x,
+                y: y,
+                radius: 2,
+                fill: 'black',
+                stroke: 'black',
+                strokeWidth: 0
+            }));
+        }
+    }
+    motorCanvasStage.add(pointLayer);
+
+    let shadowLayer = new Konva.Layer();
+    let shadowCircle = new Konva.Circle({
+        x: 40,
+        y: 40,
+        radius: 3,
+        fill: 'red',
+        stroke: 'black',
+        strokeWidth: 0,
+        id: 'shadowCircle'
+
+    });
+    shadowCircle.hide();
+    shadowLayer.add(shadowCircle);
+    motorCanvasStage.add(shadowLayer);
+
+    let optionsLayer = new Konva.Layer();
+    let bin = new Konva.Rect({
+        x: 180,
+        y: 150,
+        width: 30,
+        height: 30,
+        fill: 'grey',
+        stroke: 'black',
+        strokeWidth: 4,
+        draggable: false
+    });
+    optionsLayer.add(bin);
+
+    let addMotor = new Konva.Circle({
+        x: 190,
+        y: 40,
+        radius: 7,
+        fill: '#e5e5e5',
+        stroke: 'black',
+        strokeWidth: 1,
+        id: 'addMotor',
+        draggable: true
+    });
+    addMotor.on('dragstart', (e) => {
+        shadowCircle.show();
+        motorCanvasStage.batchDraw();
+    });
+    addMotor.on('dragend', (e) => {
+
+        // x: startPoint.x - ratioX * component.position.value.x,
+        //    y: startPoint.y - ratioY * component.position.value.y,
+
+        $(document).trigger('motor:add', [{
+            x: -1 * (Math.min(corners.x.max, Math.max(corners.x.min, Math.round(addMotor.x() / options.grid.padding) * options.grid.padding)) - startPoint.x) / ratioX,
+            y: -1 * (Math.min(corners.y.max, Math.max(corners.y.min, Math.round(addMotor.y() / options.grid.padding) * options.grid.padding)) - startPoint.y) / ratioY
+        }]);
+        addMotor.position({
+            x: 190,
+            y: 40
+        });
+        shadowCircle.hide();
+        motorCanvasStage.batchDraw();
+    });
+    addMotor.on('dragmove', (e) => {
+        shadowCircle.position({
+            x: Math.min(corners.x.max, Math.max(corners.x.min, Math.round(addMotor.x() / options.grid.padding) * options.grid.padding)),
+            y: Math.min(corners.y.max, Math.max(corners.y.min, Math.round(addMotor.y() / options.grid.padding) * options.grid.padding))
+        });
+        motorCanvasStage.batchDraw();
+    });
+    optionsLayer.add(addMotor);
+    motorCanvasStage.add(optionsLayer);
+
+    let motorLayer = new Konva.Layer();
+    let colorCounter = 0;
+
+    options.components.forEach(component => {
+        let motor = new Konva.Circle({
+            x: startPoint.x - ratioX * component.position.value.x,
+            y: startPoint.y - ratioY * component.position.value.y,
+            radius: 7,
+            fill: color[colorCounter],
+            stroke: 'black',
+            strokeWidth: 1,
+            id: component.id,
+            name: "Motor",
+            draggable: true
+        });
+
+
+        motor.on('dragstart', (e) => {
+            shadowCircle.show();
+            motorCanvasStage.batchDraw();
+        });
+        motor.on('dragend', (e) => {
+            if (!haveIntersection(e.target.getClientRect(), bin.getClientRect())) {
+
+                motor.position({
+                    x: Math.min(corners.x.max, Math.max(corners.x.min, Math.round(motor.x() / options.grid.padding) * options.grid.padding)),
+                    y: Math.min(corners.y.max, Math.max(corners.y.min, Math.round(motor.y() / options.grid.padding) * options.grid.padding))
+                });
+
+                $(document).trigger('motor:upd', [{
+                    id: motor.id(),
+                    x: -1 * (motor.x() - startPoint.x) / ratioX,
+                    y: -1 * (motor.y() - startPoint.y) / ratioY
+                }]);
+            } else {
+                bin.fill('grey');
+                e.target.destroy();
+                $(document).trigger('motor:del', [{ id: motor.id() }]);
+            }
+            shadowCircle.hide();
+            motorCanvasStage.batchDraw();
+        });
+        motor.on('dragmove', (e) => {
+            if (!haveIntersection(e.target.getClientRect(), bin.getClientRect())) {
+                shadowCircle.show();
+                bin.fill('grey');
+                shadowCircle.position({
+                    x: Math.min(corners.x.max, Math.max(corners.x.min, Math.round(motor.x() / options.grid.padding) * options.grid.padding)),
+                    y: Math.min(corners.y.max, Math.max(corners.y.min, Math.round(motor.y() / options.grid.padding) * options.grid.padding))
+                });
+            } else {
+                bin.fill('red');
+                shadowCircle.hide();
+            }
+            motorCanvasStage.batchDraw();
+        });
+        colorCounter++;
+        motorLayer.add(motor);
+    });
+    motorCanvasStage.add(motorLayer);
+
+    gridLayer.zIndex(0);
+    pointLayer.zIndex(1);
+    optionsLayer.zIndex(2);
+    motorLayer.zIndex(3);
+    shadowLayer.zIndex(4);
+}
+
+function haveIntersection(r1, r2) {
+    return !(
+        r2.x > r1.x + r1.width ||
+        r2.x + r2.width < r1.x ||
+        r2.y > r1.y + r1.height ||
+        r2.y + r2.height < r1.y
+    );
+}
+

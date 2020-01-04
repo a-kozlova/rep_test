@@ -22,7 +22,7 @@
     <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
 
     <!--dlya canvasa test-->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jcanvas/21.0.1/min/jcanvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/konva/4.0.18/konva.min.js"></script>
 
 
     <style>
@@ -32,6 +32,12 @@
             padding: 0 !important;
             overflow: hidden;
         }
+
+       
+        .konvajs-content {
+            border: 1px solid black;
+        }
+   
     </style>
 </head>
 <body>
@@ -65,8 +71,8 @@
                 <div role="tabpanel" class="tab-pane active" id="motor">
                     <h4>Position</h4>
            
-                    <div id="motorContainer" class="col-12" style="border: 1px green dashed; padding: 0">
-                        <canvas id="motorCanvas" style=" border: 1px black solid; margin: 0;" width="240" height="240"> </canvas>
+                    <div id="motorCanvasContainer" class="col-12" style="border: 1px green dashed; padding: 0">
+                        <!--<canvas id="motorCanvas" style=" border: 1px black solid; margin: 0;" width="240" height="240"> </canvas>-->
                     </div>
 
                     <h4>Speed</h4>
@@ -75,8 +81,8 @@
                 <!--SENSOR-->
                 <div role="tabpanel" class="tab-pane fade" id="sensor">
                     <h4>Position</h4>
-                    <div id="sensorContainer" class="col-12" style="border: 1px green dashed; padding: 0">
-                        <canvas id="sensorCanvas" style=" border: 1px black solid; margin: 0"> </canvas>
+                    <div id="sensorCanvasContainer" class="col-12" style="border: 1px green dashed; padding: 0">
+                        <!--<canvas id="sensorCanvas" style=" border: 1px black solid; margin: 0"> </canvas>-->
                     </div>
                         
                     <div class="row">
