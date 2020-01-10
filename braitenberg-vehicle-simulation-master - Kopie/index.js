@@ -146,6 +146,7 @@ function bodySettings(components, renderComponents) {
             components[0].setSize({ width: parseInt(newValue), height: components[0].size.value.height });
             size.width = parseInt(newValue);
             paintMotorCanvas();
+            paintSensorCanvas();
         });
 
         $("#height").change(function () {
@@ -153,6 +154,7 @@ function bodySettings(components, renderComponents) {
             components[0].setSize({ width: components[0].size.value.width, height: parseInt(newValue) });
             size.height = parseInt(newValue);
             paintMotorCanvas();
+            paintSensorCanvas();
         });
 
     } else {
@@ -767,8 +769,8 @@ function drawSensorCanvas(options) {
 
     let shadowLayer = new Konva.Layer();
     let shadowCircle = new Konva.Circle({
-        x: 40,
-        y: 40,
+        x: 20,
+        y: 20,
         radius: 3,
         fill: 'red',
         stroke: 'black',
@@ -814,9 +816,21 @@ function drawSensorCanvas(options) {
         // x: startPoint.x - ratioX * component.position.value.x,
         //    y: startPoint.y - ratioY * component.position.value.y,
 
+        let newX = Math.min(corners.x.max, Math.max(corners.x.min, Math.round(addSensor.x() / options.grid.padding) * options.grid.padding));
+        let newY = Math.min(corners.y.max, Math.max(corners.y.min, Math.round(addSensor.y() / options.grid.padding) * options.grid.padding));
+        let minDistToX = Math.min(Math.abs(newX - corners.x.min), Math.abs(newX - corners.x.max));
+        let minDistToY = Math.min(Math.abs(newY - corners.y.min), Math.abs(newY - corners.y.max));
+
+        if (minDistToX <= minDistToY) {
+
+            newX = Math.abs(newX - corners.x.min) >= Math.abs(newX - corners.x.max) ? corners.x.max : corners.x.min;
+        } else {
+            newY = Math.abs(newY - corners.y.min) >= Math.abs(newY - corners.y.max) ? corners.y.max : corners.y.min;
+        }
+
         $(document).trigger('sensor:add', [{
-            x: -1 * (Math.min(corners.x.max, Math.max(corners.x.min, Math.round(addSensor.x() / options.grid.padding) * options.grid.padding)) - startPoint.x) / ratioX,
-            y: -1 * (Math.min(corners.y.max, Math.max(corners.y.min, Math.round(addSensor.y() / options.grid.padding) * options.grid.padding)) - startPoint.y) / ratioY
+            x: -1 * (newX - startPoint.x) / ratioX,
+            y: -1 * (newY - startPoint.y) / ratioY
         }]);
         addSensor.position({
             x: 190,
@@ -826,10 +840,20 @@ function drawSensorCanvas(options) {
         sensorCanvasStage.batchDraw();
     });
     addSensor.on('dragmove', (e) => {
-        shadowCircle.position({
-            x: Math.min(corners.x.max, Math.max(corners.x.min, Math.round(addSensor.x() / options.grid.padding) * options.grid.padding)),
-            y: Math.min(corners.y.max, Math.max(corners.y.min, Math.round(addSensor.y() / options.grid.padding) * options.grid.padding))
-        });
+
+        let newX = Math.min(corners.x.max, Math.max(corners.x.min, Math.round(addSensor.x() / options.grid.padding) * options.grid.padding));
+        let newY = Math.min(corners.y.max, Math.max(corners.y.min, Math.round(addSensor.y() / options.grid.padding) * options.grid.padding));
+        let minDistToX = Math.min(Math.abs(newX - corners.x.min), Math.abs(newX - corners.x.max));
+        let minDistToY = Math.min(Math.abs(newY - corners.y.min), Math.abs(newY - corners.y.max));
+
+        if (minDistToX <= minDistToY) {
+
+            newX = Math.abs(newX - corners.x.min) >= Math.abs(newX - corners.x.max) ? corners.x.max : corners.x.min;
+        } else {
+            newY = Math.abs(newY - corners.y.min) >= Math.abs(newY - corners.y.max) ? corners.y.max : corners.y.min;
+        }
+
+        shadowCircle.position({ x: newX, y: newY });
         sensorCanvasStage.batchDraw();
     });
     optionsLayer.add(addSensor);
@@ -854,13 +878,36 @@ function drawSensorCanvas(options) {
         });
 
 
+        if ((sensor.x != corners.x.min || sensor.x != corners.x.max) && (sensor.y != corners.y.min || sensor.y != corners.y.max)) {
+            let newX = Math.min(corners.x.max, Math.max(corners.x.min, Math.round(sensor.x() / options.grid.padding) * options.grid.padding));
+            let newY = Math.min(corners.y.max, Math.max(corners.y.min, Math.round(sensor.y() / options.grid.padding) * options.grid.padding));
+            let minDistToX = Math.min(Math.abs(newX - corners.x.min), Math.abs(newX - corners.x.max));
+            let minDistToY = Math.min(Math.abs(newY - corners.y.min), Math.abs(newY - corners.y.max));
+
+            if (minDistToX <= minDistToY) {
+
+                newX = Math.abs(newX - corners.x.min) >= Math.abs(newX - corners.x.max) ? corners.x.max : corners.x.min;
+            } else {
+                newY = Math.abs(newY - corners.y.min) >= Math.abs(newY - corners.y.max) ? corners.y.max : corners.y.min;
+            }
+
+            sensor.position({ x: newX, y: newY });
+            $(document).trigger('sensor:upd', [{
+                id: sensor.id(),
+                x: -1 * (newX - startPoint.x) / ratioX,
+                y: -1 * (newY - startPoint.y) / ratioY
+            }]);
+        }
+
+
+
+
         sensor.on('dragstart', (e) => {
             shadowCircle.show();
             sensorCanvasStage.batchDraw();
         });
         sensor.on('dragend', (e) => {
             if (!haveIntersection(e.target.getClientRect(), bin.getClientRect())) {
-
                 
 
                 let newX = Math.min(corners.x.max, Math.max(corners.x.min, Math.round(sensor.x() / options.grid.padding) * options.grid.padding));
@@ -894,12 +941,25 @@ function drawSensorCanvas(options) {
         });
         sensor.on('dragmove', (e) => {
             if (!haveIntersection(e.target.getClientRect(), bin.getClientRect())) {
+
+
                 shadowCircle.show();
                 bin.fill('grey');
-                shadowCircle.position({
-                    x: Math.min(corners.x.max, Math.max(corners.x.min, Math.round(sensor.x() / options.grid.padding) * options.grid.padding)),
-                    y: Math.min(corners.y.max, Math.max(corners.y.min, Math.round(sensor.y() / options.grid.padding) * options.grid.padding))
-                });
+
+                let newX = Math.min(corners.x.max, Math.max(corners.x.min, Math.round(sensor.x() / options.grid.padding) * options.grid.padding));
+                let newY = Math.min(corners.y.max, Math.max(corners.y.min, Math.round(sensor.y() / options.grid.padding) * options.grid.padding));
+                let minDistToX = Math.min(Math.abs(newX - corners.x.min), Math.abs(newX - corners.x.max));
+                let minDistToY = Math.min(Math.abs(newY - corners.y.min), Math.abs(newY - corners.y.max));
+
+                if (minDistToX <= minDistToY) {
+
+                    newX = Math.abs(newX - corners.x.min) >= Math.abs(newX - corners.x.max) ? corners.x.max : corners.x.min;
+                } else {
+                    newY = Math.abs(newY - corners.y.min) >= Math.abs(newY - corners.y.max) ? corners.y.max : corners.y.min;
+                }
+
+                shadowCircle.position({ x: newX, y: newY });
+                
             } else {
                 bin.fill('red');
                 shadowCircle.hide();

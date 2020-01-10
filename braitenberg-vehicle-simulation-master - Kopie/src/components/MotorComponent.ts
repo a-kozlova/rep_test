@@ -28,9 +28,7 @@ export default class MotorComponent extends Component {
   public constructor(data: MotorComponentData) {
     super();
     this.position = new Attribute(data.position, PositionInput.create({ label: 'Position' }));
-      //ubrat!!!!!!!!!!!!!!!!!!!
-      console.log("position", this.position.get());
-
+      
     this.maxSpeed = new Attribute(
       data.maxSpeed || 50,
       NumberInput.create({ label: 'Maximalgeschwindigkeit', min: 1, max: 50 }),
@@ -52,7 +50,7 @@ export default class MotorComponent extends Component {
     // Für interaktion mit html
     public setPosition( newX: number, newY: number ) {
         //ubrat!!!!!!!!!!!!!!!!
-        console.log("set vector in component", newX, newY);
+        //console.log("set vector in component", newX, newY);
         this.position.set({ x: newX, y: newY });
     }
 

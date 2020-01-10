@@ -163,5 +163,8 @@ document.addEventListener('deleteSensor', function(event) {
     mytestgame.scene.scenes[3].deleteSensor(entity, event.detail.component);
 });
 
+document.addEventListener('deleteMotor', function (event) {
+    mytestgame.scene.scenes[3].deleteMotor(entity, event.detail.component);
+});
 
 

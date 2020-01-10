@@ -211,8 +211,6 @@ export default class SettingScene extends SidebarScene {
         
        var event = new CustomEvent("attributeAdded", { detail: entity });
        document.dispatchEvent(event);
-      
-
     }
 
     public addSensor(entity: Entity, position: Vector2D): void {
@@ -224,27 +222,36 @@ export default class SettingScene extends SidebarScene {
                 angle: 0.3,
             }),
         );
+
         var event = new CustomEvent("attributeAdded", { detail: entity });
         document.dispatchEvent(event);
     }
 
- public deleteSensor(entity: Entity, component: SensorComponent): void {
+    public deleteSensor(entity: Entity, component: SensorComponent): void {
         EntityManager.removeComponent(entity.id, component);
+
+        var event = new CustomEvent("attributeAdded", { detail: entity });
+        document.dispatchEvent(event);
+    }
+
+    public deleteMotor(entity: Entity, component: MotorComponent): void {
+        EntityManager.removeComponent(entity.id, component);
+
         var event = new CustomEvent("attributeAdded", { detail: entity });
         document.dispatchEvent(event);
     }
    
 
     public addSolidBody(entity: Entity): void {
-    EntityManager.addComponent(entity.id, new SolidBodyComponent({}));
-
-    var event = new CustomEvent("attributeAdded", { detail: entity });
-    document.dispatchEvent(event);
+        EntityManager.addComponent(entity.id, new SolidBodyComponent({}));
+   
+        var event = new CustomEvent("attributeAdded", { detail: entity });
+        document.dispatchEvent(event);
     }
 
     public deleteSolidBody(entity: Entity, component: SolidBodyComponent): void {
         EntityManager.removeComponent(entity.id, component);
-        console.log("delete SolidBody in settingsscene");
+        //console.log("delete SolidBody in settingsscene");
         var event = new CustomEvent("attributeAdded", { detail: entity });
         document.dispatchEvent(event);
     }
