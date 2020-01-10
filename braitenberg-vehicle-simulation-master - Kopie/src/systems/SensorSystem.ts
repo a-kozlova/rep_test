@@ -30,6 +30,8 @@ export default class SensorSystem extends System {
         return Math.abs(curr - currentAngle) < Math.abs(prev - currentAngle) ? curr : prev;
       });
 
+      //  console.log("sensorsys cur close", currentAngle, closestAngle)
+
       sensors.forEach(sensor => {
         if (!this.textures[sensor.id]) {
           return;
@@ -44,6 +46,7 @@ export default class SensorSystem extends System {
             );
             const x = bodyPosition.x + sensorOffset.x;
             const y = bodyPosition.y + sensorOffset.y;
+              //console.log("sensorsys x y", x, y);
             image.setPosition(x, y);
             image.setVisible(true);
           } else {
@@ -171,6 +174,7 @@ export default class SensorSystem extends System {
       values[angle] = angleValues;
     });
 
+    //  console.log("sensorsystem textures", textures);
     this.textures[sensor.id] = textures;
 
     EventBus.publish(EventType.SENSOR_CREATED, {

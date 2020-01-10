@@ -61,7 +61,7 @@ export default class PhysicsSystem extends System {
           continue;
         }
 
-        graphics.lineStyle(1, bodyColor, part.render.opacity);
+        graphics.lineStyle(6, bodyColor, part.render.opacity);
         //graphics.fillStyle(bodyColor, part.render.opacity);
 
         //  Part polygon

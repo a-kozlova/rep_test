@@ -1,7 +1,8 @@
 ﻿
 var entity = null;
 //var color = ["#00ffff", "#00ff00", "#ff00ff", "#cecece", "#cece00", "#ce00ce", "#00cece", "#c00ece", "#cec00e", "#0000ce"];
-let motorcomponents = [];
+let motorComponents = [];
+let sensorComponents = [];
 let size = { "width": 200, "height": 250 };
 
 document.addEventListener("entitySelected", openSettings);
@@ -16,10 +17,10 @@ function openSettings(event) {
     document.getElementById("createEntityMenu").style.marginRight = "306px";
 
     entity = event.detail;                  // die aufgerufene Entität
-    console.log(entity);
+    console.log("opensettings", entity);
 
-    motorcomponents = entity.components.filter(component => component.name == "Sensor");
-    var sensorComponents = entity.components.filter(component => component.name == "Sensor");
+    motorComponents = entity.components.filter(component => component.name == "Motor");
+    sensorComponents = entity.components.filter(component => component.name == "Sensor");
     var renderComponents = entity.components.filter(component => component.name == "Rendering");
     var solidBodyComponents = entity.components.filter(component => component.name == "Koerper");
     var sourceComponents = entity.components.filter(component => component.name == "Quelle");
@@ -33,21 +34,24 @@ function openSettings(event) {
 
 
 
-    paintMotorCanvas();
+   
 
-    /*var size = { "width": 100, "height": 150 };
-    var shape = "circle";
+    size = { "width": 100, "height": 150 };
+    //var shape = "circle";
     if (solidBodyComponents[0]) {
         size = solidBodyComponents[0].size.value;
-    }*/
+        console.log("size db izmenen", size);
+    }
 
 
-    //drawSliders(motorcomponents);
+    drawSliders(motorComponents);
 
 
     sensorSettings(sensorComponents);
     bodySettings(solidBodyComponents, renderComponents);
     emissionSettings(sourceComponents);
+    paintMotorCanvas();
+    paintSensorCanvas();
 }
 
 function emissionSettings(sourceComponents) {
@@ -140,11 +144,15 @@ function bodySettings(components, renderComponents) {
         $("#width").change(function () {
             let newValue = $("#width").val(); // get the current value of the input field.
             components[0].setSize({ width: parseInt(newValue), height: components[0].size.value.height });
+            size.width = parseInt(newValue);
+            paintMotorCanvas();
         });
 
         $("#height").change(function () {
             let newValue = $("#height").val(); // get the current value of the input field.
-            components[0].setSize({ width: components[0].size.value.width, height: parseInt(newValue)});
+            components[0].setSize({ width: components[0].size.value.width, height: parseInt(newValue) });
+            size.height = parseInt(newValue);
+            paintMotorCanvas();
         });
 
     } else {
@@ -289,7 +297,7 @@ function closeNav() {
 //add motor event
 $(document).on("motor:add", function (event, options) {
 
-    let ev = new CustomEvent("addSensor", {
+    let ev = new CustomEvent("addMotor", {
         detail: {
             position: options
         }
@@ -301,17 +309,17 @@ $(document).on("motor:add", function (event, options) {
 //del motor event
 $(document).on("motor:del", function (event, options) {
 
-    var index = motorcomponents.map(x => {
+    var index = motorComponents.map(x => {
         return x.id;
     }).indexOf(options.id);
 
 
-    console.log("delete motor", motorcomponents[index]);
+    console.log("delete motor", motorComponents[index]);
 
 
-    let ev = new CustomEvent("deleteSensor", {
+    let ev = new CustomEvent("deleteMotor", {
         detail: {
-            component:  motorcomponents[index]
+            component:  motorComponents[index]
         }
     });
     document.dispatchEvent(ev);
@@ -321,11 +329,11 @@ $(document).on("motor:del", function (event, options) {
 //update motor event
 $(document).on("motor:upd", function (event, options) {
 
-    var index = motorcomponents.map(x => {
+    var index = motorComponents.map(x => {
         return x.id;
     }).indexOf(options.id);
 
-    motorcomponents[index].setPosition(options.x, options.y);
+    motorComponents[index].setPosition(options.x, options.y);
 });
 
 
@@ -343,7 +351,7 @@ $(document).on("motor:upd", function (event, options) {
 var color = ["#00ffff", "#00ff00", "#ff00ff", "#cecece", "#cece00", "#ce00ce", "#00cece", "#c00ece", "#cec00e", "#0000ce"];
 
 var motorCanvasStage = new Konva.Stage({
-    container: 'sensorCanvasContainer'
+    container: 'motorCanvasContainer'
 });
 
 /*
@@ -351,8 +359,19 @@ var motorCanvasStage = new Konva.Stage({
 */
 
 function paintMotorCanvas() {
+
+    motorComponents.forEach(motor => {
+        if (Math.abs(motor.position.value.x) > size.width / 2) {
+            motor.setPosition(size.width / 2, motor.position.value.y )
+        }
+        if (Math.abs(motor.position.value.y) > size.height / 2) {
+            motor.setPosition(motor.position.value.x, size.height / 2)
+        }    
+    });
+   
+
     drawMotorCanvas({
-        components: motorcomponents, //entity.components.filter(component => component.name == "Motor"),
+        components: motorComponents, //entity.components.filter(component => component.name == "Motor"),
         size: size, //real: solidBodyComponents[0].size.value; ?
         width: 240,
         height: 200,
@@ -392,6 +411,9 @@ function drawMotorCanvas(options) {
     let ratioY = 1;
     if (options.size) {
         ratioX = (gridWidth) / options.size.width;
+
+        //console.log("ratioX grid width size.width motor", ratioX ,gridWidth,options.size.width);
+
         ratioY = (gridHeight) / options.size.height;
     }
 
@@ -526,6 +548,8 @@ function drawMotorCanvas(options) {
                     y: Math.min(corners.y.max, Math.max(corners.y.min, Math.round(motor.y() / options.grid.padding) * options.grid.padding))
                 });
 
+                //console.log("dragend motor ratio X Y startpoint size", motor.position(), ratioX, ratioY, startPoint, size);
+
                 $(document).trigger('motor:upd', [{
                     id: motor.id(),
                     x: -1 * (motor.x() - startPoint.x) / ratioX,
@@ -574,3 +598,322 @@ function haveIntersection(r1, r2) {
     );
 }
 
+
+
+
+/*
+* GLOBAL EVENTS
+*/
+
+//add sensor event
+$(document).on("sensor:add", function (event, options) {
+
+    let ev = new CustomEvent("addSensor", {
+        detail: {
+            position: options
+        }
+    });
+    document.dispatchEvent(ev);
+
+});
+
+//del sensor event
+$(document).on("sensor:del", function (event, options) {
+
+    var index = sensorComponents.map(x => {
+        return x.id;
+    }).indexOf(options.id);
+
+
+    console.log("delete sensor",sensorComponents[index]);
+
+
+    let ev = new CustomEvent("deleteSensor", {
+        detail: {
+            component: sensorComponents[index]
+        }
+    });
+    document.dispatchEvent(ev);
+
+});
+
+//update sensor event
+$(document).on("sensor:upd", function (event, options) {
+
+    var index = sensorComponents.map(x => {
+        return x.id;
+    }).indexOf(options.id);
+
+   sensorComponents[index].setPosition(options.x, options.y);
+});
+
+
+
+
+
+
+
+/*
+* GLOBAL VARS
+*/
+
+//color array this is unsafe because the array is of fixed size!
+//this needs a better solution!
+
+var sensorCanvasStage = new Konva.Stage({
+    container: 'sensorCanvasContainer'
+});
+
+/*
+* FUNCTIONS
+*/
+
+function paintSensorCanvas() {
+
+    sensorComponents.forEach(sensor => {
+        if (Math.abs(sensor.position.value.x) > size.width / 2) {
+            sensor.setPosition(size.width / 2, sensor.position.value.y)
+        }
+        if (Math.abs(sensor.position.value.y) > size.height / 2) {
+            sensor.setPosition(sensor.position.value.x, size.height / 2)
+        }
+    });
+
+
+    drawSensorCanvas({
+        components: sensorComponents, //entity.components.filter(component => component.name == "Motor"),
+        size: size, //real: solidBodyComponents[0].size.value; ?
+        width: 240,
+        height: 200,
+        grid: {
+            offset: {
+                x: 20,
+                y: 20
+            },
+            padding: 20,
+            size: {
+                x: 6,
+                y: 8
+            }
+        }
+    });
+}
+
+function drawSensorCanvas(options) {
+    sensorCanvasStage.destroyChildren();
+    sensorCanvasStage.width(options.width);
+    sensorCanvasStage.height(options.height);
+
+    let gridHeight = options.grid.size.y * options.grid.padding;
+    let gridWidth = options.grid.size.x * options.grid.padding;
+    let corners = {
+        x: {
+            min: options.grid.offset.x,
+            max: gridWidth + options.grid.padding,
+        },
+        y: {
+            min: options.grid.offset.y,
+            max: gridHeight + options.grid.padding,
+        },
+    };
+
+    let startPoint = { 'x': (gridWidth) / 2 + options.grid.padding, 'y': (gridHeight) / 2 + options.grid.padding };
+    let ratioX = 1;
+    let ratioY = 1;
+    if (options.size) {
+        ratioX = (gridWidth) / options.size.width;
+        //console.log("ratioX grid width size.width sensor", ratioX, gridWidth, options.size.width);
+
+        ratioY = (gridHeight) / options.size.height;
+    }
+
+    let gridLayer = new Konva.Layer();
+    for (let i = 0; i <= options.grid.size.x; i++) {
+        gridLayer.add(new Konva.Line({
+            points: [options.grid.offset.x + i * options.grid.padding, options.grid.offset.y, options.grid.offset.x + i * options.grid.padding, gridHeight + options.grid.offset.y],
+            stroke: '#ddd',
+            strokeWidth: 0.5,
+        }));
+    }
+    for (let j = 0; j <= options.grid.size.y; j++) {
+        gridLayer.add(new Konva.Line({
+            points: [options.grid.offset.x, options.grid.offset.y + j * options.grid.padding, gridWidth + options.grid.offset.x, options.grid.offset.y + j * options.grid.padding],
+            stroke: '#ddd',
+            strokeWidth: 0.5,
+        }));
+    }
+    sensorCanvasStage.add(gridLayer);
+
+    let pointLayer = new Konva.Layer();
+    for (let i = 0; i <= options.grid.size.x; i++) {
+        for (let j = 0; j <= options.grid.size.y; j++) {
+            let x = options.grid.offset.x + options.grid.padding * i;
+            let y = options.grid.offset.y + options.grid.padding * j;
+
+            if (x === corners.x.min || x === corners.x.max || y === corners.y.min || y === corners.y.max) {
+                pointLayer.add(new Konva.Circle({
+                    x: x,
+                    y: y,
+                    radius: 2,
+                    fill: 'black',
+                    stroke: 'black',
+                    strokeWidth: 0
+                }));
+            }
+           
+        }
+    }
+   sensorCanvasStage.add(pointLayer);
+
+    let shadowLayer = new Konva.Layer();
+    let shadowCircle = new Konva.Circle({
+        x: 40,
+        y: 40,
+        radius: 3,
+        fill: 'red',
+        stroke: 'black',
+        strokeWidth: 0,
+        id: 'shadowCircle'
+
+    });
+    shadowCircle.hide();
+    shadowLayer.add(shadowCircle);
+    sensorCanvasStage.add(shadowLayer);
+
+    let optionsLayer = new Konva.Layer();
+    let bin = new Konva.Rect({
+        x: 180,
+        y: 150,
+        width: 30,
+        height: 30,
+        fill: 'grey',
+        stroke: 'black',
+        strokeWidth: 4,
+        draggable: false
+    });
+    optionsLayer.add(bin);
+
+    let addSensor = new Konva.RegularPolygon({
+        x: 190,
+        y: 40,
+        radius: 10,
+        sides: 3,
+        rotation: 180,
+        fill: '#e5e5e5',
+        stroke: 'black',
+        strokeWidth: 1,
+        id: 'addSensor',
+        draggable: true
+    });
+    addSensor.on('dragstart', (e) => {
+        shadowCircle.show();
+        sensorCanvasStage.batchDraw();
+    });
+    addSensor.on('dragend', (e) => {
+
+        // x: startPoint.x - ratioX * component.position.value.x,
+        //    y: startPoint.y - ratioY * component.position.value.y,
+
+        $(document).trigger('sensor:add', [{
+            x: -1 * (Math.min(corners.x.max, Math.max(corners.x.min, Math.round(addSensor.x() / options.grid.padding) * options.grid.padding)) - startPoint.x) / ratioX,
+            y: -1 * (Math.min(corners.y.max, Math.max(corners.y.min, Math.round(addSensor.y() / options.grid.padding) * options.grid.padding)) - startPoint.y) / ratioY
+        }]);
+        addSensor.position({
+            x: 190,
+            y: 40
+        });
+        shadowCircle.hide();
+        sensorCanvasStage.batchDraw();
+    });
+    addSensor.on('dragmove', (e) => {
+        shadowCircle.position({
+            x: Math.min(corners.x.max, Math.max(corners.x.min, Math.round(addSensor.x() / options.grid.padding) * options.grid.padding)),
+            y: Math.min(corners.y.max, Math.max(corners.y.min, Math.round(addSensor.y() / options.grid.padding) * options.grid.padding))
+        });
+        sensorCanvasStage.batchDraw();
+    });
+    optionsLayer.add(addSensor);
+    sensorCanvasStage.add(optionsLayer);
+
+    let sensorLayer = new Konva.Layer();
+    let colorCounter = 0;
+
+    options.components.forEach(component => {
+        let sensor = new Konva.RegularPolygon({
+            x: startPoint.x - ratioX * component.position.value.x,
+            y: startPoint.y - ratioY * component.position.value.y,
+            radius: 10,
+            sides: 3,  
+            rotation: 180,
+            fill: color[colorCounter],
+            stroke: 'black',
+            strokeWidth: 1,
+            id: component.id,
+            name: "Sensor",
+            draggable: true
+        });
+
+
+        sensor.on('dragstart', (e) => {
+            shadowCircle.show();
+            sensorCanvasStage.batchDraw();
+        });
+        sensor.on('dragend', (e) => {
+            if (!haveIntersection(e.target.getClientRect(), bin.getClientRect())) {
+
+                
+
+                let newX = Math.min(corners.x.max, Math.max(corners.x.min, Math.round(sensor.x() / options.grid.padding) * options.grid.padding));
+                let newY = Math.min(corners.y.max, Math.max(corners.y.min, Math.round(sensor.y() / options.grid.padding) * options.grid.padding));
+                let minDistToX = Math.min(Math.abs(newX - corners.x.min), Math.abs(newX - corners.x.max));
+                let minDistToY = Math.min(Math.abs(newY - corners.y.min), Math.abs(newY - corners.y.max));
+
+                if (minDistToX <= minDistToY) {
+
+                    newX = Math.abs(newX - corners.x.min) >= Math.abs(newX - corners.x.max) ? corners.x.max : corners.x.min;
+                } else {
+                    newY = Math.abs(newY - corners.y.min) >= Math.abs(newY - corners.y.max) ? corners.y.max : corners.y.min;
+                }
+
+                sensor.position({x: newX, y: newY});
+                
+                //console.log("dragend sensor ratio X Y startpoint size", motor.position(), ratioX, ratioY, startPoint, size);
+
+                $(document).trigger('sensor:upd', [{
+                    id: sensor.id(),
+                    x: -1 * (newX - startPoint.x) / ratioX,
+                    y: -1 * (newY - startPoint.y) / ratioY
+                }]);
+            } else {
+                bin.fill('grey');
+                e.target.destroy();
+                $(document).trigger('sensor:del', [{ id: sensor.id() }]);
+            }
+            shadowCircle.hide();
+            sensorCanvasStage.batchDraw();
+        });
+        sensor.on('dragmove', (e) => {
+            if (!haveIntersection(e.target.getClientRect(), bin.getClientRect())) {
+                shadowCircle.show();
+                bin.fill('grey');
+                shadowCircle.position({
+                    x: Math.min(corners.x.max, Math.max(corners.x.min, Math.round(sensor.x() / options.grid.padding) * options.grid.padding)),
+                    y: Math.min(corners.y.max, Math.max(corners.y.min, Math.round(sensor.y() / options.grid.padding) * options.grid.padding))
+                });
+            } else {
+                bin.fill('red');
+                shadowCircle.hide();
+            }
+            sensorCanvasStage.batchDraw();
+        });
+        colorCounter++;
+        sensorLayer.add(sensor);
+    });
+    sensorCanvasStage.add(sensorLayer);
+
+    gridLayer.zIndex(0);
+    pointLayer.zIndex(1);
+    optionsLayer.zIndex(2);
+    sensorLayer.zIndex(3);
+    shadowLayer.zIndex(4);
+}

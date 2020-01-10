@@ -8,6 +8,9 @@ import EventBus from '../EventBus';
 import SolidBodyComponent from '../components/SolidBodyComponent';
 import Component from '../components/Component';
 
+
+
+
 interface RenderObjectDictionary {
   [entityId: number]: Phaser.GameObjects.Image | Phaser.GameObjects.Rectangle;
 }
@@ -18,6 +21,8 @@ export default class RenderSystem extends System {
   private renderObjects: RenderObjectDictionary = {};
 
   private selected: Phaser.GameObjects.Image | Phaser.GameObjects.Rectangle | null = null;
+
+  //private deleteBtn: Phaser.GameObjects.Circle;
 
   public constructor(scene: Phaser.Scene) {
     super(scene);
@@ -52,7 +57,7 @@ export default class RenderSystem extends System {
       if (entity) {
           console.log("highlight", entity);
           const transform = entity.getComponent(ComponentType.TRANSFORMABLE) as TransformableComponent;
-        this.scene.add.circle(transform.position.get().x-50,
+          this.scene.add.circle(transform.position.get().x-50,
             transform.position.get().y-50,
             10, 'black', 1).setOrigin(1);
       }
@@ -76,7 +81,23 @@ export default class RenderSystem extends System {
   public update(): void {
     this.entities.forEach(entity => {
       const transform = entity.getComponent(ComponentType.TRANSFORMABLE) as TransformableComponent;
-      const renderObject = this.renderObjects[entity.id];
+        const renderObject = this.renderObjects[entity.id];
+
+        /*const motors = entity.getMultipleComponents(ComponentType.MOTOR) as MotorComponent[];
+        motors.forEach(motor => {
+           
+                    const bodyPosition = transform.position.get();
+                    const sensorOffset = Phaser.Physics.Matter.Matter.Vector.rotate(
+                        motor.position.get(),
+                        transform.angle.get(),
+                    );
+                    const x = bodyPosition.x + sensorOffset.x;
+                    const y = bodyPosition.y + sensorOffset.y;
+            //console.log("sensorsys x y", x, y);
+            this.scene.add.circle(x, y, 10, 'black', 1);
+                  
+        });*/
+        
 
       //  console.log("render sys trangsf set", transform.position.get().x, transform.position.get().y);
       renderObject.setPosition(transform.position.get().x, transform.position.get().y);
@@ -125,10 +146,11 @@ export default class RenderSystem extends System {
       );
       const scaleX = render.size.get().width / image.width;
       const scaleY = render.size.get().height === 0 ? scaleX : render.size.get().height / image.height;
-      image.setScale(scaleX, scaleY);
+        image.setScale(scaleX, scaleY);  
     }
+    console.log("render sys", image);
 
-    if (render.blendMode.get()) {
+      if (render.blendMode.get()) {
       image.setBlendMode(render.blendMode.get() as Phaser.BlendModes);
     }
 
