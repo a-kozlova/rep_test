@@ -87,6 +87,12 @@ $('#emis.switch-btn').click(function() {
   document.dispatchEvent(event);
 });
 
+$('#closeSettings').click(function(){
+	var event = new CustomEvent('closeSettings');
+	document.dispatchEvent(event);
+
+})
+
 //Farbe
 $('input[name="farbe"]:radio').change(function() {
   entity.components.forEach(component => {
@@ -166,5 +172,8 @@ document.addEventListener('deleteSensor', function(event) {
 document.addEventListener('deleteMotor', function (event) {
     mytestgame.scene.scenes[3].deleteMotor(entity, event.detail.component);
 });
+
+
+
 
 

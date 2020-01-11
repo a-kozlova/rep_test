@@ -174,6 +174,7 @@ class EntityManager {
         return undefined;
     }
   }
+
 }
 
 export default new EntityManager();

@@ -9,6 +9,7 @@ document.addEventListener("entitySelected", openSettings);
 document.addEventListener("attributeAdded", openSettings);
 
 document.addEventListener("componentChanged", openSettings);
+document.addEventListener("closeSettings", closeSettings);
 
 function openSettings(event) {
     closeNav();
@@ -270,6 +271,7 @@ components.forEach((component,index) => {
 
 
 function closeSettings() {
+
     document.getElementById("myEntitySettings").style.width = "0";
     document.getElementById("createEntityMenu").style.marginRight = "60px";
 }     
