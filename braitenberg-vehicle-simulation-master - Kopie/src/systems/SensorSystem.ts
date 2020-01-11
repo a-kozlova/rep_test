@@ -38,6 +38,7 @@ export default class SensorSystem extends System {
         }
 
         Object.entries(this.textures[sensor.id]).forEach(([angle, image]) => {
+          //  console.log("sensorsys angle image", this.textures[sensor.id]);
           if (angle === String(closestAngle)) {
             const bodyPosition = transform.position.get();
             const sensorOffset = Phaser.Physics.Matter.Matter.Vector.rotate(
@@ -174,8 +175,8 @@ export default class SensorSystem extends System {
       values[angle] = angleValues;
     });
 
-    //  console.log("sensorsystem textures", textures);
     this.textures[sensor.id] = textures;
+    //  console.log("sensorsystem textures", this.textures, sensor.id);
 
     EventBus.publish(EventType.SENSOR_CREATED, {
       id: sensor.id,

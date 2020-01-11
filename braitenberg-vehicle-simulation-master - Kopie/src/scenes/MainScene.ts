@@ -20,6 +20,7 @@ import PhysicsSystem from '../systems/PhysicsSystem';
 import RenderSystem from '../systems/RenderSystem';
 import EngineSystem from '../systems/EngineSystem';
 import SensorSystem from '../systems/SensorSystem';
+import MotorSystem from '../systems/MotorSystem';
 
 import ConnectionSystem from '../systems/ConnectionSystem';
 import SourceSystem from '../systems/SourceSystem';
@@ -178,6 +179,7 @@ export default class MainScene extends Phaser.Scene {
       new SourceSystem(this),
       new EngineSystem(this),
       new SensorSystem(this),
+      new MotorSystem(this),
       new ConnectionSystem(this),
       new ReactionSystem(this),
       new RenderSystem(this),
@@ -271,8 +273,8 @@ export default class MainScene extends Phaser.Scene {
     this.matter.world.setBounds();
   }
 
- // test funktion 14.11.19
- public createBarrier(mouseX, mouseY): void {
+    // test funktion 14.11.19
+  public createBarrier(mouseX: number, mouseY: number): void {
     EntityManager.createEntity(
         new TransformableComponent({ position: { x: mouseX, y: mouseY } }),
         new SolidBodyComponent({
@@ -292,7 +294,7 @@ export default class MainScene extends Phaser.Scene {
     );
 }
 
-private createBlank(mouseX, mouseY): void {
+  private createBlank(mouseX: number, mouseY: number): void {
 	EntityManager.createEntity(
 	
         new TransformableComponent({ position: { x: mouseX, y: mouseY }}),
@@ -305,7 +307,7 @@ private createBlank(mouseX, mouseY): void {
         })
     );   
 }
-private createSource(mouseX, mouseY): void {
+  private createSource(mouseX: number, mouseY: number): void {
 	EntityManager.createEntity(
         new TransformableComponent({ position: { x: mouseX, y: mouseY }}),
         new SourceComponent({
@@ -315,7 +317,7 @@ private createSource(mouseX, mouseY): void {
       );
    
 }
-private createPrefab2a(mouseX, mouseY): void {
+  private createPrefab2a(mouseX: number, mouseY: number): void {
 	  const entity = new Entity();
       const transform = new TransformableComponent({
         position: { x: mouseX, y: mouseY },
@@ -376,7 +378,7 @@ private createPrefab2a(mouseX, mouseY): void {
       EntityManager.addExistingEntity(entity);
    
 }
-private createPrefab2b(mouseX, mouseY): void {
+  private createPrefab2b(mouseX: number, mouseY: number): void {
 	  const entity = new Entity();
       const transform = new TransformableComponent({
         position: { x: mouseX, y: mouseY },
@@ -438,7 +440,7 @@ private createPrefab2b(mouseX, mouseY): void {
       EntityManager.addExistingEntity(entity);
    
 }
-private createPrefab3a(mouseX, mouseY): void {
+    private createPrefab3a(mouseX: number, mouseY: number): void {
       const entity = new Entity();
       const transform = new TransformableComponent({
         position: { x: mouseX, y: mouseY },
@@ -500,7 +502,7 @@ private createPrefab3a(mouseX, mouseY): void {
       EntityManager.addExistingEntity(entity);
    
 }
-private createPrefab3b(mouseX, mouseY): void {
+    private createPrefab3b(mouseX: number, mouseY: number): void {
       const entity = new Entity();
       const transform = new TransformableComponent({
         position: { x: mouseX, y: mouseY },
@@ -564,7 +566,7 @@ private createPrefab3b(mouseX, mouseY): void {
    
 }
 
-public createObject (mouseX, mouseY, droppedItemID ) {
+    public createObject(mouseX: number, mouseY: number, droppedItemID: number ) {
 	switch(droppedItemID) { 
 		case 'blank': { 
 			this.createBlank(mouseX, mouseY);

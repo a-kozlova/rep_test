@@ -95,6 +95,7 @@ export default class PhysicsSystem extends System {
         graphics.strokePath();
       }
     }
+      //console.log("physics sys body part", body, part);
   }
 
   protected onEntityCreated(entity: Entity): void {

@@ -58,8 +58,8 @@ export default class RenderSystem extends System {
           console.log("highlight", entity);
           const transform = entity.getComponent(ComponentType.TRANSFORMABLE) as TransformableComponent;
           this.scene.add.circle(transform.position.get().x-50,
-            transform.position.get().y-50,
-            10, 'black', 1).setOrigin(1);
+              transform.position.get().y - 50,
+              10, 'black', 1).setOrigin(1);
       }
       
   }
@@ -128,17 +128,17 @@ export default class RenderSystem extends System {
     const body = entity.getComponent(ComponentType.SOLID_BODY) as SolidBodyComponent;
 
     let image: Phaser.GameObjects.Image | Phaser.GameObjects.Rectangle;
-    if ((body && typeof render.asset.get() === 'number') || typeof render.asset.get() === 'number') {
+   // if ((body && typeof render.asset.get() === 'number') || typeof render.asset.get() === 'number') {
       const renderHeight = render.size.get().height === 0 ? render.size.get().width : render.size.get().height;
       image = this.scene.add.rectangle(
         transform.position.get().x,
         transform.position.get().y,
         body ? body.size.get().width : render.size.get().width,
         body ? body.size.get().height : renderHeight,
-        render.asset.get() as number,
-		0.3,
+        
       );
-    } else {
+      image.setStrokeStyle(10, render.asset.get() as number)
+   /* } else {
       image = this.scene.add.image(
         transform.position.get().x,
         transform.position.get().y,
@@ -147,7 +147,7 @@ export default class RenderSystem extends System {
       const scaleX = render.size.get().width / image.width;
       const scaleY = render.size.get().height === 0 ? scaleX : render.size.get().height / image.height;
         image.setScale(scaleX, scaleY);  
-    }
+    }*/
     console.log("render sys", image);
 
       if (render.blendMode.get()) {
