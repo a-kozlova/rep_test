@@ -39,14 +39,9 @@ export default class MainInterfaceScene extends Phaser.Scene {
       MainScene.importJson();
     }, 'Load scene from');
 
-    const zoomIn = new Button(this, 80, this.cameras.main.displayHeight - 60, 12, () => {
-          
-    }, '');
-    const zoomOut = new Button(this, 120, this.cameras.main.displayHeight - 60, 16, () => {
+  
 
-    }, '');
-
-    this.buttons.push(start, newFile, /*showEditor,*/ save, exportButton, importButton, zoomIn, zoomOut);	
+    this.buttons.push(start, newFile, /*showEditor,*/ save, exportButton, importButton);	
   }
 
  /* private handleResize(gameSize: Phaser.Structs.Size): void {

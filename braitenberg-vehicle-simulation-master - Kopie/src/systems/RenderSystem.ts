@@ -8,6 +8,7 @@ import EventBus from '../EventBus';
 import SolidBodyComponent from '../components/SolidBodyComponent';
 import Component from '../components/Component';
 
+import EntityManager from '../EntityManager';
 
 
 
@@ -22,7 +23,9 @@ export default class RenderSystem extends System {
 
   private selected: Phaser.GameObjects.Image | Phaser.GameObjects.Rectangle | null = null;
 
-  //private deleteBtn: Phaser.GameObjects.Circle;
+  private deleteBtn: Phaser.GameObjects.Graphics | null = null;
+
+  private direction: Phaser.GameObjects.Graphics | null = null;
 
   public constructor(scene: Phaser.Scene) {
     super(scene);
@@ -61,9 +64,19 @@ export default class RenderSystem extends System {
       if (entity) {
           console.log("highlight", entity);
           const transform = entity.getComponent(ComponentType.TRANSFORMABLE) as TransformableComponent;
-          this.scene.add.circle(transform.position.get().x-50,
-              transform.position.get().y - 50,
-              10, 'black', 1).setOrigin(1);
+          const img = this.scene.add.graphics();
+          img.fillCircle(transform.position.get().x - 100,
+              transform.position.get().y - 100,
+              10);
+          img.fillStyle(0x000000, 1);
+
+          //INTERACTIVE?????????????????????????????????????
+          img.setInteractive(new Phaser.Geom.Circle(transform.position.get().x - 100, transform.position.get().y - 100, 10), Phaser.Geom.Circle.Contains);
+          img.on('click', () => {
+              console.log("tut deletebtn");
+              EntityManager.destroyEntity(entity.id);
+          });
+          this.deleteBtn = img;
       }
       
   }
@@ -79,33 +92,38 @@ export default class RenderSystem extends System {
       }
       this.selected.setDepth(this.selected.getData('originalDepth') || 0);
     }
-    this.selected = null;
+      this.selected = null;
+      if (this.deleteBtn) {
+        this.deleteBtn.clear();
+      }
+      
   }
 
   public update(): void {
     this.entities.forEach(entity => {
       const transform = entity.getComponent(ComponentType.TRANSFORMABLE) as TransformableComponent;
-        const renderObject = this.renderObjects[entity.id];
-
-        /*const motors = entity.getMultipleComponents(ComponentType.MOTOR) as MotorComponent[];
-        motors.forEach(motor => {
-           
-                    const bodyPosition = transform.position.get();
-                    const sensorOffset = Phaser.Physics.Matter.Matter.Vector.rotate(
-                        motor.position.get(),
-                        transform.angle.get(),
-                    );
-                    const x = bodyPosition.x + sensorOffset.x;
-                    const y = bodyPosition.y + sensorOffset.y;
-            //console.log("sensorsys x y", x, y);
-            this.scene.add.circle(x, y, 10, 'black', 1);
-                  
-        });*/
-        
+      const renderObject = this.renderObjects[entity.id];
 
       //  console.log("render sys trangsf set", transform.position.get().x, transform.position.get().y);
       renderObject.setPosition(transform.position.get().x, transform.position.get().y);
       renderObject.setRotation(transform.angle.get());
+
+       const dir = this.direction.clear();
+
+        const bodyPosition = transform.position.get();
+        const dirOffset = Phaser.Physics.Matter.Matter.Vector.rotate(
+            { x: 0, y: 50 },
+            transform.angle.get(),
+        );
+        //console.log("diroffset", dirOffset);
+        const x = bodyPosition.x + dirOffset.x;
+        const y = bodyPosition.y + dirOffset.y;
+
+        dir.lineStyle(2, 0x000000, 1);
+        dir.fillStyle(0x000000, 1);
+        dir.fillTriangle(x, y, x - 5, y - 5, x + 5, y - 5);
+        dir.strokeTriangle(x, y, x - 5, y - 5, x + 5, y - 5);
+        dir.setAngle(180);
     });
   }
 
@@ -152,12 +170,30 @@ export default class RenderSystem extends System {
       const scaleY = render.size.get().height === 0 ? scaleX : render.size.get().height / image.height;
         image.setScale(scaleX, scaleY);  
     }*/
-    console.log("render sys", image);
+      console.log("render sys", image);
+     
 
       if (render.blendMode.get()) {
       image.setBlendMode(render.blendMode.get() as Phaser.BlendModes);
-    }
+      }
 
+      const direction = this.scene.add.graphics();
+
+      const bodyPosition = transform.position.get();
+      const dirOffset = Phaser.Physics.Matter.Matter.Vector.rotate(
+          { x: 0, y: 50 },
+          transform.angle.get(),
+      );
+      console.log("diroffset", dirOffset, entity);
+      const x = bodyPosition.x + dirOffset.x;
+      const y = bodyPosition.y + dirOffset.y;
+
+      direction.lineStyle(2, 0x000000, 1);
+      direction.fillStyle(0x000000, 1);
+      direction.fillTriangle(x, y, x - 5, y - 10, x + 5, y - 10);
+      direction.strokeTriangle(x, y, x - 5, y - 10, x + 5, y - 10);
+      //direction.setAngle(180);
+      this.direction = direction;
     // Alles was man rendert, kann man auch verschieben. Macht es trotzdem
     // vielleicht Sinn eine eigene "DraggableComponent" zu erzeugen und
     // nur anhand dessen ein Objekt draggable zu machen oder nicht?
