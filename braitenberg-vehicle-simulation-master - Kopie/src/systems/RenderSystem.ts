@@ -30,11 +30,15 @@ export default class RenderSystem extends System {
     EventBus.subscribe(EventType.ENTITY_SELECTED, (entity: Entity) => {
       this.removeHighlight();
       this.highlight(entity);
-    });
+      });
 
-    EventBus.subscribe(EventType.SIDEBAR_CLOSED, () => {
+      document.addEventListener("closeSettings", () => {
+          this.removeHighlight();
+      });
+
+    /*EventBus.subscribe(EventType.SIDEBAR_CLOSED, () => {
       this.removeHighlight();
-    });
+    });*/
   }
 
   private highlight(entity: Entity): void {
@@ -44,14 +48,14 @@ export default class RenderSystem extends System {
       this.selected.setData('originalDepth', image.depth);
       this.selected.setDepth(999);
 
-      if (image instanceof Phaser.GameObjects.Image) {
+      /*if (image instanceof Phaser.GameObjects.Image) {
         image.setTint(0xddddff);
       }
 
       if (image instanceof Phaser.GameObjects.Rectangle) {
         this.selected.setData('originalColor', image.fillColor);
         image.setFillStyle(0xddddff);
-      }
+      }*/
         
       }
       if (entity) {
@@ -67,11 +71,11 @@ export default class RenderSystem extends System {
   private removeHighlight(): void {
     if (this.selected && this.scene.children.exists(this.selected)) {
       if (this.selected instanceof Phaser.GameObjects.Image) {
-        this.selected.setTint(0xffffff);
+        //this.selected.setTint(0xffffff);
       }
       if (this.selected instanceof Phaser.GameObjects.Rectangle) {
         const color = this.selected.getData('originalColor') || 0xcccccc;
-        this.selected.setFillStyle(color);
+        //this.selected.setFillStyle(color);
       }
       this.selected.setDepth(this.selected.getData('originalDepth') || 0);
     }

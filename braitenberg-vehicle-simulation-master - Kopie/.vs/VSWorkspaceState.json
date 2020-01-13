@@ -1,12 +1,14 @@
 {
   "ExpandedNodes": [
     "",
+    "\\bootstrap-4.3.1-dist",
+    "\\bootstrap-4.3.1-dist\\js",
     "\\src",
     "\\src\\components",
-    "\\src\\dynamic_input",
+    "\\src\\scenes",
     "\\src\\systems",
     "\\webpack"
   ],
-  "SelectedNode": "\\src\\components\\SensorComponent.ts",
+  "SelectedNode": "\\src\\systems\\SensorSystem.ts",
   "PreviewInSolutionExplorer": false
 }

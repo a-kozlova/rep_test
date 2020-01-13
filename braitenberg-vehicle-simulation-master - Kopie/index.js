@@ -274,6 +274,8 @@ function closeSettings() {
 
     document.getElementById("myEntitySettings").style.width = "0";
     document.getElementById("createEntityMenu").style.marginRight = "60px";
+    let event = new CustomEvent("closeSettings");
+    document.dispatchEvent(event);
 }     
 
 function openNav() {

@@ -14,160 +14,129 @@ const mod = (x: number, n: number): number => ((x % n) + n) % n;
 export default class MotorSystem extends System {
     public expectedComponents: ComponentType[] = [ComponentType.MOTOR, ComponentType.TRANSFORMABLE];
 
-    private textures: { [componentId: number]:  Phaser.GameObjects.Image } = {};
+    private grs: { [componentId: number]: Phaser.GameObjects.Graphics } = {};
     
     public update(): void {
-        /*this.entities.forEach(entity => {
+
+        this.entities.forEach(entity => {
             const transform = entity.getComponent(ComponentType.TRANSFORMABLE) as TransformableComponent;
-            const sensors = entity.getMultipleComponents(ComponentType.SENSOR) as MotorComponent[];
+            const motors = entity.getMultipleComponents(ComponentType.MOTOR) as MotorComponent[];
 
-            const currentAngle = mod(transform.angle.get(), Math.PI * 2);
-            const closestAngle = AVAILABLE_ANGLES.reduce((prev, curr) => {
-                return Math.abs(curr - currentAngle) < Math.abs(prev - currentAngle) ? curr : prev;
-            });
-            
-            //  console.log("sensorsys cur close", currentAngle, closestAngle)
-
-            sensors.forEach(sensor => {
-                if (!this.textures[sensor.id]) {
+            motors.forEach(motor => {
+                if (!this.grs[motor.id]) {
                     return;
                 }
 
-                Object.entries(this.textures[sensor.id]).forEach(([angle, image]) => {
-                    if (angle === String(closestAngle)) {
-                        const bodyPosition = transform.position.get();
-                        const sensorOffset = Phaser.Physics.Matter.Matter.Vector.rotate(
-                            sensor.position.get(),
-                            transform.angle.get(),
-                        );
-                        const x = bodyPosition.x + sensorOffset.x;
-                        const y = bodyPosition.y + sensorOffset.y;
-                        //console.log("sensorsys x y", x, y);
-                        image.setPosition(x, y);
-                        image.setVisible(true);
-                    } else {
-                        image.setVisible(false);
-                    }
-                });
+                this.grs[motor.id].clear();
+                
+                const bodyPosition = transform.position.get();
+                const motorOffset = Phaser.Physics.Matter.Matter.Vector.rotate(
+                    motor.position.get(),
+                    transform.angle.get(),
+                );
+                const x = bodyPosition.x + motorOffset.x;
+                const y = bodyPosition.y + motorOffset.y;
+              
+                this.grs[motor.id].lineStyle(2, 'black', 1);
+                this.grs[motor.id].fillStyle(0xff0000, motor.defaultSpeed.get() / 100);
+                this.grs[motor.id].fillCircle(x, y, 7);
+                this.grs[motor.id].strokeCircle(x, y, 7);
             });
-        });*/
+        });
     }
 
     protected onEntityCreated(entity: Entity): void {
-        const sensors = entity.getMultipleComponents(ComponentType.MOTOR) as MotorComponent[];
-        sensors.forEach(sensor => {
-            this.addSensorObject(entity, sensor);
+        const motors = entity.getMultipleComponents(ComponentType.MOTOR) as MotorComponent[];
+        motors.forEach(motor => {
+            this.addMotorObject(entity, motor);
 
-            sensor.maxSpeed.onChange(value => {
-                this.removeSensorObject(sensor);
-                this.addSensorObject(entity, sensor);
+            motor.maxSpeed.onChange(value => {
+                this.removeMotorObject(motor);
+                this.addMotorObject(entity, motor);
             });
 
-            sensor.defaultSpeed.onChange(value => {
-                this.removeSensorObject(sensor);
-                this.addSensorObject(entity, sensor);
+            motor.defaultSpeed.onChange(value => {
+                this.removeMotorObject(motor);
+                this.addMotorObject(entity, motor);
             });
-            console.log("motorsys test", sensor);
+            //console.log("motorsys test", motor);
 
         });
     }
 
     protected onEntityDestroyed(entity: Entity): void {
-        const sensors = entity.getMultipleComponents(ComponentType.MOTOR) as MotorComponent[];
-        sensors.forEach(sensor => {
-            this.removeSensorObject(sensor);
+        const motors = entity.getMultipleComponents(ComponentType.MOTOR) as MotorComponent[];
+        motors.forEach(motor => {
+            this.removeMotorObject(motor);
         });
     }
 
     protected onEntityComponentAdded(entity: Entity, component: Component): void {
         if (component.name !== ComponentType.MOTOR) return;
 
-        const sensor = component as MotorComponent;
-        this.addSensorObject(entity, sensor);
+        const motor = component as MotorComponent;
+        this.addMotorObject(entity, motor);
 
-        sensor.maxSpeed.onChange(value => {
-            this.removeSensorObject(sensor);
-            this.addSensorObject(entity, sensor);
+        motor.maxSpeed.onChange(value => {
+            this.removeMotorObject(motor);
+            this.addMotorObject(entity, motor);
         });
 
-        sensor.defaultSpeed.onChange(value => {
-            this.removeSensorObject(sensor);
-            this.addSensorObject(entity, sensor);
+        motor.defaultSpeed.onChange(value => {
+            this.removeMotorObject(motor);
+            this.addMotorObject(entity, motor);
         });
     }
 
     protected onEntityComponentRemoved(entity: Entity, component: Component): void {
         if (component.name !== ComponentType.MOTOR) return;
 
-        this.removeSensorObject(component as MotorComponent);
+        this.removeMotorObject(component as MotorComponent);
     }
 
-    private addSensorObject(entity: Entity, sensor: MotorComponent): void {
+    private addMotorObject(entity: Entity, motor: MotorComponent): void {
         const transform = entity.getComponent(ComponentType.TRANSFORMABLE) as TransformableComponent;
+        const bodyPosition = transform.position.get();
+        const motorOffset = Phaser.Physics.Matter.Matter.Vector.rotate(
+            motor.position.get(),
+            transform.angle.get(),
+        );
+        const x = bodyPosition.x + motorOffset.x;
+        const y = bodyPosition.y + motorOffset.y;
+            
+        const graphics = this.scene.add.graphics();
+
+        var color = 0xffff00;
+        var thickness = 2;
+        var alpha = 1;
+
+        graphics.lineStyle(thickness, color, alpha);
+        graphics.fillStyle(0xff0000, 1);
+        graphics.fillCircle(x,y,5);
+        graphics.strokeCircle(x, y, 5);
 
 
-        /*const textures: { [compId: number]: Phaser.GameObjects.Image } = {};
-        
-        
-            const texture = this.scene.textures.createCanvas(`sensor_texture_${sensor.id}`,8, 50);
-            const context = texture.getContext();
-           
-            // zeichnet die Sensoren auf dem Canvas
-            for (let y = 0; y < 5; y += 1) {
-                for (let x = 0; x < 5; x += 1) {
-                   
-                    context.fillStyle = `rgba(50, 50, 100, 1})`;
-                    context.fillRect(x, y, 8, 50);
-                }
-            }
+        this.grs[motor.id] = graphics;
 
-            // window.open(offScreenCanvas.toDataURL(), '_blank');
-            // window.open(offScreenCanvasDown.toDataURL(), '_blank');
-
-            texture.refresh();
-
-            const x = transform.position.get().x + sensor.position.get().x;
-            const y = transform.position.get().y + sensor.position.get().y;
-            const image = this.scene.add.image(x, y, `sensor_texture_${sensor.id}`);
-            image.setScale(CORRELATION_SCALE);
-            // image.setBlendMode(Phaser.BlendModes.SCREEN);
-            image.setVisible(false);
-            image.setDepth(99);
-            this.scene.children.bringToTop(image);
-
-            //textures[sensor.id] = image;
-           
-        
-
-        //  console.log("sensorsystem textures", textures);
-        this.textures[sensor.id] = image;*/
-        const x = transform.position.get().x + sensor.position.get().x;
-        const y = transform.position.get().y + sensor.position.get().y;
-        this.scene.add.circle(x,y, 10, 'black', 1).setOrigin(1);
-
-        console.log("motorsys textures ", this.textures[sensor.id]);
+        //console.log("motorsys textures ", this.grs[motor.id]);
 
         /*EventBus.publish(EventType.MOTOR_CREATED, {
-          id: sensor.id,
-          type: sensor.reactsTo.get(),
+          id: motor.id,
+          type: motor.reactsTo.get(),
           values,
           width,
           height,
         });*/
     }
 
-    private removeSensorObject(sensor: MotorComponent): void {
-        const angleTextures = this.textures[sensor.id];
+    private removeMotorObject(motor: MotorComponent): void {
+        this.grs[motor.id].clear();
 
-        Object.keys(angleTextures).forEach(key => {
-            this.scene.textures.remove(`sensor_texture_${sensor.id}`);
-        });
+        delete this.grs[motor.id];
 
-        delete this.textures[sensor.id];
-
-        /*EventBus.publish(EventType.SENSOR_DESTROYED, {
-          id: sensor.id,
-          type: sensor.reactsTo.get(),
+        /*EventBus.publish(EventType.motor_DESTROYED, {
+          id: motor.id,
+          type: motor.reactsTo.get(),
         });*/
     }
 }
