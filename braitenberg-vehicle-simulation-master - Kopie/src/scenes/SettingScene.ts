@@ -257,6 +257,4 @@ export default class SettingScene extends SidebarScene {
     }
 
 
-   
-
 }

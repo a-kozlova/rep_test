@@ -58,14 +58,6 @@ export default class MainScene extends Phaser.Scene {
       document.dispatchEvent(event);
     });
 
-	EventBus.subscribe(EventType.SIDEBAR_CLOSED, () => {
-        var event = new CustomEvent("closeSettings");
-        event.preventDefault();
-		console.log ("close");
-	    document.dispatchEvent(event);
-    });
-
-
 	//Barrier
     EntityManager.createEntity(
       new TransformableComponent({ position: { x: 800, y: 450 }, angle: Math.PI }),

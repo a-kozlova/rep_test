@@ -2,13 +2,14 @@
   "ExpandedNodes": [
     "",
     "\\bootstrap-4.3.1-dist",
-    "\\bootstrap-4.3.1-dist\\js",
     "\\src",
     "\\src\\components",
+    "\\src\\gui",
     "\\src\\scenes",
     "\\src\\systems",
+    "\\src\\utils",
     "\\webpack"
   ],
-  "SelectedNode": "\\src\\systems\\SensorSystem.ts",
+  "SelectedNode": "\\src\\index.ts",
   "PreviewInSolutionExplorer": false
 }

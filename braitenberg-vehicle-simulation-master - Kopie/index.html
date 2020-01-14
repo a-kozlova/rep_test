@@ -56,6 +56,9 @@
             </div>
         </div>
 
+        <div id="deleteEntity">Delete entity</div>
+
+
         <div id="settingsMenu">
             <!--TABS-->
             <div class="nav nav-tabs nav-fil" id="myTabs" role="tablist">
@@ -70,13 +73,14 @@
                 <!--MOTOR-->
                 <div role="tabpanel" class="tab-pane active" id="motor">
                     <h4>Position</h4>
-           
+
                     <div id="motorCanvasContainer" class="col-12" style="border: 1px green dashed; padding: 0">
                         <!--<canvas id="motorCanvas" style=" border: 1px black solid; margin: 0;" width="240" height="240"> </canvas>-->
                     </div>
 
                     <h4>Speed</h4>
                     <div id="slidecontainer"></div>
+                    <div class="row" style="padding-left: 20px;"> For all motors</div>
                 </div>
                 <!--SENSOR-->
                 <div role="tabpanel" class="tab-pane fade" id="sensor">
@@ -84,16 +88,23 @@
                     <div id="sensorCanvasContainer" class="col-12" style="border: 1px green dashed; padding: 0">
                         <!--<canvas id="sensorCanvas" style=" border: 1px black solid; margin: 0"> </canvas>-->
                     </div>
-                        
+
                     <div class="row">
                         <h4 class="col-4">Range</h4>
                         <h4 class="col-4"> Angle</h4>
                         <h4 class="col-4">Reaction</h4>
                     </div>
+
                     <div class="row" id="sensorRow">
                         <form id="sensorRange" class="col-4"> </form>
                         <form id="sensorAngle" class="col-4"> </form>
                         <form id="sensorReaction" class="col-4"> </form>
+                    </div>
+                    <div class="row" style="padding-left: 20px;"> For all sensors</div>
+                    <div class="row" id="sensorRowForAll">
+                        <form id="sensorRangeFA" class="col-4"> </form>
+                        <form id="sensorAngleFA" class="col-4"> </form>
+                        <form id="sensorReactionFA" class="col-4"> </form>
                     </div>
                 </div>
                 <!--EMISSION-->

@@ -11,6 +11,18 @@ document.addEventListener("attributeAdded", openSettings);
 document.addEventListener("componentChanged", openSettings);
 document.addEventListener("closeSettings", closeSettings);
 
+
+$(document).on('entity:delete', function (event, options) {
+    let ev = new CustomEvent('delEnt', { detail: options });
+    console.log("html delte entiti", options);
+    document.dispatchEvent(ev);
+});
+
+
+ $('#deleteEntity').on('click', () => {
+        $(document).trigger('entity:delete', [entity]);
+ });
+
 function openSettings(event) {
     closeNav();
     //closeSettings();
@@ -20,6 +32,8 @@ function openSettings(event) {
     entity = event.detail;                  // die aufgerufene Entität
     console.log("opensettings", entity);
 
+   
+
     motorComponents = entity.components.filter(component => component.name == "Motor");
     sensorComponents = entity.components.filter(component => component.name == "Sensor");
     var renderComponents = entity.components.filter(component => component.name == "Rendering");
@@ -27,14 +41,6 @@ function openSettings(event) {
     var sourceComponents = entity.components.filter(component => component.name == "Quelle");
     var transformableComponents = entity.components.filter(component => component.name == "Transform");
     var connectionComponents = entity.components.filter(component => component.name == "Verbindung");
-
-
-
-
-
-
-
-
    
 
     size = { "width": 100, "height": 150 };
@@ -171,23 +177,23 @@ function bodySettings(components, renderComponents) {
        return
     }
 
-switch (renderComponents[0].asset.value) {
-    case 13421772: 
-        $("#grey").prop('checked', true);
-        break;
+    switch (renderComponents[0].asset.value) {
+        case 13421772: 
+            $("#grey").prop('checked', true);
+            break;
     
-    case 13713746: 
-        $("#red").prop('checked', true);
-        console.log('red');
-        break;
+        case 13713746: 
+            $("#red").prop('checked', true);
+            console.log('red');
+            break;
     
-    case 5744185: 
-        $("#green").prop('checked', true);
-        break;
+        case 5744185: 
+            $("#green").prop('checked', true);
+            break;
     
-    case 1791363: 
-        $("#blue").prop('checked', true);
-        break;
+        case 1791363: 
+            $("#blue").prop('checked', true);
+            break;
     }
 
 }
@@ -199,6 +205,11 @@ function sensorSettings(components) {
         $('#sensorRow > form').children().each((idx, child) => {
             child.remove('input');
         });    
+    }
+    if ($('#sensorRowForAll  > form').children().length) {
+        $('#sensorRowForAll > form').children().each((idx, child) => {
+            child.remove('input');
+        });
     }
 
     // falls Entity keine Sensoren hat
@@ -222,31 +233,42 @@ function sensorSettings(components) {
             //console.log(newValue);
             component.setRange(newValue);
         });
+
         $('#angle' + component.id).on('input', function () {
             let newValue = $(this).val(); // get the current value of the input field.
             component.setAngle(newValue);
+        });  
+    });
+
+    $("#sensorRangeFA").append(
+        '<input id = "rangeFA" style = "background: white"; margin-bottom:10px" placeholder = "0">');
+    $("#sensorAngleFA").append(
+        '<input id = "angleFA" style = "background:  white"; margin-bottom:10px" placeholder = "0">');
+    
+    $('#rangeFA').on('input', function () {
+        let newValue = $(this).val(); // get the current value of the input field.
+        //console.log(newValue);
+        components.forEach((component, index) => {
+            component.setRange(newValue);
         });
     });
-    
+    $('#angleFA').on('input', function () {
+        let newValue = $(this).val(); // get the current value of the input field.
+        components.forEach((component, index) => {
+            component.setAngle(newValue);
+        });
+    });
 }
 
-/* TODO  size from solidBody? render??
-function drawOnCanvas(motorcomponents, cName) {
-
-   
-}*/
-
-
-
 function drawSliders(components) {
-   $('#slidecontainer').children().each((idx, child) => {
+    $('#slidecontainer').children().each((idx, child) => {
             child.remove('div');
-        });
+    });
     components.forEach(component => {
         $("#slidecontainer").append('<div id = "' + component.id + '" class="slider">');
     });
  
-components.forEach((component,index) => {
+    components.forEach((component,index) => {
         var slider = $(function () {
             $("#" + component.id).slider({
                 range: true,
@@ -265,17 +287,25 @@ components.forEach((component,index) => {
             });
         $("#" + component.id + " .ui-widget-header").css('background', color[index]);
             
-           });
         });
+    });
 }
+
+
+
+$(document).on("settigs:closed", function (event, options) {
+
+    let ev = new CustomEvent("closeSetting", {});
+    document.dispatchEvent(ev);
+
+});
 
 
 function closeSettings() {
 
     document.getElementById("myEntitySettings").style.width = "0";
     document.getElementById("createEntityMenu").style.marginRight = "60px";
-    let event = new CustomEvent("closeSettings");
-    document.dispatchEvent(event);
+    $(document).trigger('settings:closed', []);
 }     
 
 function openNav() {
@@ -286,12 +316,6 @@ function openNav() {
 function closeNav() {
     document.getElementById("mySidenav").style.width = "0";
 }
-
-
-
-
-
-
 
 
 

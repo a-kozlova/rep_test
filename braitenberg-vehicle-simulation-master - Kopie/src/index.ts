@@ -175,5 +175,8 @@ document.addEventListener('deleteMotor', function (event) {
 
 
 
-
+document.addEventListener('delEnt', (event) => {
+    console.log("deleteEntity settscen", event);
+    EntityManager.destroyEntity(event.detail.id); 
+});
 

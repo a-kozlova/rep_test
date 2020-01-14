@@ -39,6 +39,7 @@ export default class RenderSystem extends System {
           this.removeHighlight();
       });
 
+     
     /*EventBus.subscribe(EventType.SIDEBAR_CLOSED, () => {
       this.removeHighlight();
     });*/
@@ -62,11 +63,11 @@ export default class RenderSystem extends System {
         
       }
       if (entity) {
-          console.log("highlight", entity);
           const transform = entity.getComponent(ComponentType.TRANSFORMABLE) as TransformableComponent;
-          const img = this.scene.add.graphics();
-          img.fillCircle(transform.position.get().x - 100,
-              transform.position.get().y - 100,
+          const render = entity.getComponent(ComponentType.RENDER) as RenderComponent;
+          let img = this.scene.add.graphics();
+          img.fillCircle(transform.position.get().x - render.size.get().width,
+              transform.position.get().y - render.size.get().width,
               10);
           img.fillStyle(0x000000, 1);
 
@@ -108,22 +109,25 @@ export default class RenderSystem extends System {
       renderObject.setPosition(transform.position.get().x, transform.position.get().y);
       renderObject.setRotation(transform.angle.get());
 
-       const dir = this.direction.clear();
+        if (this.direction) {
+            const dir = this.direction.clear();
 
-        const bodyPosition = transform.position.get();
-        const dirOffset = Phaser.Physics.Matter.Matter.Vector.rotate(
-            { x: 0, y: 50 },
-            transform.angle.get(),
-        );
-        //console.log("diroffset", dirOffset);
-        const x = bodyPosition.x + dirOffset.x;
-        const y = bodyPosition.y + dirOffset.y;
+            const bodyPosition = transform.position.get();
+            const dirOffset = Phaser.Physics.Matter.Matter.Vector.rotate(
+                { x: 0, y:200 },
+                transform.angle.get(),
+            );
+            //console.log("diroffset", dirOffset);
+            const x = bodyPosition.x + dirOffset.x;
+            const y = bodyPosition.y + dirOffset.y;
 
-        dir.lineStyle(2, 0x000000, 1);
-        dir.fillStyle(0x000000, 1);
-        dir.fillTriangle(x, y, x - 5, y - 5, x + 5, y - 5);
-        dir.strokeTriangle(x, y, x - 5, y - 5, x + 5, y - 5);
-        dir.setAngle(180);
+            dir.lineStyle(2, 0x000000, 1);
+            dir.fillStyle(0x000000, 1);
+            dir.fillTriangle(x, y, x - 5, y - 5, x + 5, y - 5);
+            dir.strokeTriangle(x, y, x - 5, y - 5, x + 5, y - 5);
+            dir.setAngle(180);
+        }
+        
     });
   }
 
@@ -181,10 +185,10 @@ export default class RenderSystem extends System {
 
       const bodyPosition = transform.position.get();
       const dirOffset = Phaser.Physics.Matter.Matter.Vector.rotate(
-          { x: 0, y: 50 },
+          { x: 0, y: 200 },
           transform.angle.get(),
       );
-      console.log("diroffset", dirOffset, entity);
+      console.log("diroffset angle", dirOffset,transform.angle.get(), entity);
       const x = bodyPosition.x + dirOffset.x;
       const y = bodyPosition.y + dirOffset.y;
 
