@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import Entity from '../Entity';
-import { ComponentType, EventType } from '../enums';
+import { ComponentType, EventType, SubstanceType } from '../enums';
 import { CORRELATION_SCALE } from '../constants';
 import SensorComponent from '../components/SensorComponent';
 import TransformableComponent from '../components/TransformableComponent';
@@ -152,8 +152,15 @@ export default class SensorSystem extends System {
 
           angleValues[y * width + x] = v;
 
-          context.fillStyle = `rgba(50, 50, 100, ${v * 0.6})`;
-          context.fillRect(x, y, 1, 1);
+          if (sensor.reactsTo.get() == SubstanceType.LIGHT){
+			context.fillStyle = `rgba(255, 0, 0, ${v * 0.6})`;
+			context.fillRect(x, y, 1, 1);
+		  } else {
+			context.fillStyle = `rgba(0, 0, 255, ${v * 0.6})`;
+			context.fillRect(x, y, 1, 1);
+		  }
+		  
+
         }
       }
 
