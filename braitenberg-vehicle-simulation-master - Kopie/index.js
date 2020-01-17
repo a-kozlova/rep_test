@@ -236,9 +236,36 @@ function sensorSettings(components) {
         $("#sensorAngle").append(
             '<input id = "angle' + component.id + '" style = "background: ' + color[index] +
             '; margin-bottom:10px" placeholder = "' + component.angle.value + '">');
+        $("#sensorReaction").append(
+            '<div class="switch-btn switch-reaction" id = "react' + component.id + '" style = "background: ' + color[index] +
+            '; margin-bottom:10px">');
+
+
+console.log(component.reactsTo.get());
+switch (component.reactsTo.get()) {
+    case 'Licht': {
+        $('#react' + component.id).addClass('switch-on');
+        break;}
+    case 'Hindernis': {
+        $('#react' + component.id).removeClass('switch-on');
+        break;}
+}
+
+            //switch reaction
+            $('#react' + component.id).click(function() {
+                $(this).toggleClass('switch-on');
+                if ($(this).hasClass('switch-on')) {
+                  $(this).trigger('on.switch');
+                  component.setReaction('source');
+                } else {
+                  $(this).trigger('off.switch');
+                  component.setReaction('barrier');
+                }
+
+            });
 
         // ne rabotaet podklu4it bootstrap toggle?
-        $("#sensorReaction").append('<input type="checkbox" data-toggle="toggle" data-on="on" data-off="off" data-onstyle="success" data-offstyle="danger">');
+       // $("#sensorReaction").append('<input type="checkbox" data-toggle="toggle" data-on="on" data-off="off" data-onstyle="success" data-offstyle="danger">');
             
         $('#range' + component.id).on('input', function () {
             let newValue = $(this).val(); // get the current value of the input field.

@@ -367,7 +367,18 @@ h4 {
     background: #3fb53f;
 }
 .switch-on::after {
-    left: 26px;
+    left: 25px;
+}
+.switch-reaction {
+    height: 31px;
+	width: 60px;
+}
+.switch-reaction::after {
+    height: 25px;	
+	width: 25px;
+}
+.switch-reaction.switch-on::after {
+	left: 33px;
 }
 
 /*slider*/

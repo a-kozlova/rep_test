@@ -67,10 +67,12 @@ export default class RenderSystem extends System {
           img.fillStyle(0x000000, 1);
 
           //INTERACTIVE?????????????????????????????????????
-          img.setInteractive(new Phaser.Geom.Circle(transform.position.get().x - 100, transform.position.get().y - 100, 10), Phaser.Geom.Circle.Contains);
-          img.on('pointerdown', () => {
+          img.setInteractive(new Phaser.Geom.Circle(transform.position.get().x - 100, transform.position.get().y - 100, 10), Phaser.Geom.Circle.Contains)
+
+		     .on('pointerdown', () => {
               EntityManager.destroyEntity(entity.id);
           });
+		  //			 .setInteractive({ useHandCursor: true })
           
           this.deleteBtn = img;
       }
