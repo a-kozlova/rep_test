@@ -25,6 +25,7 @@ $(document).on('entity:delete', function (event, options) {
 
 function openSettings(event) {
     closeNav();
+  resetSettings();
     //closeSettings();
     document.getElementById("myEntitySettings").style.width = "256px";
     document.getElementById("createEntityMenu").style.marginRight = "306px";
@@ -62,15 +63,10 @@ function openSettings(event) {
 }
 
 function emissionSettings(sourceComponents) {
-
 	$('#emRange').attr('value', sourceComponents[0].range.value);
     if (sourceComponents[0].isActive){
-        $('#static.switch-btn').addClass("switch-on");
+        $('#emis.switch-btn').addClass("switch-on");
 
-        $("#emRange").prop('disabled', false);
-        $('#emRange').on('input', function () {
-            sourceComponents[0].setRange($(this).val());
-        });
 
         $("#barrier").prop('disabled', false);
         $("#sour").prop('disabled', false);
@@ -88,13 +84,21 @@ function emissionSettings(sourceComponents) {
         if(sourceComponents[0].emissionType.value ==="GAUSSIAN") {
             $("#gaus").prop('checked', true);
             $("#flat").prop('checked', false);
+            $('#emRange').prop('disabled', false);
+            $('#emRange').removeClass('disabled');
+            $('#emRange').on('input', function () {
+                sourceComponents[0].setRange($(this).val());
+            });
         }
+
         if(sourceComponents[0].emissionType.value ==="FLAT") {
             $("#gaus").prop('checked', false);
             $("#flat").prop('checked', true);
-        }        
+            $('#emRange').prop('disabled', true);
+            $('#emRange').addClass('disabled');
+        }
     } else {
-        $('#static.switch-btn').removeClass("switch-on");
+        $('#emis.switch-btn').removeClass("switch-on");
 
         $("#emRange").prop('disabled', true);
 
@@ -110,10 +114,18 @@ function emissionSettings(sourceComponents) {
     }
 
 }
+function resetSettings() {           
+
+//$('.switch-btn').removeClass('switch-on');
+
+$('input:radio').prop('checked', false);
+
+}
 
     
 
 function bodySettings(components, renderComponents) {
+
     // Zuerst alle input-Kindknoten löschen, 
     // damit keine Abhaengigkeiten zwischen Komponenten der verschiedenen Entitäten entstehen
     $('#bodySize').children("input").each((idx, child) => {

@@ -127,6 +127,9 @@ $('input[name="emission"]:radio').change(function() {
       component.setEmissionType($("input[name='emission']:checked").val());
     }
   });
+
+ var event = new CustomEvent('componentChanged', { detail: entity });
+  document.dispatchEvent(event);
 });
 
 // add remove solid body
