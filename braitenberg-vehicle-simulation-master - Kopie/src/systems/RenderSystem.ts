@@ -38,11 +38,6 @@ export default class RenderSystem extends System {
       document.addEventListener("closeSettings", () => {
           this.removeHighlight();
       });
-
-     
-    /*EventBus.subscribe(EventType.SIDEBAR_CLOSED, () => {
-      this.removeHighlight();
-    });*/
   }
 
   private highlight(entity: Entity): void {
@@ -65,7 +60,7 @@ export default class RenderSystem extends System {
       if (entity) {
           const transform = entity.getComponent(ComponentType.TRANSFORMABLE) as TransformableComponent;
           const render = entity.getComponent(ComponentType.RENDER) as RenderComponent;
-          let img = this.scene.add.graphics();
+		 let img = this.scene.add.graphics();
           img.fillCircle(transform.position.get().x - render.size.get().width,
               transform.position.get().y - render.size.get().width,
               10);
@@ -73,10 +68,10 @@ export default class RenderSystem extends System {
 
           //INTERACTIVE?????????????????????????????????????
           img.setInteractive(new Phaser.Geom.Circle(transform.position.get().x - 100, transform.position.get().y - 100, 10), Phaser.Geom.Circle.Contains);
-          img.on('click', () => {
-              console.log("tut deletebtn");
+          img.on('pointerdown', () => {
               EntityManager.destroyEntity(entity.id);
           });
+          
           this.deleteBtn = img;
       }
       
