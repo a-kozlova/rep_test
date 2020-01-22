@@ -33,7 +33,7 @@ $('input:radio').prop('checked', false);
 
 function openSettings(event) {
     closeNav();
-  resetSettings();
+    resetSettings();
     //closeSettings();
     document.getElementById("myEntitySettings").style.width = "256px";
     document.getElementById("createEntityMenu").style.marginRight = "306px";
@@ -246,27 +246,31 @@ function sensorSettings(components) {
             '<div class="switch-btn switch-reaction" id = "react' + component.id + '" style = "background: ' + color[index] +
             '; margin-bottom:10px">');
 
+
+        console.log(component.reactsTo.get());
         switch (component.reactsTo.get()) {
             case 'Licht': {
                 $('#react' + component.id).addClass('switch-on');
-                break;}
+                break;
+            }
             case 'Hindernis': {
                 $('#react' + component.id).removeClass('switch-on');
-                break;}
+                break;
+            }
         }
 
             //switch reaction
-            $('#react' + component.id).click(function() {
-                $(this).toggleClass('switch-on');
-                if ($(this).hasClass('switch-on')) {
+        $('#react' + component.id).click(function() {
+            $(this).toggleClass('switch-on');
+            if ($(this).hasClass('switch-on')) {
                   $(this).trigger('on.switch');
                   component.setReaction('source');
-                } else {
+            } else {
                   $(this).trigger('off.switch');
                   component.setReaction('barrier');
-                }
+            }
 
-            });
+        });
 
         // ne rabotaet podklu4it bootstrap toggle?
        // $("#sensorReaction").append('<input type="checkbox" data-toggle="toggle" data-on="on" data-off="off" data-onstyle="success" data-offstyle="danger">');
@@ -305,7 +309,7 @@ function sensorSettings(components) {
 
 function drawSliders(components) {
     $('#slidecontainer').children().each((idx, child) => {
-            child.remove('div');
+        child.remove('div');
     });
     components.forEach(component => {
         $("#slidecontainer").append('<div id = "' + component.id + '" class="slider">');
@@ -328,7 +332,7 @@ function drawSliders(components) {
                     console.log(component.maxSpeed.get());
                 }
             });
-        $("#" + component.id + " .ui-widget-header").css('background', color[index]);
+            $("#" + component.id + " .ui-widget-header").css('background', color[index]);
             
         });
     });
@@ -422,6 +426,20 @@ $(document).on("motor:upd", function (event, options) {
 //color array this is unsafe because the array is of fixed size!
 //this needs a better solution!
 var color = ["#00ffff", "#00ff00", "#ff00ff", "#cecece", "#cece00", "#ce00ce", "#00cece", "#c00ece", "#cec00e", "#0000ce"];
+
+var col = {};
+
+
+function generateHexColor() {
+
+    let colr = '#' + ((0.5 + 0.5 * Math.random()) * 0xFFFFFF << 0).toString(16);
+    console.log("tsvet", colr);
+    return colr;
+}
+
+
+
+
 
 var motorCanvasStage = new Konva.Stage({
     container: 'motorCanvasContainer'
@@ -596,11 +614,12 @@ function drawMotorCanvas(options) {
     let colorCounter = 0;
 
     options.components.forEach(component => {
+        col[component.id] = generateHexColor();
         let motor = new Konva.Circle({
             x: startPoint.x - ratioX * component.position.value.x,
             y: startPoint.y - ratioY * component.position.value.y,
             radius: 7,
-            fill: color[colorCounter],
+            fill: col[component.id],
             stroke: 'black',
             strokeWidth: 1,
             id: component.id,
