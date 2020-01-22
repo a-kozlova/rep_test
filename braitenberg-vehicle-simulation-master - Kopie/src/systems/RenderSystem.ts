@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
 import System from './System';
 import Entity from '../Entity';
-import { ComponentType, EventType } from '../enums';
+import { ComponentType, EventType, BodyShape } from '../enums';
 import RenderComponent from '../components/RenderComponent';
 import TransformableComponent from '../components/TransformableComponent';
 import EventBus from '../EventBus';
@@ -23,7 +23,7 @@ export default class RenderSystem extends System {
 
   private selected: Phaser.GameObjects.Image | Phaser.GameObjects.Rectangle | null = null;
 
-  private deleteBtn: Phaser.GameObjects.Graphics | null = null;
+  private deleteBtn: { [entityId: number]: Phaser.GameObjects.Graphics } = {};
 
   private direction: { [entityId: number]: Phaser.GameObjects.Graphics } = {};
 
@@ -33,11 +33,11 @@ export default class RenderSystem extends System {
     EventBus.subscribe(EventType.ENTITY_SELECTED, (entity: Entity) => {
       this.removeHighlight();
       this.highlight(entity);
-      });
+    });
 
-      document.addEventListener("closeSettings", () => {
-          this.removeHighlight();
-      });
+    document.addEventListener("closeSettings", () => {
+      this.removeHighlight();
+    });
   }
 
   private highlight(entity: Entity): void {
@@ -57,45 +57,39 @@ export default class RenderSystem extends System {
       }*/
         
     }
-      if (entity) {
-          const transform = entity.getComponent(ComponentType.TRANSFORMABLE) as TransformableComponent;
-          const render = entity.getComponent(ComponentType.RENDER) as RenderComponent;
-		 let img = this.scene.add.graphics();
-          img.lineStyle(3, 0x000000, 1);
 
-          const deleteBtnOffset = Phaser.Physics.Matter.Matter.Vector.rotate(
+    if (entity) {
+      const transform = entity.getComponent(ComponentType.TRANSFORMABLE) as TransformableComponent;
+      const render = entity.getComponent(ComponentType.RENDER) as RenderComponent;
+      const deleteBtnOffset = Phaser.Physics.Matter.Matter.Vector.rotate(
               { x: -render.size.get().width - 30, y: render.size.get().width},
-              transform.angle.get(),
-          );
-          img.strokeCircle(transform.position.get().x - deleteBtnOffset.x,
+              transform.angle.get());
+
+      let img = this.scene.add.graphics();
+      img.lineStyle(3, 0x000000, 1);
+      img.strokeCircle(transform.position.get().x - deleteBtnOffset.x,
               transform.position.get().y - deleteBtnOffset.y,
               10);
-
-          
-          img.lineBetween(transform.position.get().x - deleteBtnOffset.x - 5,
+                  
+      img.lineBetween(transform.position.get().x - deleteBtnOffset.x - 5,
               transform.position.get().y - deleteBtnOffset.y - 5, transform.position.get().x - deleteBtnOffset.x + 5,
               transform.position.get().y - deleteBtnOffset.y + 5);
-          img.lineBetween(transform.position.get().x - deleteBtnOffset.x - 5, 
+      img.lineBetween(transform.position.get().x - deleteBtnOffset.x - 5, 
               transform.position.get().y - deleteBtnOffset.y + 5, transform.position.get().x - deleteBtnOffset.x + 5,
               transform.position.get().y - deleteBtnOffset.y - 5);
          
-
           //INTERACTIVE?????????????????????????????????????
-          img.setInteractive(new Phaser.Geom.Circle(transform.position.get().x - deleteBtnOffset.x,
-              transform.position.get().y - deleteBtnOffset.y,
+      img.setInteractive(new Phaser.Geom.Circle(transform.position.get().x - deleteBtnOffset.x, transform.position.get().y - deleteBtnOffset.y,
               10), Phaser.Geom.Circle.Contains)
-
-		     .on('pointerdown', () => {
+  		     .on('pointerdown', () => {
                  if (confirm("Delete this entity?")) {
                      EntityManager.destroyEntity(entity.id);
                  }
                  
-          });
-		  //			 .setInteractive({ useHandCursor: true })
-          
-          this.deleteBtn = img;
-      }
-      
+             });
+		            
+      this.deleteBtn[entity.id] = img;
+    }   
   }
 
   private removeHighlight(): void {
@@ -108,12 +102,14 @@ export default class RenderSystem extends System {
         //this.selected.setFillStyle(color);
       }
       this.selected.setDepth(this.selected.getData('originalDepth') || 0);
-    }
+      }
+
+      console.log("removehigh", this.selected);
       this.selected = null;
 
 
       if (this.deleteBtn) {
-        this.deleteBtn.clear();
+         // this.deleteBtn[entity.id].clear();
       }
       
   }
@@ -187,16 +183,25 @@ export default class RenderSystem extends System {
     const body = entity.getComponent(ComponentType.SOLID_BODY) as SolidBodyComponent;
 
     let image: Phaser.GameObjects.Image | Phaser.GameObjects.Rectangle;
-   // if ((body && typeof render.asset.get() === 'number') || typeof render.asset.get() === 'number') {
+      // if ((body && typeof render.asset.get() === 'number') || typeof render.asset.get() === 'number') {
       const renderHeight = render.size.get().height === 0 ? render.size.get().width : render.size.get().height;
-      image = this.scene.add.rectangle(
-        transform.position.get().x,
-        transform.position.get().y,
-        body ? body.size.get().width : render.size.get().width,
-        body ? body.size.get().height : renderHeight,
+     // if (entity.getShape() !== BodyShape.RECTANGLE) {
+          image = this.scene.add.circle(
+              transform.position.get().x,
+              transform.position.get().y,
+              100);
+          image.setStrokeStyle(10, render.asset.get() as number) 
+      /*} else {
+         image = this.scene.add.rectangle(
+            transform.position.get().x,
+            transform.position.get().y,
+            body ? body.size.get().width : render.size.get().width,
+            body ? body.size.get().height : renderHeight,
         
-      );
-      image.setStrokeStyle(10, render.asset.get() as number)
+          );
+          image.setStrokeStyle(10, render.asset.get() as number)
+      }
+
    /* } else {
       image = this.scene.add.image(
         transform.position.get().x,

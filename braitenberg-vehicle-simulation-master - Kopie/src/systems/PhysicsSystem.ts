@@ -46,6 +46,8 @@ export default class PhysicsSystem extends System {
     let body;
     let part;
 
+   // console.log("physic sys bodies", bodies);
+
     for (let i = 0; i < bodies.length; i += 1) {
       ({ body } = bodies[i]);
 
