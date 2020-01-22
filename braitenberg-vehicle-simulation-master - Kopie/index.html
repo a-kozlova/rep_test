@@ -56,9 +56,6 @@
             </div>
         </div>
 
-        <div id="deleteEntity">Delete entity</div>
-
-
         <div id="settingsMenu">
             <!--TABS-->
             <div class="nav nav-tabs nav-fil" id="myTabs" role="tablist">
@@ -134,16 +131,14 @@
                             <input type="radio" id="gaus" name="emission" class="custom-control-input" value="gaus">
                             <label class="custom-control-label" for="gaus">Gaussian</label>
                         </div>
-						<!--FLAT??????? -->
                         <div class="custom-control">
                             <input type="radio" id="flat" name="emission" class="custom-control-input" value="flat">
                             <label class="custom-control-label" for="flat">Flat</label>
                         </div>
                     </div>
 					<div class="row">
-						<div class="col-4">Range</div>
-						<form id="emissionRange" class="col-4"> 
-							<input id = "emRange" style = "height: 25px;">
+						<div id="range-label" class="col-4">Range</div>
+						<form id="emissionRange"> 							
 						</form>
 					</div>
                 </div>
@@ -209,8 +204,9 @@
                 <div role="tabpanel" class="tab-pane fade" id="connection">Connection</div>
 
             </div>
-        </div>
-    </div>
+			<button id="deleteEntity">Delete entity</button>
+        </div>		
+	 </div>
 
 
         <!--CREATE ENTITY-->

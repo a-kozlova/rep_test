@@ -78,6 +78,7 @@ export default class SourceComponent extends Component {
 		}
 		case 'flat': {
 			this.emissionType.set(EmissionType.FLAT);
+			this.range.set(100);
 			break;
 		}
 	}

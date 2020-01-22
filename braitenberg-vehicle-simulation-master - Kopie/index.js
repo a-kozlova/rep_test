@@ -23,6 +23,14 @@ $(document).on('entity:delete', function (event, options) {
         $(document).trigger('entity:delete', [entity]);
  });
 
+function resetSettings() {           
+
+//$('.switch-btn').removeClass('switch-on');
+
+$('input:radio').prop('checked', false);
+
+}
+
 function openSettings(event) {
     closeNav();
   resetSettings();
@@ -63,10 +71,12 @@ function openSettings(event) {
 }
 
 function emissionSettings(sourceComponents) {
+    $('#emRange').remove();
+    $('#emissionRange').after('<input id = "emRange" class="col-4" style = "height: 25px;">');
+
 	$('#emRange').attr('value', sourceComponents[0].range.value);
     if (sourceComponents[0].isActive){
         $('#emis.switch-btn').addClass("switch-on");
-
 
         $("#barrier").prop('disabled', false);
         $("#sour").prop('disabled', false);
@@ -86,6 +96,7 @@ function emissionSettings(sourceComponents) {
             $("#flat").prop('checked', false);
             $('#emRange').prop('disabled', false);
             $('#emRange').removeClass('disabled');
+            $('#range-label').removeClass('disabled');
             $('#emRange').on('input', function () {
                 sourceComponents[0].setRange($(this).val());
             });
@@ -96,11 +107,14 @@ function emissionSettings(sourceComponents) {
             $("#flat").prop('checked', true);
             $('#emRange').prop('disabled', true);
             $('#emRange').addClass('disabled');
+            $('#range-label').addClass('disabled');
         }
     } else {
         $('#emis.switch-btn').removeClass("switch-on");
 
         $("#emRange").prop('disabled', true);
+        $('#emRange').addClass('disabled');
+        $('#range-label').addClass('disabled');
 
         $("#barrier").prop('checked', false);
         $("#sour").prop('checked', false);
@@ -114,15 +128,7 @@ function emissionSettings(sourceComponents) {
     }
 
 }
-function resetSettings() {           
-
-//$('.switch-btn').removeClass('switch-on');
-
-$('input:radio').prop('checked', false);
-
-}
-
-    
+   
 
 function bodySettings(components, renderComponents) {
 
@@ -240,16 +246,14 @@ function sensorSettings(components) {
             '<div class="switch-btn switch-reaction" id = "react' + component.id + '" style = "background: ' + color[index] +
             '; margin-bottom:10px">');
 
-
-console.log(component.reactsTo.get());
-switch (component.reactsTo.get()) {
-    case 'Licht': {
-        $('#react' + component.id).addClass('switch-on');
-        break;}
-    case 'Hindernis': {
-        $('#react' + component.id).removeClass('switch-on');
-        break;}
-}
+        switch (component.reactsTo.get()) {
+            case 'Licht': {
+                $('#react' + component.id).addClass('switch-on');
+                break;}
+            case 'Hindernis': {
+                $('#react' + component.id).removeClass('switch-on');
+                break;}
+        }
 
             //switch reaction
             $('#react' + component.id).click(function() {

@@ -77,12 +77,15 @@ $('#emis.switch-btn').click(function() {
   if ($(this).hasClass('switch-on')) {
     $(this).trigger('on.switch');
     entity.getComponent('Quelle').activateSourceComponent();
+	$('#emRange').attr('placeholder', entity.getComponent('Quelle').range.value);
+	$('#emRange').attr('value', entity.getComponent('Quelle').range.value);
   } else {
     $(this).trigger('off.switch');
     entity.getComponent('Quelle').deactivateSourceComponent();
+	$('#emRange').attr('placeholder', 0);
+	$('#emRange').attr('value',0);
   }
-  $('#emRange').attr('placeholder', entity.getComponent('Quelle').range.value);
-  $('#emRange').attr('value', entity.getComponent('Quelle').range.value);
+
   var event = new CustomEvent('componentChanged', { detail: entity });
   document.dispatchEvent(event);
 });
