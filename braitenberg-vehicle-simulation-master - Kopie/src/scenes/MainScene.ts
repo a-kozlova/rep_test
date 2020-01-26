@@ -73,7 +73,7 @@ export default class MainScene extends Phaser.Scene {
       }),
       new RenderComponent({
         asset: 0xcccccc,
-        size: 110,
+        size: { width: 20, height: 400 }
       }),
     );
 
@@ -85,7 +85,7 @@ export default class MainScene extends Phaser.Scene {
     entity.addComponent(transform);
     entity.addComponent(
       new SolidBodyComponent({
-        size: { width: 200, height: 250 },
+        size: { width: 100, height: 150 },
       }),
     );
 	entity.addComponent(

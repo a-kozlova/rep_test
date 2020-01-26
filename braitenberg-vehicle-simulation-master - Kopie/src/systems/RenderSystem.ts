@@ -16,6 +16,7 @@ interface RenderObjectDictionary {
   [entityId: number]: Phaser.GameObjects.Image | Phaser.GameObjects.Rectangle;
 }
 
+
 export default class RenderSystem extends System {
   public expectedComponents: ComponentType[] = [ComponentType.TRANSFORMABLE, ComponentType.RENDER];
 
@@ -23,7 +24,9 @@ export default class RenderSystem extends System {
 
   private selected: Phaser.GameObjects.Image | Phaser.GameObjects.Rectangle | null = null;
 
-  private deleteBtn: { [entityId: number]: Phaser.GameObjects.Graphics } = {};
+  private deleteBtn: Phaser.GameObjects.Graphics | null = null;
+
+  private selectedId: number | null = null;
 
   private direction: { [entityId: number]: Phaser.GameObjects.Graphics } = {};
 
@@ -46,6 +49,7 @@ export default class RenderSystem extends System {
       this.selected = image;
       this.selected.setData('originalDepth', image.depth);
       this.selected.setDepth(999);
+      this.selectedId = entity.id;
 
       /*if (image instanceof Phaser.GameObjects.Image) {
         image.setTint(0xddddff);
@@ -76,19 +80,20 @@ export default class RenderSystem extends System {
               transform.position.get().y - deleteBtnOffset.y + 5);
       img.lineBetween(transform.position.get().x - deleteBtnOffset.x - 5, 
               transform.position.get().y - deleteBtnOffset.y + 5, transform.position.get().x - deleteBtnOffset.x + 5,
-              transform.position.get().y - deleteBtnOffset.y - 5);
-         
+            transform.position.get().y - deleteBtnOffset.y - 5);
+
+        img.generateTexture('del');
           //INTERACTIVE?????????????????????????????????????
       img.setInteractive(new Phaser.Geom.Circle(transform.position.get().x - deleteBtnOffset.x, transform.position.get().y - deleteBtnOffset.y,
-              10), Phaser.Geom.Circle.Contains)
+          10), Phaser.Geom.Circle.Contains)
   		     .on('pointerdown', () => {
                  if (confirm("Delete this entity?")) {
                      EntityManager.destroyEntity(entity.id);
                  }
-                 
-             });
-		            
-      this.deleteBtn[entity.id] = img;
+            });
+        console.log("del texture", img);
+      this.deleteBtn = img;
+      //console.log("deleteBtn", this.deleteBtn);
     }   
   }
 
@@ -109,7 +114,9 @@ export default class RenderSystem extends System {
 
 
       if (this.deleteBtn) {
-         // this.deleteBtn[entity.id].clear();
+          this.deleteBtn.clear();
+          this.deleteBtn.removeInteractive();
+          this.selectedId = null;
       }
       
   }
@@ -119,25 +126,29 @@ export default class RenderSystem extends System {
       const transform = entity.getComponent(ComponentType.TRANSFORMABLE) as TransformableComponent;
       const renderObject = this.renderObjects[entity.id];
 
-      //  console.log("render sys trangsf set", transform.position.get().x, transform.position.get().y);
       renderObject.setPosition(transform.position.get().x, transform.position.get().y);
       renderObject.setRotation(transform.angle.get());
+
+        const render = entity.getComponent(ComponentType.RENDER) as RenderComponent;
+        const renderHeight = render.size.get().height === 0 ? render.size.get().width : render.size.get().height;
 
         if (this.direction) {
             const dir = this.direction[entity.id];
             dir.clear();
 
+
+
             const bodyPosition = transform.position.get();
             const dirOffset1 = Phaser.Physics.Matter.Matter.Vector.rotate(
-                { x: 0, y: 200 / 2 - 15 },
+                { x: 0, y: renderHeight / 2 - 5 },
                 transform.angle.get(),
             );
             const dirOffset2 = Phaser.Physics.Matter.Matter.Vector.rotate(
-                { x: -10, y: 200 / 2 - 30 },
+                { x: -10, y: renderHeight / 2 - 15 },
                 transform.angle.get(),
             );
             const dirOffset3 = Phaser.Physics.Matter.Matter.Vector.rotate(
-                { x: 10, y: 200 / 2 - 30 },
+                { x: 10, y: renderHeight / 2 - 15 },
                 transform.angle.get(),
             );
 
@@ -155,6 +166,48 @@ export default class RenderSystem extends System {
             dir.fillStyle(0x000000, 1);
             dir.fillTriangle(x1, y1, x2, y2, x3, y3);
             dir.strokeTriangle(x1, y1, x2, y2, x3, y3);
+
+        }
+
+        if (this.selectedId === entity.id) {
+            
+            if (this.deleteBtn) {
+                const del = this.deleteBtn;
+                //del.disableInteractive();
+               
+                const deleteBtnOffset = Phaser.Physics.Matter.Matter.Vector.rotate(
+                    { x: -render.size.get().width - 30, y: render.size.get().width },
+                    transform.angle.get());
+
+                
+                //console.log("rend update delete delbtn", transform.position.get().x, deleteBtnOffset.x, transform.position.get().x-deleteBtnOffset.x,
+                //    transform.position.get().y, deleteBtnOffset.y, transform.position.get().y-deleteBtnOffset.y);
+
+                /* ????????????????????????????????????????????????????????????????????????????????????????????????????
+                * Wenn dieser Code eingesetzt wird, wird die Position des Buttons richtig berechnet und gezeichnet, 
+                * der Button reagiert aber nur in dem Punkt, der ursprünglich in setIneraktive() übergeben wurde
+                
+               del.clear();
+               del.lineStyle(3, 0x000000, 1);
+                del.strokeCircle(transform.position.get().x - deleteBtnOffset.x,
+                    transform.position.get().y - deleteBtnOffset.y,
+                    10);
+
+                del.lineBetween(transform.position.get().x - deleteBtnOffset.x - 5,
+                    transform.position.get().y - deleteBtnOffset.y - 5, transform.position.get().x - deleteBtnOffset.x + 5,
+                    transform.position.get().y - deleteBtnOffset.y + 5);
+                del.lineBetween(transform.position.get().x - deleteBtnOffset.x - 5,
+                    transform.position.get().y - deleteBtnOffset.y + 5, transform.position.get().x - deleteBtnOffset.x + 5,
+                    transform.position.get().y - deleteBtnOffset.y - 5);
+                */
+                
+                // ????????????????????????????????????????????????????????????????????????????????????????????????????
+                // Bei diesem Code wird Position falsch gesetzt, obwohl Koordinaten richtig berechnet werden
+                // Außerdem wird die Position neu berechnet bei jedem weiterem Aufruf der Funktion highlight()
+                this.deleteBtn.setPosition(transform.position.get().x - deleteBtnOffset.x,
+                    transform.position.get().y - deleteBtnOffset.y);
+                //console.log("rendersys update delbtn", this.deleteBtn);
+            }  
         }
         
     });
@@ -164,6 +217,11 @@ export default class RenderSystem extends System {
     const render = entity.getComponent(ComponentType.RENDER) as RenderComponent;
 
     render.asset.onChange(value => {
+      this.onEntityDestroyed(entity);
+      this.createImage(entity, render);
+    });
+
+    render.shape.onChange(value => {
       this.onEntityDestroyed(entity);
       this.createImage(entity, render);
     });
@@ -178,100 +236,103 @@ export default class RenderSystem extends System {
     this.createImage(entity, render);
   }
 
-  protected createImage(entity: Entity, render: RenderComponent): void {
-    const transform = entity.getComponent(ComponentType.TRANSFORMABLE) as TransformableComponent;
-    const body = entity.getComponent(ComponentType.SOLID_BODY) as SolidBodyComponent;
+    protected createImage(entity: Entity, render: RenderComponent): void {
+        const transform = entity.getComponent(ComponentType.TRANSFORMABLE) as TransformableComponent;
+        const body = entity.getComponent(ComponentType.SOLID_BODY) as SolidBodyComponent;
 
-    let image: Phaser.GameObjects.Image | Phaser.GameObjects.Rectangle;
-      // if ((body && typeof render.asset.get() === 'number') || typeof render.asset.get() === 'number') {
-      const renderHeight = render.size.get().height === 0 ? render.size.get().width : render.size.get().height;
-     // if (entity.getShape() !== BodyShape.RECTANGLE) {
-          image = this.scene.add.circle(
-              transform.position.get().x,
-              transform.position.get().y,
-              100);
-          image.setStrokeStyle(10, render.asset.get() as number) 
-      /*} else {
-         image = this.scene.add.rectangle(
-            transform.position.get().x,
-            transform.position.get().y,
-            body ? body.size.get().width : render.size.get().width,
-            body ? body.size.get().height : renderHeight,
-        
-          );
-          image.setStrokeStyle(10, render.asset.get() as number)
-      }
+        let image: Phaser.GameObjects.Image | Phaser.GameObjects.Rectangle;
+        if (render) {
+            const renderHeight = render.size.get().height === 0 ? render.size.get().width : render.size.get().height;
+            if (render.shape.get() === BodyShape.RECTANGLE) {
+                /* image = this.scene.add.circle(
+                     transform.position.get().x,
+                     transform.position.get().y,
+                     100);
+                 image.setStrokeStyle(10, render.asset.get() as number) 
+            */
+                image = this.scene.add.rectangle(
+                    transform.position.get().x,
+                    transform.position.get().y,
+                    body ? body.size.get().width : render.size.get().width,
+                    body ? body.size.get().height : renderHeight,
 
-   /* } else {
-      image = this.scene.add.image(
-        transform.position.get().x,
-        transform.position.get().y,
-        render.asset.get() as string,
-      );
-      const scaleX = render.size.get().width / image.width;
-      const scaleY = render.size.get().height === 0 ? scaleX : render.size.get().height / image.height;
-        image.setScale(scaleX, scaleY);  
-    }*/
-      console.log("render sys", image);
-     
-
-      if (render.blendMode.get()) {
-      image.setBlendMode(render.blendMode.get() as Phaser.BlendModes);
-      }
-
-      const direction = this.scene.add.graphics();
-
-      const bodyPosition = transform.position.get();
-      const dirOffset1 = Phaser.Physics.Matter.Matter.Vector.rotate(
-          { x: 0, y: renderHeight/2 - 15 },
-          transform.angle.get(),
-      );
-      const dirOffset2 = Phaser.Physics.Matter.Matter.Vector.rotate(
-          { x: -10, y: renderHeight / 2 - 30 },
-          transform.angle.get(),
-      );
-      const dirOffset3 = Phaser.Physics.Matter.Matter.Vector.rotate(
-          { x: 10, y: renderHeight / 2 - 30 },
-          transform.angle.get(),
-      );
+                );
 
 
+            } else {
+                image = this.scene.add.arc(
+                    transform.position.get().x,
+                    transform.position.get().y,
+                    render.size.get().width,
+                    0, 2 * Math.PI, true, 0x000000
+                );
+            }
+            image.setStrokeStyle(10, render.asset.get() as number)
 
-      console.log("diroffset angle", dirOffset1,transform.angle.get(), entity);
-      const x1 = bodyPosition.x + dirOffset1.x;
-      const y1 = bodyPosition.y + dirOffset1.y;
-      const x2 = bodyPosition.x + dirOffset2.x;
-      const y2 = bodyPosition.y + dirOffset2.y;
-      const x3 = bodyPosition.x + dirOffset3.x;
-      const y3 = bodyPosition.y + dirOffset3.y;
+            const scaleX = render.size.get().width / image.width;
+            const scaleY = render.size.get().height === 0 ? scaleX : render.size.get().height / image.height;
+            image.setScale(scaleX, scaleY);
 
-      direction.lineStyle(2, 0x000000, 1);
-      direction.fillStyle(0x000000, 1);
-      direction.fillTriangle(x1, y1, x2, y2, x3, y3);
-      direction.strokeTriangle(x1, y1, x2, y2, x3, y3);
-      //direction.setAngle(180);
-      this.direction[entity.id] = direction;
+            console.log("render sys", image);
 
 
-    // Alles was man rendert, kann man auch verschieben. Macht es trotzdem
-    // vielleicht Sinn eine eigene "DraggableComponent" zu erzeugen und
-    // nur anhand dessen ein Objekt draggable zu machen oder nicht?
-    image.setInteractive({ draggable: true, useHandCursor: true });
-    image.on('drag', (gameObject: unknown, x: number, y: number) => {
-      transform.position.set({ x, y });
-    });
+            if (render.blendMode.get()) {
+                image.setBlendMode(render.blendMode.get() as Phaser.BlendModes);
+            }
 
-    image.on('pointerup', (pointer: Phaser.Input.Pointer) => {
-      const dragThreshold = 1;
-      if (pointer.getDistance() > dragThreshold) {
-        return;
-      }
-      EventBus.publish(EventType.ENTITY_SELECTED, entity);
-    });
+            const direction = this.scene.add.graphics();
 
-    this.renderObjects[entity.id] = image;
-  }
+            const bodyPosition = transform.position.get();
+            const dirOffset1 = Phaser.Physics.Matter.Matter.Vector.rotate(
+                { x: 0, y: renderHeight / 2 - 5 },
+                transform.angle.get(),
+            );
+            const dirOffset2 = Phaser.Physics.Matter.Matter.Vector.rotate(
+                { x: -10, y: renderHeight / 2 - 15 },
+                transform.angle.get(),
+            );
+            const dirOffset3 = Phaser.Physics.Matter.Matter.Vector.rotate(
+                { x: 10, y: renderHeight / 2 - 15 },
+                transform.angle.get(),
+            );
 
+
+
+            console.log("diroffset angle", dirOffset1, transform.angle.get(), entity);
+            const x1 = bodyPosition.x + dirOffset1.x;
+            const y1 = bodyPosition.y + dirOffset1.y;
+            const x2 = bodyPosition.x + dirOffset2.x;
+            const y2 = bodyPosition.y + dirOffset2.y;
+            const x3 = bodyPosition.x + dirOffset3.x;
+            const y3 = bodyPosition.y + dirOffset3.y;
+
+            direction.lineStyle(2, 0x000000, 1);
+            direction.fillStyle(0x000000, 1);
+            direction.fillTriangle(x1, y1, x2, y2, x3, y3);
+            direction.strokeTriangle(x1, y1, x2, y2, x3, y3);
+            //direction.setAngle(180);
+            this.direction[entity.id] = direction;
+
+
+            // Alles was man rendert, kann man auch verschieben. Macht es trotzdem
+            // vielleicht Sinn eine eigene "DraggableComponent" zu erzeugen und
+            // nur anhand dessen ein Objekt draggable zu machen oder nicht?
+            image.setInteractive({ draggable: true, useHandCursor: true });
+            image.on('drag', (gameObject: unknown, x: number, y: number) => {
+                transform.position.set({ x, y })
+            });
+
+            image.on('pointerup', (pointer: Phaser.Input.Pointer) => {
+                const dragThreshold = 1;
+                if (pointer.getDistance() > dragThreshold) {
+                    return;
+                }
+                EventBus.publish(EventType.ENTITY_SELECTED, entity);
+            });
+
+            this.renderObjects[entity.id] = image;
+        }
+    }
   protected onEntityDestroyed(entity: Entity): void {
     const render = this.renderObjects[entity.id];
 

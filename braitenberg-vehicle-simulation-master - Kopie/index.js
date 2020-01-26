@@ -163,6 +163,7 @@ function bodySettings(components, renderComponents) {
         $("#width").change(function () {
             let newValue = $("#width").val(); // get the current value of the input field.
             components[0].setSize({ width: parseInt(newValue), height: components[0].size.value.height });
+            renderComponents[0].setSize({ width: parseInt(newValue), height: components[0].size.value.height });
             size.width = parseInt(newValue);
             paintMotorCanvas();
             paintSensorCanvas();
@@ -321,7 +322,7 @@ function drawSliders(components) {
 
                 $("#" + component.id).val("$" + ui.values[0] + " - $" + ui.values[1]);
                 component.setDefaultSpeed(ui.values[0]);
-                component.setDefaultSpeed(ui.values[1]);
+                component.setMaxSpeed(ui.values[1]);
                     console.log(component.defaultSpeed.get());
                     console.log(component.maxSpeed.get());
                 }
