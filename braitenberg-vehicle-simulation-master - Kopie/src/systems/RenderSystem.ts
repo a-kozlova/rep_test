@@ -82,7 +82,7 @@ export default class RenderSystem extends System {
               transform.position.get().y - deleteBtnOffset.y + 5, transform.position.get().x - deleteBtnOffset.x + 5,
             transform.position.get().y - deleteBtnOffset.y - 5);
 
-        img.generateTexture('del');
+       // img.generateTexture('del');
           //INTERACTIVE?????????????????????????????????????
       img.setInteractive(new Phaser.Geom.Circle(transform.position.get().x - deleteBtnOffset.x, transform.position.get().y - deleteBtnOffset.y,
           10), Phaser.Geom.Circle.Contains)
@@ -204,8 +204,8 @@ export default class RenderSystem extends System {
                 // ????????????????????????????????????????????????????????????????????????????????????????????????????
                 // Bei diesem Code wird Position falsch gesetzt, obwohl Koordinaten richtig berechnet werden
                 // Außerdem wird die Position neu berechnet bei jedem weiterem Aufruf der Funktion highlight()
-                this.deleteBtn.setPosition(transform.position.get().x - deleteBtnOffset.x,
-                    transform.position.get().y - deleteBtnOffset.y);
+                this.deleteBtn.setPosition(transform.position.get().x ,
+                    transform.position.get().y );
                 //console.log("rendersys update delbtn", this.deleteBtn);
             }  
         }

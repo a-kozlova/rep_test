@@ -620,14 +620,14 @@ function drawMotorCanvas(options) {
             x: startPoint.x - ratioX * component.position.value.x,
             y: startPoint.y - ratioY * component.position.value.y,
             radius: 7,
-            fill: col[component.id],
+            fill: color[colorCounter], //col[component.id],
             stroke: 'black',
             strokeWidth: 1,
             id: component.id,
             name: "Motor",
             draggable: true
         });
-
+        
 
         motor.on('dragstart', (e) => {
             shadowCircle.show();
