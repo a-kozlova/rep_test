@@ -24,7 +24,7 @@ export default class RenderSystem extends System {
 
   private selected: Phaser.GameObjects.Image | Phaser.GameObjects.Rectangle | null = null;
 
-  private deleteBtn: Phaser.GameObjects.Graphics | null = null;
+  private deleteBtn: Phaser.GameObjects.Image | null = null;
 
   private selectedId: number | null = null;
 
@@ -66,10 +66,13 @@ export default class RenderSystem extends System {
       const transform = entity.getComponent(ComponentType.TRANSFORMABLE) as TransformableComponent;
       const render = entity.getComponent(ComponentType.RENDER) as RenderComponent;
       const deleteBtnOffset = Phaser.Physics.Matter.Matter.Vector.rotate(
-              { x: -render.size.get().width - 30, y: render.size.get().width},
+              { x: -render.size.get().width - 15, y: render.size.get().width},
               transform.angle.get());
 
-      let img = this.scene.add.graphics();
+        let img = this.scene.add.image(transform.position.get().x - deleteBtnOffset.x,
+            transform.position.get().y - deleteBtnOffset.y, 'del');
+        img.setScale(0.04,0.04);
+            /*this.scene.add.graphics();
       img.lineStyle(3, 0x000000, 1);
       img.strokeCircle(transform.position.get().x - deleteBtnOffset.x,
               transform.position.get().y - deleteBtnOffset.y,
@@ -85,13 +88,14 @@ export default class RenderSystem extends System {
        // img.generateTexture('del');
           //INTERACTIVE?????????????????????????????????????
       img.setInteractive(new Phaser.Geom.Circle(transform.position.get().x - deleteBtnOffset.x, transform.position.get().y - deleteBtnOffset.y,
-          10), Phaser.Geom.Circle.Contains)
-  		     .on('pointerdown', () => {
+          10), Phaser.Geom.Circle.Contains)*/
+        img.setInteractive( { useHandCursor: true }).on('pointerdown', () => {
                  if (confirm("Delete this entity?")) {
                      EntityManager.destroyEntity(entity.id);
                  }
-            });
-        console.log("del texture", img);
+        });
+       
+       
       this.deleteBtn = img;
       //console.log("deleteBtn", this.deleteBtn);
     }   
@@ -114,7 +118,7 @@ export default class RenderSystem extends System {
 
 
       if (this.deleteBtn) {
-          this.deleteBtn.clear();
+          this.deleteBtn.setVisible(false);
           this.deleteBtn.removeInteractive();
           this.selectedId = null;
       }
@@ -127,7 +131,9 @@ export default class RenderSystem extends System {
       const renderObject = this.renderObjects[entity.id];
 
       renderObject.setPosition(transform.position.get().x, transform.position.get().y);
-      renderObject.setRotation(transform.angle.get());
+        renderObject.setRotation(transform.angle.get());
+
+        console.log("rendersys rend obj", renderObject);
 
         const render = entity.getComponent(ComponentType.RENDER) as RenderComponent;
         const renderHeight = render.size.get().height === 0 ? render.size.get().width : render.size.get().height;
@@ -176,7 +182,7 @@ export default class RenderSystem extends System {
                 //del.disableInteractive();
                
                 const deleteBtnOffset = Phaser.Physics.Matter.Matter.Vector.rotate(
-                    { x: -render.size.get().width - 30, y: render.size.get().width },
+                    { x: -render.size.get().width - 15, y: render.size.get().width },
                     transform.angle.get());
 
                 
@@ -204,9 +210,8 @@ export default class RenderSystem extends System {
                 // ????????????????????????????????????????????????????????????????????????????????????????????????????
                 // Bei diesem Code wird Position falsch gesetzt, obwohl Koordinaten richtig berechnet werden
                 // Außerdem wird die Position neu berechnet bei jedem weiterem Aufruf der Funktion highlight()
-                this.deleteBtn.setPosition(transform.position.get().x ,
-                    transform.position.get().y );
-                //console.log("rendersys update delbtn", this.deleteBtn);
+                del.setPosition(transform.position.get().x - deleteBtnOffset.x,
+                    transform.position.get().y - deleteBtnOffset.y);
             }  
         }
         
