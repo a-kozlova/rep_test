@@ -271,11 +271,14 @@ function sensorSettings(components) {
 
         });
 
- 
-        $('#range' + component.id).on('input', function () {
+        // ne rabotaet podklu4it bootstrap toggle?
+       // $("#sensorReaction").append('<input type="checkbox" data-toggle="toggle" data-on="on" data-off="off" data-onstyle="success" data-offstyle="danger">');
+            
+        $('#range' + component.id).on('input', function (event) {
             let newValue = $(this).val(); // get the current value of the input field.
             //console.log(newValue);
             component.setRange(newValue);
+            event.preventDefault();
         });
 
         $('#angle' + component.id).on('input', function () {
