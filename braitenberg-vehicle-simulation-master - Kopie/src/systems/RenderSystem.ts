@@ -133,7 +133,7 @@ export default class RenderSystem extends System {
       renderObject.setPosition(transform.position.get().x, transform.position.get().y);
         renderObject.setRotation(transform.angle.get());
 
-        console.log("rendersys rend obj", renderObject);
+        //console.log("rendersys rend obj", renderObject);
 
         const render = entity.getComponent(ComponentType.RENDER) as RenderComponent;
         const renderHeight = render.size.get().height === 0 ? render.size.get().width : render.size.get().height;

@@ -4,6 +4,11 @@ var entity = null;
 let motorComponents = [];
 let sensorComponents = [];
 let size = { "width": 200, "height": 250 };
+let rangeFA = 0;
+let angleFA = 0;
+let reactionFA = "Hindernis";
+let defaultSpeedFA = 0;
+let maxSpeedFA = 10;
 
 document.addEventListener("entitySelected", openSettings);
 document.addEventListener("attributeAdded", openSettings);
@@ -274,7 +279,6 @@ function sensorSettings(components) {
             
         $('#range' + component.id).on('input', function (event) {
             let newValue = $(this).val(); // get the current value of the input field.
-            //console.log(newValue);
             component.setRange(newValue);
             event.preventDefault();
         });
@@ -285,24 +289,42 @@ function sensorSettings(components) {
         });  
     });
 
+//For all
+
     $("#sensorRangeFA").append(
-        '<input id = "rangeFA" style = "background: white"; margin-bottom:10px" placeholder = "0">');
+        '<input id = "rangeFA" style = "background: white"; margin-bottom:10px" placeholder = "' + rangeFA + '">');
     $("#sensorAngleFA").append(
-        '<input id = "angleFA" style = "background:  white"; margin-bottom:10px" placeholder = "0">');
+        '<input id = "angleFA" style = "background:  white"; margin-bottom:10px" placeholder = "' + angleFA + '">');
     $("#sensorReactionFA").append(
             '<div class="switch-btn switch-reaction" id = "reactFA" style = "margin-bottom:10px">');
+    switch (reactionFA) {
+            case 'Licht': {
+                $('#reactFA').addClass('switch-on');
+                break;
+            }
+            case 'Hindernis': {
+                $('#reactFA').removeClass('switch-on');
+                break;
+            }
+        }
     
     $('#rangeFA').on('input', function () {
         let newValue = $(this).val(); // get the current value of the input field.
         //console.log(newValue);
+        rangeFA = newValue;
         components.forEach((component, index) => {
-            component.setRange(newValue);
+            component.setRange(newValue);       
         });
  var event = new CustomEvent('componentChanged', { detail: entity });
   document.dispatchEvent(event);
+        
     });
+
+
+
     $('#angleFA').on('input', function () {
         let newValue = $(this).val(); // get the current value of the input field.
+        angleFA = newValue;
         components.forEach((component, index) => {
             component.setAngle(newValue);
         });
@@ -317,11 +339,13 @@ function sensorSettings(components) {
                   components.forEach((component, index) => {
                       component.setReaction('source');
                   });
+                  reactionFA = "Licht";
             } else {
                   $(this).trigger('off.switch');
                   components.forEach((component, index) => {
                       component.setReaction('barrier');
-                  });                  
+                  });    
+                  reactionFA = "Hindernis";              
             }
  var event = new CustomEvent('componentChanged', { detail: entity });
   document.dispatchEvent(event);
@@ -331,6 +355,9 @@ function sensorSettings(components) {
 
 function drawSliders(components) {
     $('#slidecontainer').children().each((idx, child) => {
+        child.remove('div');
+    });
+    $('#slidecontainerForAll').children().each((idx, child) => {
         child.remove('div');
     });
     components.forEach(component => {
@@ -351,35 +378,28 @@ function drawSliders(components) {
                 $("#" + component.id).val("$" + ui.values[0] + " - $" + ui.values[1]);
                 component.setDefaultSpeed(ui.values[0]);
                 component.setMaxSpeed(ui.values[1]);
-                    console.log(component.defaultSpeed.get());
-                    console.log(component.maxSpeed.get());
                 }
             });
             $("#" + component.id + " .ui-widget-header").css('background', color[index]);
             
-        });
+        });    
+    });
 var slider = $(function () {
             $("sliderForAll").slider({
                 range: true,
                 min: 0,
                 max: 100,
                 step: 10,
-                values: [component.defaultSpeed.get(), component.maxSpeed.get()],
+                values: [10, 20],
                 slide: function (event, ui) {
 
-                $("#" + component.id).val("$" + ui.values[0] + " - $" + ui.values[1]);
-                component.setDefaultSpeed(ui.values[0]);
-                component.setMaxSpeed(ui.values[1]);
-                    console.log(component.defaultSpeed.get());
-                    console.log(component.maxSpeed.get());
-                }
-            });
-            $("#" + component.id + " .ui-widget-header").css('background', color[index]);
-            
-        });
-    });
-
- 
+                $("#sliderForAll").val("$" + ui.values[0] + " - $" + ui.values[1]);
+                components.forEach((component, index)=>{
+                    component.setDefaultSpeed(ui.values[0]);
+                    component.setMaxSpeed(ui.values[1]);
+                });  }
+            });            
+        }); 
 }
 
 
