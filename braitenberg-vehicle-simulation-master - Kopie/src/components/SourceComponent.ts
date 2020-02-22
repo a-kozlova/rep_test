@@ -20,6 +20,7 @@ export default class SourceComponent extends Component {
   public emissionType: Attribute<EmissionType, SelectInput<EmissionType>>;
   
   public originalRange: Attribute<number, NumberInput>;
+  public gausRange: Attribute<number, NumberInput>;
 
   public isActive: boolean;
 
@@ -27,6 +28,7 @@ export default class SourceComponent extends Component {
     super();
     this.range = new Attribute(data.range, NumberInput.create({ label: 'Reichweite' }));
 	this.originalRange = new Attribute(data.range, NumberInput.create({ label: 'Reichweite' }));
+	this.gausRange = new Attribute(data.range, NumberInput.create({ label: 'Reichweite' }));
     this.substance = new Attribute(
       data.substance || SubstanceType.LIGHT,
       SelectInput.create<SubstanceType, SelectInput<SubstanceType>>({ label: 'Substanz', options: SubstanceType }),
@@ -35,8 +37,7 @@ export default class SourceComponent extends Component {
       data.emissionType || EmissionType.GAUSSIAN,
       SelectInput.create<EmissionType, SelectInput<EmissionType>>({ label: 'Charakteristik', options: EmissionType }),
     );
-	this.isActive = this.range.value === 0 ? false : true;
-	
+	this.isActive = this.range.value === 0 ? false : true;	
   }
 	
 	public activateSourceComponent (){
@@ -67,18 +68,23 @@ export default class SourceComponent extends Component {
 			break;
 		}
 	}	
-	
 	}
 
 	public setEmissionType(emission){
 	switch (emission) {
-		case 'gaus': {
+		case 'gaus': {				
+			this.range.set(this.gausRange.get());
 			this.emissionType.set(EmissionType.GAUSSIAN);
+			console.log(this.gausRange.get());
 			break;
 		}
 		case 'flat': {
+		console.log(this.gausRange.get());
+			this.gausRange.set(this.range.get());
 			this.emissionType.set(EmissionType.FLAT);
-			this.range.set(100);
+					console.log(this.gausRange.get());
+			this.range.set(0);
+					console.log(this.gausRange.get());
 			break;
 		}
 	}
