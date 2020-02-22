@@ -314,13 +314,8 @@ function sensorSettings(components) {
         rangeFA = newValue;
         components.forEach((component, index) => {
             component.setRange(newValue);       
-        });
- var event = new CustomEvent('componentChanged', { detail: entity });
-  document.dispatchEvent(event);
-        
+        });        
     });
-
-
 
     $('#angleFA').on('input', function () {
         let newValue = $(this).val(); // get the current value of the input field.
@@ -328,8 +323,6 @@ function sensorSettings(components) {
         components.forEach((component, index) => {
             component.setAngle(newValue);
         });
- var event = new CustomEvent('componentChanged', { detail: entity });
-  document.dispatchEvent(event);
     });
 
         $('#reactFA').click(function() {
@@ -384,7 +377,7 @@ function drawSliders(components) {
             
         });    
     });
-var slider = $(function () {
+$(function () {
             $("sliderForAll").slider({
                 range: true,
                 min: 0,
