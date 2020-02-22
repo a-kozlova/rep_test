@@ -8,7 +8,7 @@ let rangeFA = 0;
 let angleFA = 0;
 let reactionFA = "Hindernis";
 let defaultSpeedFA = 0;
-let maxSpeedFA = 10;
+let maxSpeedFA = 20;
 
 document.addEventListener("entitySelected", openSettings);
 document.addEventListener("attributeAdded", openSettings);
@@ -353,6 +353,9 @@ function drawSliders(components) {
     $('#slidecontainerForAll').children().each((idx, child) => {
         child.remove('div');
     });
+    if (!components.length) {
+        return
+    }
     components.forEach(component => {
         $("#slidecontainer").append('<div id = "' + component.id + '" class="slider">');
     });
@@ -378,19 +381,25 @@ function drawSliders(components) {
         });    
     });
 $(function () {
-            $("sliderForAll").slider({
+            $("#sliderForAll").slider({
                 range: true,
                 min: 0,
                 max: 100,
                 step: 10,
-                values: [10, 20],
+                values: [defaultSpeedFA, maxSpeedFA],
                 slide: function (event, ui) {
 
                 $("#sliderForAll").val("$" + ui.values[0] + " - $" + ui.values[1]);
                 components.forEach((component, index)=>{
                     component.setDefaultSpeed(ui.values[0]);
                     component.setMaxSpeed(ui.values[1]);
-                });  }
+                $("#" + component.id + "").val("$" + ui.values[0] + " - $" + ui.values[1]);
+                });  
+                    defaultSpeedFA = ui.values[0];
+                    maxSpeedFA = ui.values[1]; 
+                 var event = new CustomEvent('componentChanged', { detail: entity });
+                 document.dispatchEvent(event);
+               }
             });            
         }); 
 }
