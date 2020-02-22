@@ -393,12 +393,11 @@ $(function () {
                 components.forEach((component, index)=>{
                     component.setDefaultSpeed(ui.values[0]);
                     component.setMaxSpeed(ui.values[1]);
-                $("#" + component.id + "").val("$" + ui.values[0] + " - $" + ui.values[1]);
+                $( "#" + component.id + "" ).slider('values', [ui.values[0],ui.values[1]]);
                 });  
                     defaultSpeedFA = ui.values[0];
                     maxSpeedFA = ui.values[1]; 
-                 var event = new CustomEvent('componentChanged', { detail: entity });
-                 document.dispatchEvent(event);
+
                }
             });            
         }); 
