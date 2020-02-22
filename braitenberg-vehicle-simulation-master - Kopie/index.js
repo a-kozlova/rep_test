@@ -194,7 +194,6 @@ function bodySettings(components, renderComponents) {
         $("#rectangle").prop('disabled', true); 
         $("#circle").prop('checked', false);
         $("#circle").prop('disabled', true); 
-
         
         $('#static.switch-btn').removeClass("switch-on");
 
@@ -397,7 +396,6 @@ $(function () {
                 });  
                     defaultSpeedFA = ui.values[0];
                     maxSpeedFA = ui.values[1]; 
-
                }
             });            
         }); 
