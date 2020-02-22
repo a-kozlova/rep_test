@@ -270,9 +270,7 @@ function sensorSettings(components) {
             }
 
         });
-
-        // ne rabotaet podklu4it bootstrap toggle?
-       // $("#sensorReaction").append('<input type="checkbox" data-toggle="toggle" data-on="on" data-off="off" data-onstyle="success" data-offstyle="danger">');
+        
             
         $('#range' + component.id).on('input', function (event) {
             let newValue = $(this).val(); // get the current value of the input field.
@@ -300,13 +298,35 @@ function sensorSettings(components) {
         components.forEach((component, index) => {
             component.setRange(newValue);
         });
+ var event = new CustomEvent('componentChanged', { detail: entity });
+  document.dispatchEvent(event);
     });
     $('#angleFA').on('input', function () {
         let newValue = $(this).val(); // get the current value of the input field.
         components.forEach((component, index) => {
             component.setAngle(newValue);
         });
+ var event = new CustomEvent('componentChanged', { detail: entity });
+  document.dispatchEvent(event);
     });
+
+        $('#reactFA').click(function() {
+            $(this).toggleClass('switch-on');
+            if ($(this).hasClass('switch-on')) {
+                  $(this).trigger('on.switch');                  
+                  components.forEach((component, index) => {
+                      component.setReaction('source');
+                  });
+            } else {
+                  $(this).trigger('off.switch');
+                  components.forEach((component, index) => {
+                      component.setReaction('barrier');
+                  });                  
+            }
+ var event = new CustomEvent('componentChanged', { detail: entity });
+  document.dispatchEvent(event);
+        });
+
 }
 
 function drawSliders(components) {
