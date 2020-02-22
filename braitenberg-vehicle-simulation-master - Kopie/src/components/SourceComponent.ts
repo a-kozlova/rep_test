@@ -23,6 +23,7 @@ export default class SourceComponent extends Component {
   public gausRange: Attribute<number, NumberInput>;
 
   public isActive: boolean;
+  public wasFlat: boolean;
 
   public constructor(data: SourceComponentData) {
     super();
@@ -46,10 +47,21 @@ export default class SourceComponent extends Component {
 		} else {
 			this.range.set(this.originalRange.get());
 		}
+		if (this.wasFlat){
+			this.range.set(0);
+			this.emissionType.set(EmissionType.FLAT);
+		}
 		this.isActive = true;		
 	}
 	public deactivateSourceComponent (){
-		this.originalRange.set(this.range.get());
+		this.wasFlat = this.emissionType.value === "FLAT" ? true : false;
+		if (this.wasFlat) {
+			this.originalRange.set(this.gausRange.get());
+			this.emissionType.set(EmissionType.GAUSSIAN);
+		} else {
+			this.originalRange.set(this.range.get());
+		}
+
 		this.range.set(0);
 		this.isActive = false;
 	}
@@ -75,16 +87,12 @@ export default class SourceComponent extends Component {
 		case 'gaus': {				
 			this.range.set(this.gausRange.get());
 			this.emissionType.set(EmissionType.GAUSSIAN);
-			console.log(this.gausRange.get());
 			break;
 		}
 		case 'flat': {
-		console.log(this.gausRange.get());
 			this.gausRange.set(this.range.get());
 			this.emissionType.set(EmissionType.FLAT);
-					console.log(this.gausRange.get());
 			this.range.set(0);
-					console.log(this.gausRange.get());
 			break;
 		}
 	}
