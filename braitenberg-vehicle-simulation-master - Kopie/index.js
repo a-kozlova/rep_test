@@ -147,7 +147,59 @@ function bodySettings(components, renderComponents) {
     $('#bodyWidth').after('<input id="width" class="col-3">');
     $('#bodyHeight').after('<input id="height" class="col-3">');
 
-    // wenn SolidBodyComponent vorhanden, den Button auf ON setzten
+
+        // die aktuelle Breite, Hoehe und Form der Entität anzeigen
+        if (renderComponents[0].shape.value === "Rechteck") {
+              $("#height").prop('disabled', false);
+		      $("#height").removeClass('disabled');
+              $("#rectangle").prop('checked', true);
+              $("#circle").prop('checked', false);
+        } else if (renderComponents[0].shape.value === "Kreis") {
+              console.log("dhape kreis");
+              $("#circle").prop('checked', true);
+              $("#rectangle").prop('checked', false);
+              $("#height").prop('disabled', true);
+		      $("#height").addClass('disabled');
+        }
+
+        $("#width").val(renderComponents[0].size.value.width);
+        $("#height").val(renderComponents[0].size.value.height);
+
+        $("#width").change(function () {
+            let newValue = $("#width").val(); // get the current value of the input field.
+
+            if (renderComponents[0].shape.get() === 'Kreis') {
+                let newWidth = parseInt(newValue)
+                if (components.length) {
+                    components[0].setSize({ width: newWidth, height: newWidth });
+                }
+                renderComponents[0].setSize({ width: newWidth, height: newWidth });
+                $("#height").val(newWidth);
+            } else {
+                if (components.length) {
+                    components[0].setSize({ width: parseInt(newValue), height: renderComponents[0].size.value.height });
+                }
+                renderComponents[0].setSize({ width: parseInt(newValue), height: renderComponents[0].size.value.height });  
+            }                       
+
+            size.width = parseInt(newValue);
+            paintMotorCanvas();
+            paintSensorCanvas();
+        });
+
+        $("#height").change(function () {
+            let newValue = $("#height").val(); // get the current value of the input field.
+            if (components.length) {
+                components[0].setSize({ width: renderComponents[0].size.value.width, height: parseInt(newValue) });
+            }
+            components[0].setSize({ width: renderComponents[0].size.value.width, height: parseInt(newValue) });
+            renderComponents[0].setSize({ width: renderComponents[0].size.value.width, height: parseInt(newValue) }); 
+            size.height = parseInt(newValue);
+            paintMotorCanvas();
+            paintSensorCanvas();
+        }); 
+
+// wenn SolidBodyComponent vorhanden, den Button auf ON setzten
     if (components.length) {
         $("#static").prop('disabled', false); 
         $('#solidBody.switch-btn').addClass("switch-on");
@@ -158,59 +210,8 @@ function bodySettings(components, renderComponents) {
             $('#static.switch-btn').removeClass("switch-on");
         }
 
-        $("#rectangle").prop('disabled', false); 
-        $("#circle").prop('disabled', false); 
-
-        if (components[0].shape.value === "Rechteck") {
-            $("#rectangle").prop('checked', true);
-        } else if (components[0].shape.value === "Kreis") {
-            $("#circle").prop('checked', true);
-        }
-
-        // die aktuelle Breite und Hoehe der Entität anzeigen
-        $("#width").val(components[0].size.value.width);
-        $("#height").val(components[0].size.value.height);
-
-        $("#width").change(function () {
-            let newValue = $("#width").val(); // get the current value of the input field.
-
-            if (components[0].shape.get() === 'Kreis') {
-                console.log('try circle', renderComponents);
-                let newWidth = parseInt(newValue)
-                components[0].setSize({ width: newWidth, height: newWidth });
-                renderComponents[0].setSize({ width: newWidth, height: newWidth });
-                //$("#height").prop('disabled', true);
-                $("#height").val(newWidth);
-                $("#height").addClass('disabled');
-
-            } else {
-                components[0].setSize({ width: parseInt(newValue), height: components[0].size.value.height });
-                renderComponents[0].setSize({ width: parseInt(newValue), height: components[0].size.value.height });
-              
-
-            }
-                       
-
-            size.width = parseInt(newValue);
-            paintMotorCanvas();
-            paintSensorCanvas();
-        });
-
-        $("#height").change(function () {
-            let newValue = $("#height").val(); // get the current value of the input field.
-            components[0].setSize({ width: components[0].size.value.width, height: parseInt(newValue) });
-            size.height = parseInt(newValue);
-            paintMotorCanvas();
-            paintSensorCanvas();
-        });
-
     } else {
-        $('#solidBody.switch-btn').removeClass("switch-on");
-        $("#rectangle").prop('checked', false);
-        $("#rectangle").prop('disabled', true); 
-        $("#circle").prop('checked', false);
-        $("#circle").prop('disabled', true); 
-        
+        $('#solidBody.switch-btn').removeClass("switch-on");            
         $('#static.switch-btn').removeClass("switch-on");
 
        return
