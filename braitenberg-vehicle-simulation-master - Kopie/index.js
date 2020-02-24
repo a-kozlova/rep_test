@@ -4,6 +4,11 @@ var entity = null;
 let motorComponents = [];
 let sensorComponents = [];
 let size = { "width": 200, "height": 250 };
+let rangeFA = 0;
+let angleFA = 0;
+let reactionFA = "Hindernis";
+let defaultSpeedFA = 0;
+let maxSpeedFA = 20;
 
 document.addEventListener("entitySelected", openSettings);
 document.addEventListener("attributeAdded", openSettings);
@@ -189,7 +194,6 @@ function bodySettings(components, renderComponents) {
         $("#rectangle").prop('disabled', true); 
         $("#circle").prop('checked', false);
         $("#circle").prop('disabled', true); 
-
         
         $('#static.switch-btn').removeClass("switch-on");
 
@@ -247,8 +251,6 @@ function sensorSettings(components) {
             '<div class="switch-btn switch-reaction" id = "react' + component.id + '" style = "background: ' + color[index] +
             '; margin-bottom:10px">');
 
-
-        console.log(component.reactsTo.get());
         switch (component.reactsTo.get()) {
             case 'Licht': {
                 $('#react' + component.id).addClass('switch-on');
@@ -272,13 +274,10 @@ function sensorSettings(components) {
             }
 
         });
-
-        // ne rabotaet podklu4it bootstrap toggle?
-       // $("#sensorReaction").append('<input type="checkbox" data-toggle="toggle" data-on="on" data-off="off" data-onstyle="success" data-offstyle="danger">');
+        
             
         $('#range' + component.id).on('input', function (event) {
             let newValue = $(this).val(); // get the current value of the input field.
-            //console.log(newValue);
             component.setRange(newValue);
             event.preventDefault();
         });
@@ -289,33 +288,77 @@ function sensorSettings(components) {
         });  
     });
 
+//For all
+
     $("#sensorRangeFA").append(
-        '<input id = "rangeFA" style = "background: white"; margin-bottom:10px" placeholder = "0">');
+        '<input id = "rangeFA" style = "background: white"; margin-bottom:10px" placeholder = "' + rangeFA + '">');
     $("#sensorAngleFA").append(
-        '<input id = "angleFA" style = "background:  white"; margin-bottom:10px" placeholder = "0">');
+        '<input id = "angleFA" style = "background:  white"; margin-bottom:10px" placeholder = "' + angleFA + '">');
+    $("#sensorReactionFA").append(
+            '<div class="switch-btn switch-reaction" id = "reactFA" style = "margin-bottom:10px">');
+    switch (reactionFA) {
+            case 'Licht': {
+                $('#reactFA').addClass('switch-on');
+                break;
+            }
+            case 'Hindernis': {
+                $('#reactFA').removeClass('switch-on');
+                break;
+            }
+        }
     
     $('#rangeFA').on('input', function () {
         let newValue = $(this).val(); // get the current value of the input field.
         //console.log(newValue);
+        rangeFA = newValue;
         components.forEach((component, index) => {
-            component.setRange(newValue);
-        });
+            component.setRange(newValue);       
+        });        
     });
+
     $('#angleFA').on('input', function () {
         let newValue = $(this).val(); // get the current value of the input field.
+        angleFA = newValue;
         components.forEach((component, index) => {
             component.setAngle(newValue);
         });
     });
+
+        $('#reactFA').click(function() {
+            $(this).toggleClass('switch-on');
+            if ($(this).hasClass('switch-on')) {
+                  $(this).trigger('on.switch');                  
+                  components.forEach((component, index) => {
+                      component.setReaction('source');
+                  });
+                  reactionFA = "Licht";
+            } else {
+                  $(this).trigger('off.switch');
+                  components.forEach((component, index) => {
+                      component.setReaction('barrier');
+                  });    
+                  reactionFA = "Hindernis";              
+            }
+ var event = new CustomEvent('componentChanged', { detail: entity });
+  document.dispatchEvent(event);
+        });
+
 }
 
 function drawSliders(components) {
     $('#slidecontainer').children().each((idx, child) => {
         child.remove('div');
     });
+    $('#slidecontainerForAll').children().each((idx, child) => {
+        child.remove('div');
+    });
+    if (!components.length) {
+        return
+    }
     components.forEach(component => {
         $("#slidecontainer").append('<div id = "' + component.id + '" class="slider">');
     });
+        $("#slidecontainerForAll").append('<div id = "sliderForAll" class="slider">');
  
     components.forEach((component,index) => {
         var slider = $(function () {
@@ -330,14 +373,32 @@ function drawSliders(components) {
                 $("#" + component.id).val("$" + ui.values[0] + " - $" + ui.values[1]);
                 component.setDefaultSpeed(ui.values[0]);
                 component.setMaxSpeed(ui.values[1]);
-                    console.log(component.defaultSpeed.get());
-                    console.log(component.maxSpeed.get());
                 }
             });
             $("#" + component.id + " .ui-widget-header").css('background', color[index]);
             
-        });
+        });    
     });
+$(function () {
+            $("#sliderForAll").slider({
+                range: true,
+                min: 0,
+                max: 100,
+                step: 10,
+                values: [defaultSpeedFA, maxSpeedFA],
+                slide: function (event, ui) {
+
+                $("#sliderForAll").val("$" + ui.values[0] + " - $" + ui.values[1]);
+                components.forEach((component, index)=>{
+                    component.setDefaultSpeed(ui.values[0]);
+                    component.setMaxSpeed(ui.values[1]);
+                $( "#" + component.id + "" ).slider('values', [ui.values[0],ui.values[1]]);
+                });  
+                    defaultSpeedFA = ui.values[0];
+                    maxSpeedFA = ui.values[1]; 
+               }
+            });            
+        }); 
 }
 
 

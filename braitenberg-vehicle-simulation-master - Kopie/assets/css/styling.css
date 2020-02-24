@@ -378,6 +378,12 @@ h4 {
 .switch-reaction.switch-on::after {
 	left: 33px;
 }
+#reactFA {
+    background: rgba(0,0,255,0.3) !important;
+}
+#reactFA.switch-on {
+    background: rgba(255,0,0,0.3) !important;
+}
 
 /*slider*/
 .slidecontainer {
@@ -410,6 +416,10 @@ h4 {
 .disabled {
 	color: gray;
 }
+input.disabled  {
+	background-color: rgba(128,128,128,0.2);
+}
+
 
 #deleteEntity{
 	color: red;
