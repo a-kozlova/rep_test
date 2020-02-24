@@ -176,7 +176,7 @@ export default class SourceSystem extends System {
     }
 
     texture.refresh();
-    const image = this.scene.add.image(0, 150, `source_texture_${source.id}`);
+    const image = this.scene.add.image(0, 0, `source_texture_${source.id}`);
     image.setOrigin(0);
     image.setScale(CORRELATION_SCALE);
     image.setBlendMode(Phaser.BlendModes.SCREEN);
