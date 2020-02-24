@@ -108,7 +108,7 @@ $('input[name="farbe"]:radio').change(function() {
 //Form
 $('input[name="form"]:radio').change(function() {
   entity.components.forEach(component => {
-    if (component.name == 'Koerper' || component.name == 'Render') {
+      if (component.name == 'Koerper' || component.name == 'Rendering') {
       component.setShape($("input[name='form']:checked").val());
     }
   });

@@ -39,15 +39,12 @@ export default class PhysicsSystem extends System {
   private renderBodies(): void {
     this.bodiesGraphic.clear();
 
-      const graphics = this.bodiesGraphic;
-      console.log("phys physobj", this.physicsObjects);
+    const graphics = this.bodiesGraphic;
     const bodies = Object.values(this.physicsObjects);
     const bodyColor = 0x999999;
 
     let body;
     let part;
-
-   // console.log("physic sys bodies", bodies);
 
     for (let i = 0; i < bodies.length; i += 1) {
       ({ body } = bodies[i]);
@@ -98,7 +95,6 @@ export default class PhysicsSystem extends System {
         graphics.strokePath();
       }
     }
-      //console.log("physics sys body part", body, part);
   }
 
   protected onEntityCreated(entity: Entity): void {
@@ -110,14 +106,23 @@ export default class PhysicsSystem extends System {
 
     component.size.onChange((value, old) => {
       const { body } = this.physicsObjects[entity.id];
-      // Hier wird der Körper einmal in die "aufrechte" Position gedreht, weil `Matter.Body.scale`
-      // den Körper aus der "globalen" Sicht skaliert. D.h. sind scaleX und scaleY unterschied-
-      // lich, dann wird der Körper gequetscht und zu einem Parallelogramm.
-      Phaser.Physics.Matter.Matter.Body.rotate(body, -body.angle);
-      Phaser.Physics.Matter.Matter.Body.scale(body, value.width / old.width, value.height / old.height);
-      // Da wir den Körper vorher gedreht haben, muss er auch wieder in die Ausgangsdrehung
-      // gebracht werden.
-      Phaser.Physics.Matter.Matter.Body.rotate(body, body.angle);
+      
+      if (component.shape.get() === 'Kreis') {
+        //Fuer den Kreis muss Radius gesetzt werden, denn sonst wir er null und Body wird zur Ellipse 
+        Phaser.Physics.Matter.Matter.Body.set(body, 'circleRadius', value.width/2);
+
+      } else {
+
+        // Hier wird der Körper einmal in die "aufrechte" Position gedreht, weil `Matter.Body.scale`
+        // den Körper aus der "globalen" Sicht skaliert. D.h. sind scaleX und scaleY unterschied-
+        // lich, dann wird der Körper gequetscht und zu einem Parallelogramm.
+        Phaser.Physics.Matter.Matter.Body.rotate(body, -body.angle);
+        Phaser.Physics.Matter.Matter.Body.scale(body, value.width / old.width, value.height / old.height);
+        // Phaser.Physics.Matter.Matter.Body.scale(body, value.width / old.width, value.height / old.height);
+        // Da wir den Körper vorher gedreht haben, muss er auch wieder in die Ausgangsdrehung
+        // gebracht werden.
+        Phaser.Physics.Matter.Matter.Body.rotate(body, body.angle);
+      }
     });
 
     component.isStatic.onChange(value => {
@@ -128,8 +133,7 @@ export default class PhysicsSystem extends System {
   }
 
   private createBody(entity: Entity, component: SolidBodyComponent): void {
-      const body = PhysicsSystem.getBody(component);
-      console.log("phys sys body", body);
+    const body = PhysicsSystem.getBody(component);
 
     const emitters = this.attachSynchronization(body, entity);
 

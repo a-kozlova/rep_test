@@ -173,8 +173,24 @@ function bodySettings(components, renderComponents) {
 
         $("#width").change(function () {
             let newValue = $("#width").val(); // get the current value of the input field.
-            components[0].setSize({ width: parseInt(newValue), height: components[0].size.value.height });
-            renderComponents[0].setSize({ width: parseInt(newValue), height: components[0].size.value.height });
+
+            if (components[0].shape.get() === 'Kreis') {
+                console.log('try circle', renderComponents);
+                let newWidth = parseInt(newValue)
+                components[0].setSize({ width: newWidth, height: newWidth });
+                renderComponents[0].setSize({ width: newWidth, height: newWidth });
+                //$("#height").prop('disabled', true);
+                $("#height").val(newWidth);
+                $("#height").addClass('disabled');
+
+            } else {
+                components[0].setSize({ width: parseInt(newValue), height: components[0].size.value.height });
+                renderComponents[0].setSize({ width: parseInt(newValue), height: components[0].size.value.height });
+              
+
+            }
+                       
+
             size.width = parseInt(newValue);
             paintMotorCanvas();
             paintSensorCanvas();
@@ -339,8 +355,8 @@ function sensorSettings(components) {
                   });    
                   reactionFA = "Hindernis";              
             }
- var event = new CustomEvent('componentChanged', { detail: entity });
-  document.dispatchEvent(event);
+            let event = new CustomEvent('componentChanged', { detail: entity });
+            document.dispatchEvent(event);
         });
 
 }

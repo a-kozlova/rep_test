@@ -156,10 +156,11 @@ export default class MainScene extends Phaser.Scene {
 
 	//Source
     EntityManager.createEntity(
-      new TransformableComponent({ position: { x: 950, y: 350 } }),
+        new TransformableComponent({ position: { x: 950, y: 350 }}),
       new RenderComponent({
         asset: 'prefab-source',
         size: 100,
+        shape: BodyShape.CIRCLE
       }),
       new SourceComponent({
         range: 200,

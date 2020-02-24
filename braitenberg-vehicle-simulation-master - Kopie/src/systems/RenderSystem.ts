@@ -80,32 +80,18 @@ export default class RenderSystem extends System {
         imgDel.setScale(0.04, 0.04);
         imgDel.setDepth(999);
 
-        let imgRotate = this.scene.add.image(transform.position.get().x - rotateBtnOffset.x,
-            transform.position.get().y - rotateBtnOffset.y, 'rotate');
-        imgRotate.setScale(0.08, 0.08);
-        imgRotate.setDepth(999);
-            /*this.scene.add.graphics();
-      img.lineStyle(3, 0x000000, 1);
-      img.strokeCircle(transform.position.get().x - deleteBtnOffset.x,
-              transform.position.get().y - deleteBtnOffset.y,
-              10);
-                  
-      img.lineBetween(transform.position.get().x - deleteBtnOffset.x - 5,
-              transform.position.get().y - deleteBtnOffset.y - 5, transform.position.get().x - deleteBtnOffset.x + 5,
-              transform.position.get().y - deleteBtnOffset.y + 5);
-      img.lineBetween(transform.position.get().x - deleteBtnOffset.x - 5, 
-              transform.position.get().y - deleteBtnOffset.y + 5, transform.position.get().x - deleteBtnOffset.x + 5,
-            transform.position.get().y - deleteBtnOffset.y - 5);
-
-       // img.generateTexture('del');
-          //INTERACTIVE?????????????????????????????????????
-      img.setInteractive(new Phaser.Geom.Circle(transform.position.get().x - deleteBtnOffset.x, transform.position.get().y - deleteBtnOffset.y,
-          10), Phaser.Geom.Circle.Contains)*/
+       
+           
         imgDel.setInteractive( { useHandCursor: true }).on('pointerdown', () => {
                  if (confirm("Delete this entity?")) {
                      EntityManager.destroyEntity(entity.id);
                  }
         });
+
+        let imgRotate = this.scene.add.image(transform.position.get().x - rotateBtnOffset.x,
+            transform.position.get().y - rotateBtnOffset.y, 'rotate');
+        imgRotate.setScale(0.08, 0.08);
+        imgRotate.setDepth(999);
 
         imgRotate.setInteractive({ useHandCursor: true }).on('drag', (gameObject: unknown) => {
             console.log(gameObject);
@@ -113,7 +99,6 @@ export default class RenderSystem extends System {
         });
 
         imgRotate.on('pointerup', (pointer: Phaser.Input.Pointer) => {
-            console.log("high up", event);
             /*const dragThreshold = 1;
             if (pointer.getDistance() > dragThreshold) {
                 return;
@@ -164,15 +149,14 @@ export default class RenderSystem extends System {
       renderObject.setPosition(transform.position.get().x, transform.position.get().y);
       renderObject.setRotation(transform.angle.get());
 
+
       const render = entity.getComponent(ComponentType.RENDER) as RenderComponent;
       const renderHeight = render.size.get().height === 0 ? render.size.get().width : render.size.get().height;
 
         if (this.direction) {
             const dir = this.direction[entity.id];
             dir.clear();
-
-
-
+                       
             const bodyPosition = transform.position.get();
             const dirOffset1 = Phaser.Physics.Matter.Matter.Vector.rotate(
                 { x: 0, y: renderHeight / 2 - 5 },
@@ -186,9 +170,7 @@ export default class RenderSystem extends System {
                 { x: 10, y: renderHeight / 2 - 15 },
                 transform.angle.get(),
             );
-
-
-
+                       
             //console.log("diroffset angle", dirOffset1, transform.angle.get(), entity);
             const x1 = bodyPosition.x + dirOffset1.x;
             const y1 = bodyPosition.y + dirOffset1.y;
@@ -208,13 +190,11 @@ export default class RenderSystem extends System {
             
             if (this.deleteBtn) {
                 const del = this.deleteBtn;
-                //del.disableInteractive();
                
                 const deleteBtnOffset = Phaser.Physics.Matter.Matter.Vector.rotate(
                     { x: -render.size.get().width - 15, y: render.size.get().width },
                     transform.angle.get());
-
-                
+                                
                 //console.log("rend update delete delbtn", transform.position.get().x, deleteBtnOffset.x, transform.position.get().x-deleteBtnOffset.x,
                 //    transform.position.get().y, deleteBtnOffset.y, transform.position.get().y-deleteBtnOffset.y);
 
@@ -274,7 +254,7 @@ export default class RenderSystem extends System {
         const transform = entity.getComponent(ComponentType.TRANSFORMABLE) as TransformableComponent;
         const body = entity.getComponent(ComponentType.SOLID_BODY) as SolidBodyComponent;
 
-        let image: Phaser.GameObjects.Image | Phaser.GameObjects.Rectangle;
+        let image: Phaser.GameObjects.Image | Phaser.GameObjects.Rectangle | Phaser.GameObjects.Arc;
         if (render) {
             const renderHeight = render.size.get().height === 0 ? render.size.get().width : render.size.get().height;
             if (render.shape.get() === BodyShape.RECTANGLE) {
@@ -294,18 +274,18 @@ export default class RenderSystem extends System {
 
 
             } else {
-                image = this.scene.add.arc(
-                    transform.position.get().x,
-                    transform.position.get().y,
+                image = this.scene.add.ellipse(
+                    transform.position.get().x ,
+                    transform.position.get().y ,
                     render.size.get().width,
-                    0, 2 * Math.PI, true, 0x000000
+                    render.size.get().width,
+                    
                 );
+                //image.setDisplayOrigin(0, 0);
             }
             image.setStrokeStyle(10, render.asset.get() as number)
 
-            const scaleX = render.size.get().width / image.width;
-            const scaleY = render.size.get().height === 0 ? scaleX : render.size.get().height / image.height;
-            image.setScale(scaleX, scaleY);
+           
 
             console.log("render sys", image);
 
@@ -330,9 +310,6 @@ export default class RenderSystem extends System {
                 transform.angle.get(),
             );
 
-
-
-            console.log("diroffset angle", dirOffset1, transform.angle.get(), entity);
             const x1 = bodyPosition.x + dirOffset1.x;
             const y1 = bodyPosition.y + dirOffset1.y;
             const x2 = bodyPosition.x + dirOffset2.x;
