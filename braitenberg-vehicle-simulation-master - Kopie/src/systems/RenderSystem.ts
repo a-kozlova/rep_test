@@ -283,7 +283,7 @@ export default class RenderSystem extends System {
                 );
                 //image.setDisplayOrigin(0, 0);
             }
-            image.setStrokeStyle(10, render.asset.get() as number)
+            image.setStrokeStyle(5, render.asset.get() as number)
 
            
 
