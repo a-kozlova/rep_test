@@ -142,6 +142,8 @@ function bodySettings(components, renderComponents) {
     $('#bodyWidth').after('<input id="width" class="col-3">');
     $('#bodyHeight').after('<input id="height" class="col-3">');
 
+        $("#width").val(renderComponents[0].size.value.width);
+        $("#height").val(renderComponents[0].size.value.height);
 
         // die aktuelle Breite, Hoehe und Form der Entität anzeigen
         if (renderComponents[0].shape.value === "Rechteck") {
@@ -155,9 +157,6 @@ function bodySettings(components, renderComponents) {
               $("#height").prop('disabled', true);
 		      $("#height").addClass('disabled');
         }
-
-        $("#width").val(renderComponents[0].size.value.width);
-        $("#height").val(renderComponents[0].size.value.height);
 
         $("#width").change(function () {
             let newValue = $("#width").val(); // get the current value of the input field.

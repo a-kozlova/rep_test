@@ -110,7 +110,9 @@ $('input[name="form"]:radio').change(function() {
   entity.components.forEach(component => {
       if (component.name == 'Koerper' || component.name == 'Rendering') {
       component.setShape($("input[name='form']:checked").val());
-    }
+	  component.setSize({ width: component.size.value.width, height: component.size.value.width});
+    }	
+
   });
   var event = new CustomEvent('componentChanged', { detail: entity });
   document.dispatchEvent(event);
