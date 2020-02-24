@@ -112,6 +112,8 @@ $('input[name="form"]:radio').change(function() {
       component.setShape($("input[name='form']:checked").val());
     }
   });
+   var event = new CustomEvent('componentChanged', { detail: entity });
+  document.dispatchEvent(event);
 });
 
 //SubstanceType
@@ -161,7 +163,7 @@ $('#static.switch-btn').click(function() {
   }
 });
 
-// add sensor	!!!!!!!!!!!!!!!!!!!!!! peredelat dlya vsech
+// add sensor
 document.addEventListener('addSensor', function(event) {
   mytestgame.scene.scenes[3].addSensor(entity, event.detail.position);
 });
