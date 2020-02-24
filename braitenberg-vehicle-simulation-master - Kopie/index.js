@@ -19,7 +19,6 @@ document.addEventListener("closeSettings", closeSettings);
 
 $(document).on('entity:delete', function (event, options) {
     let ev = new CustomEvent('delEnt', { detail: options });
-    console.log("html delte entiti", options);
     document.dispatchEvent(ev);
 });
 
@@ -43,10 +42,7 @@ function openSettings(event) {
     document.getElementById("myEntitySettings").style.width = "256px";
     document.getElementById("createEntityMenu").style.marginRight = "306px";
 
-    entity = event.detail;                  // die aufgerufene Entität
-    console.log("opensettings", entity);
-
-   
+    entity = event.detail;                  // die aufgerufene Entität  
 
     motorComponents = entity.components.filter(component => component.name == "Motor");
     sensorComponents = entity.components.filter(component => component.name == "Sensor");
@@ -61,7 +57,6 @@ function openSettings(event) {
     //var shape = "circle";
     if (solidBodyComponents[0]) {
         size = solidBodyComponents[0].size.value;
-        console.log("size db izmenen", size);
     }
 
 
@@ -155,7 +150,6 @@ function bodySettings(components, renderComponents) {
               $("#rectangle").prop('checked', true);
               $("#circle").prop('checked', false);
         } else if (renderComponents[0].shape.value === "Kreis") {
-              console.log("dhape kreis");
               $("#circle").prop('checked', true);
               $("#rectangle").prop('checked', false);
               $("#height").prop('disabled', true);
@@ -199,6 +193,25 @@ function bodySettings(components, renderComponents) {
             paintSensorCanvas();
         }); 
 
+
+    switch (renderComponents[0].asset.value) {
+        case 13421772: 
+            $("#grey").prop('checked', true);
+            break;
+    
+        case 13713746: 
+            $("#red").prop('checked', true);
+            break;
+    
+        case 5744185: 
+            $("#green").prop('checked', true);
+            break;
+    
+        case 1791363: 
+            $("#blue").prop('checked', true);
+            break;
+    }
+
 // wenn SolidBodyComponent vorhanden, den Button auf ON setzten
     if (components.length) {
         $("#static").prop('disabled', false); 
@@ -215,25 +228,6 @@ function bodySettings(components, renderComponents) {
         $('#static.switch-btn').removeClass("switch-on");
 
        return
-    }
-
-    switch (renderComponents[0].asset.value) {
-        case 13421772: 
-            $("#grey").prop('checked', true);
-            break;
-    
-        case 13713746: 
-            $("#red").prop('checked', true);
-            console.log('red');
-            break;
-    
-        case 5744185: 
-            $("#green").prop('checked', true);
-            break;
-    
-        case 1791363: 
-            $("#blue").prop('checked', true);
-            break;
     }
 
 }
@@ -326,7 +320,6 @@ function sensorSettings(components) {
     
     $('#rangeFA').on('input', function () {
         let newValue = $(this).val(); // get the current value of the input field.
-        //console.log(newValue);
         rangeFA = newValue;
         components.forEach((component, index) => {
             component.setRange(newValue);       
@@ -470,10 +463,6 @@ $(document).on("motor:del", function (event, options) {
         return x.id;
     }).indexOf(options.id);
 
-
-    console.log("delete motor", motorComponents[index]);
-
-
     let ev = new CustomEvent("deleteMotor", {
         detail: {
             component:  motorComponents[index]
@@ -511,14 +500,9 @@ var col = {};
 
 
 function generateHexColor() {
-
     let colr = '#' + ((0.5 + 0.5 * Math.random()) * 0xFFFFFF << 0).toString(16);
-    console.log("tsvet", colr);
     return colr;
 }
-
-
-
 
 
 var motorCanvasStage = new Konva.Stage({
@@ -582,9 +566,6 @@ function drawMotorCanvas(options) {
     let ratioY = 1;
     if (options.size) {
         ratioX = (gridWidth) / options.size.width;
-
-        //console.log("ratioX grid width size.width motor", ratioX ,gridWidth,options.size.width);
-
         ratioY = (gridHeight) / options.size.height;
     }
 
@@ -720,8 +701,6 @@ function drawMotorCanvas(options) {
                     y: Math.min(corners.y.max, Math.max(corners.y.min, Math.round(motor.y() / options.grid.padding) * options.grid.padding))
                 });
 
-                //console.log("dragend motor ratio X Y startpoint size", motor.position(), ratioX, ratioY, startPoint, size);
-
                 $(document).trigger('motor:upd', [{
                     id: motor.id(),
                     x: -1 * (motor.x() - startPoint.x) / ratioX,
@@ -795,10 +774,6 @@ $(document).on("sensor:del", function (event, options) {
     var index = sensorComponents.map(x => {
         return x.id;
     }).indexOf(options.id);
-
-
-    console.log("delete sensor",sensorComponents[index]);
-
 
     let ev = new CustomEvent("deleteSensor", {
         detail: {
@@ -894,8 +869,6 @@ function drawSensorCanvas(options) {
     let ratioY = 1;
     if (options.size) {
         ratioX = (gridWidth) / options.size.width;
-        //console.log("ratioX grid width size.width sensor", ratioX, gridWidth, options.size.width);
-
         ratioY = (gridHeight) / options.size.height;
     }
 
@@ -1093,9 +1066,6 @@ function drawSensorCanvas(options) {
                 }
 
                 sensor.position({x: newX, y: newY});
-                
-                //console.log("dragend sensor ratio X Y startpoint size", motor.position(), ratioX, ratioY, startPoint, size);
-
                 $(document).trigger('sensor:upd', [{
                     id: sensor.id(),
                     x: -1 * (newX - startPoint.x) / ratioX,
