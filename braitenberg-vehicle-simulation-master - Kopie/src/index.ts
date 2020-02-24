@@ -112,7 +112,7 @@ $('input[name="form"]:radio').change(function() {
       component.setShape($("input[name='form']:checked").val());
     }
   });
-   var event = new CustomEvent('componentChanged', { detail: entity });
+  var event = new CustomEvent('componentChanged', { detail: entity });
   document.dispatchEvent(event);
 });
 
