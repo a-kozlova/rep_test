@@ -25,6 +25,7 @@ export default class RenderSystem extends System {
   private selected: Phaser.GameObjects.Image | Phaser.GameObjects.Rectangle | null = null;
 
   private deleteBtn: Phaser.GameObjects.Image | null = null;
+  private rotateBtn: Phaser.GameObjects.Image | null = null;
 
   private selectedId: number | null = null;
 
@@ -67,11 +68,22 @@ export default class RenderSystem extends System {
       const render = entity.getComponent(ComponentType.RENDER) as RenderComponent;
       const deleteBtnOffset = Phaser.Physics.Matter.Matter.Vector.rotate(
               { x: -render.size.get().width - 15, y: render.size.get().width},
-              transform.angle.get());
+            transform.angle.get());
 
-        let img = this.scene.add.image(transform.position.get().x - deleteBtnOffset.x,
+        const rotateBtnOffset = Phaser.Physics.Matter.Matter.Vector.rotate(
+            { x: -render.size.get().width - 15, y: -render.size.get().width },
+            transform.angle.get());
+
+        
+        let imgDel = this.scene.add.image(transform.position.get().x - deleteBtnOffset.x,
             transform.position.get().y - deleteBtnOffset.y, 'del');
-        img.setScale(0.04,0.04);
+        imgDel.setScale(0.04, 0.04);
+        imgDel.setDepth(999);
+
+        let imgRotate = this.scene.add.image(transform.position.get().x - rotateBtnOffset.x,
+            transform.position.get().y - rotateBtnOffset.y, 'rotate');
+        imgRotate.setScale(0.08, 0.08);
+        imgRotate.setDepth(999);
             /*this.scene.add.graphics();
       img.lineStyle(3, 0x000000, 1);
       img.strokeCircle(transform.position.get().x - deleteBtnOffset.x,
@@ -89,14 +101,28 @@ export default class RenderSystem extends System {
           //INTERACTIVE?????????????????????????????????????
       img.setInteractive(new Phaser.Geom.Circle(transform.position.get().x - deleteBtnOffset.x, transform.position.get().y - deleteBtnOffset.y,
           10), Phaser.Geom.Circle.Contains)*/
-        img.setInteractive( { useHandCursor: true }).on('pointerdown', () => {
+        imgDel.setInteractive( { useHandCursor: true }).on('pointerdown', () => {
                  if (confirm("Delete this entity?")) {
                      EntityManager.destroyEntity(entity.id);
                  }
         });
+
+        imgRotate.setInteractive({ useHandCursor: true }).on('drag', (gameObject: unknown) => {
+            console.log(gameObject);
+            //transform.angle.set();
+        });
+
+        imgRotate.on('pointerup', (pointer: Phaser.Input.Pointer) => {
+            console.log("high up", event);
+            /*const dragThreshold = 1;
+            if (pointer.getDistance() > dragThreshold) {
+                return;
+            }
+            EventBus.publish(EventType.ENTITY_SELECTED, entity);*/
+        });
        
-       
-      this.deleteBtn = img;
+        this.deleteBtn = imgDel;
+        this.rotateBtn = imgRotate;
       //console.log("deleteBtn", this.deleteBtn);
     }   
   }
@@ -113,7 +139,7 @@ export default class RenderSystem extends System {
       this.selected.setDepth(this.selected.getData('originalDepth') || 0);
       }
 
-      console.log("removehigh", this.selected);
+      //console.log("removehigh", this.selected);
       this.selected = null;
 
 
@@ -121,6 +147,11 @@ export default class RenderSystem extends System {
           this.deleteBtn.setVisible(false);
           this.deleteBtn.removeInteractive();
           this.selectedId = null;
+      }
+
+      if (this.rotateBtn) {
+          this.rotateBtn.setVisible(false);
+          this.rotateBtn.removeInteractive();
       }
       
   }
@@ -131,12 +162,10 @@ export default class RenderSystem extends System {
       const renderObject = this.renderObjects[entity.id];
 
       renderObject.setPosition(transform.position.get().x, transform.position.get().y);
-        renderObject.setRotation(transform.angle.get());
+      renderObject.setRotation(transform.angle.get());
 
-        console.log("rendersys rend obj", renderObject);
-
-        const render = entity.getComponent(ComponentType.RENDER) as RenderComponent;
-        const renderHeight = render.size.get().height === 0 ? render.size.get().width : render.size.get().height;
+      const render = entity.getComponent(ComponentType.RENDER) as RenderComponent;
+      const renderHeight = render.size.get().height === 0 ? render.size.get().width : render.size.get().height;
 
         if (this.direction) {
             const dir = this.direction[entity.id];

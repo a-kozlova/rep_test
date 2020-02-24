@@ -12,6 +12,7 @@ import source from '../../assets/prefabs/source.png';
 import blank from '../../assets/prefabs/blank.png';
 
 import del from '../../assets/delete-button.png';
+import rotate from '../../assets/rotate.png';
 
 export default class LoadingScene extends Phaser.Scene {
   public constructor() {
@@ -35,9 +36,10 @@ export default class LoadingScene extends Phaser.Scene {
     this.load.image('prefab-3a', vehicle3a);
     this.load.image('prefab-3b', vehicle3b);
     this.load.image('prefab-source', source);
-      this.load.image('prefab-blank', blank);
+    this.load.image('prefab-blank', blank);
 
-      this.load.image('del', del)
+    this.load.image('del', del);
+    this.load.image('rotate', rotate);
 
     this.load.spritesheet('button', buttonSpriteSheet, { frameWidth: 50, frameHeight: 48 });
   }

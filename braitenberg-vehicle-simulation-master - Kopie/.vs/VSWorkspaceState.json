@@ -4,12 +4,12 @@
     "\\bootstrap-4.3.1-dist",
     "\\src",
     "\\src\\components",
+    "\\src\\dynamic_input",
     "\\src\\gui",
     "\\src\\scenes",
     "\\src\\systems",
     "\\src\\utils",
-    "\\webpack"
+    "\\typings"
   ],
-  "SelectedNode": "\\src\\systems\\SensorSystem.ts",
   "PreviewInSolutionExplorer": false
 }

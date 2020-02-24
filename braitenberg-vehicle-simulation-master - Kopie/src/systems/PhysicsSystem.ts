@@ -39,7 +39,8 @@ export default class PhysicsSystem extends System {
   private renderBodies(): void {
     this.bodiesGraphic.clear();
 
-    const graphics = this.bodiesGraphic;
+      const graphics = this.bodiesGraphic;
+      console.log("phys physobj", this.physicsObjects);
     const bodies = Object.values(this.physicsObjects);
     const bodyColor = 0x999999;
 
@@ -127,7 +128,8 @@ export default class PhysicsSystem extends System {
   }
 
   private createBody(entity: Entity, component: SolidBodyComponent): void {
-    const body = PhysicsSystem.getBody(component);
+      const body = PhysicsSystem.getBody(component);
+      console.log("phys sys body", body);
 
     const emitters = this.attachSynchronization(body, entity);
 

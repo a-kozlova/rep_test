@@ -59,6 +59,7 @@ export default class SolidBodyComponent extends Component {
         this.size.set(size)
         console.log("set size", this.size);
     }
+
 	public setStatic(isStatic: boolean){
 		this.isStatic.set(isStatic);
 	
