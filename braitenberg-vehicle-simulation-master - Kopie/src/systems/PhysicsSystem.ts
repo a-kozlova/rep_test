@@ -183,7 +183,7 @@ export default class PhysicsSystem extends System {
         return Phaser.Physics.Matter.Matter.Bodies.circle(
           0,
           0,
-          component.size.get().width,
+          component.size.get().width / 2,
           pickBy(options, v => v !== undefined),
         );
       }
