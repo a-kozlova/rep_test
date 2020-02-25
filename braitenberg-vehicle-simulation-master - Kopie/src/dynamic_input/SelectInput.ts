@@ -5,7 +5,7 @@ export default class SelectInput<T> extends BaseInput<T> {
     const input = document.createElement('select');
 
     if (!this.config.options) {
-      throw new Error('Die Konfiguration "options" muss für die Klasse "SelectInput" definiert sein.');
+      throw new Error('The configuration "options" must be defined for the class "SelectInput".');
     }
 
     const type = this.config.options;

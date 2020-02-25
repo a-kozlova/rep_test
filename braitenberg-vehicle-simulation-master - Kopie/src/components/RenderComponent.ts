@@ -32,7 +32,7 @@ export default class RenderComponent extends Component {
   protected deletable: boolean = false;
 
   protected infoTip: string =
-    'Achtung! Diese Komponente bestimmt nur die visuelle Darstellung und ist unabhängig von der Komponente für einen festen Körper.';
+    'Attention! This component determines only the visual representation and is independent of the component for a solid body.';
 
     public constructor(data: RenderComponentData) {
         super();
