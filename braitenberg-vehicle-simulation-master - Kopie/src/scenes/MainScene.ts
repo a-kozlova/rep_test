@@ -226,7 +226,7 @@ export default class MainScene extends Phaser.Scene {
       entities.forEach(entity => EntityManager.destroyEntity(entity.id));
       EntityManager.loadEntities(aktuellerStatus);
     } else {
-      swal('Es konnte keine Scene geladen werden! Bitte verwenden Sie zunächst den Speichern Knopf.');
+      swal('No scene could be loaded! Please use the save button first.');
     }
   }
 
@@ -254,7 +254,7 @@ export default class MainScene extends Phaser.Scene {
       const files = importEl.files || [];
 
       if (files.length <= 0) {
-        swal('Es wurde keine korrekte Datei ausgewählt.');
+        swal('No correct file was selected.');
         return;
       }
       const fr = new FileReader();

@@ -50,7 +50,7 @@ export default class Entity {
     // Komponenten können angeben, wie viele davon zu einer Entität hinzugefügt werden dürfen.
     if (currentAmount >= component.getMaxAmount()) {
       new Noty({
-        text: `Die Entität besitzt bereits die maximale Anzahl an Komponenten des Typs ${component.name}`,
+        text: `The entity already has the maximum number of components of type ${component.name}`,
       }).show();
       return -1;
     }
