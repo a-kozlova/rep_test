@@ -9,7 +9,7 @@ export default class Button extends Phaser.GameObjects.Sprite {
     });
 
 	// Zeigt die Erlaeuterung zu einer Taste an
-	var txt = scene.add.text(x-15, y+30, name, { fontFamily: 'Arial', fontSize: 18, color: '#ffffff' }); 
+	var txt = scene.add.text(x-15, y+30, name, { fontFamily: 'Arial', fontSize: 18, color: '#000000' }); 
 	txt.visible = false;
 
     this.on('pointerover', () => {

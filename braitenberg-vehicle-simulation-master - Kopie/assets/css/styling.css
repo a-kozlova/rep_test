@@ -330,8 +330,6 @@ h4 {
 	outline-style: none;
 }
 
-
-
 #main {
     transition: margin-left .5s;    
 }
@@ -341,25 +339,25 @@ h4 {
 
 .switch-btn {
     display: inline-block;
-    width: 50px; /* ширина */
-    height: 20px; /* высота */ 
-    background: #bfbfbf; /* цвет фона */
+    width: 50px; 
+    height: 20px;  
+    background: #bfbfbf; 
     z-index: 0;
     margin: 0;
     padding: 0;
     border: none;
     cursor: pointer;
     position: relative;
-    transition-duration: 300ms; /* анимация */
+    transition-duration: 300ms; 
 }
 .switch-btn::after {
     content: "";
-    height: 14px; /* высота кнопки */
-    width: 22px; /* ширина кнопки */ 
-    background: #fff; /* цвет кнопки */
-    top: 3px; /* положение кнопки по вертикали относительно основы */
-    left: 3px; /* положение кнопки по горизонтали относительно основы */
-    transition-duration: 300ms; /* анимация */
+    height: 14px;
+    width: 22px;  
+    background: #fff; 
+    top: 3px; 
+    left: 3px; 
+    transition-duration: 300ms; 
     position: absolute;
     z-index: 1;
 }
@@ -367,7 +365,24 @@ h4 {
     background: #3fb53f;
 }
 .switch-on::after {
-    left: 26px;
+    left: 25px;
+}
+.switch-reaction {
+    height: 31px;
+	width: 60px;
+}
+.switch-reaction::after {
+    height: 25px;	
+	width: 25px;
+}
+.switch-reaction.switch-on::after {
+	left: 33px;
+}
+#reactFA {
+    background: rgba(0,0,255,0.3) !important;
+}
+#reactFA.switch-on {
+    background: rgba(255,0,0,0.3) !important;
 }
 
 /*slider*/
@@ -393,8 +408,6 @@ h4 {
 }
 
 
-
-
 /* Mouse-over effects */
 .slider:hover {
     opacity: 0.7;
@@ -403,7 +416,14 @@ h4 {
 .disabled {
 	color: gray;
 }
+input.disabled  {
+	background-color: rgba(128,128,128,0.2);
+}
 
+
+#deleteEntity{
+	color: red;
+}
 
 
 

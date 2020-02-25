@@ -51,5 +51,16 @@ export default class SensorComponent extends Component {
     public setAngle(newValue: number) {
         this.angle.set(newValue);
     }
-
+	public setReaction (newReaction: string) {
+			switch (newReaction) {
+		case 'source': {
+			this.reactsTo.set(SubstanceType.LIGHT);
+			break;
+		}
+		case 'barrier': {
+			this.reactsTo.set(SubstanceType.BARRIER);
+			break;
+		}
+	}
+	}
 }

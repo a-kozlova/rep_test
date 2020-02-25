@@ -24,107 +24,13 @@ export default class SettingScene extends SidebarScene {
     super('SettingScene');
   }
 
-  /*private createComponentSelect(entity: Entity): Phaser.GameObjects.DOMElement[] {
-    const row = this.add.dom(0, 0).createFromHTML(`<div class="base-input-container">
-      <select style="width: 85%" name="components">
-      <option value="${ComponentType.MOTOR}">Motor</option>
-      <option value="${ComponentType.SENSOR}">Sensor</option>
-      <option value="${ComponentType.SOURCE}">Quelle</option>
-      <option value="${ComponentType.SOLID_BODY}">Fester Körper</option>
-      <option value="${ComponentType.CONNECTION}">Verbindungsnetzwerk</option>
-      </select>
-    </div>`);
-
-    const select = row.getChildByName('components');
-
-    const el = this.add
-      .dom(0, 0)
-      .createFromHTML('<i class="fa fa-plus"></i>')
-      .setClassName('deleteButton');
-
-    el.setData('ignoreHeight', true);
-    el.addListener('click');
-    el.on('click', () => {
-      const name = (select as HTMLSelectElement).value;
-      let added;
-
-      switch (name) {
-        case ComponentType.MOTOR:
-          added = EntityManager.addComponent(
-            entity.id,
-            new MotorComponent({
-              position: { x: 0, y: 0 },
-              maxSpeed: 50,
-              defaultSpeed: 5,
-            }),
-          );
-          break;
-        case ComponentType.SENSOR:
-          added = EntityManager.addComponent(
-            entity.id,
-            new SensorComponent({
-              position: { x: 0, y: 0 },
-              range: 20,
-              angle: 0.3,
-            }),
-          );
-          break;
-        case ComponentType.SOURCE:
-          added = EntityManager.addComponent(
-            entity.id,
-            new SourceComponent({
-              range: 100,
-            }),
-          );
-          break;
-        case ComponentType.SOLID_BODY:
-          added = EntityManager.addComponent(entity.id, new SolidBodyComponent({}));
-          break;
-        case ComponentType.CONNECTION:
-          {
-            const inputs = entity.getMultipleComponents(ComponentType.SENSOR).map(com => com.id);
-            const outputs = entity.getMultipleComponents(ComponentType.MOTOR).map(com => com.id);
-            added = EntityManager.addComponent(
-              entity.id,
-              new ConnectionComponent({
-                inputIds: inputs,
-                outputIds: outputs,
-              }),
-            );
-          }
-          break;
-        default:
-      }
-
-      if (added === undefined) {
-        return;
-      }
-
-      new Noty({ text: `Komponente ${name} hinzugefügt.` }).show();
-
-      // alle Componenten der Enittät neu laden
-      this.container!.removeAll(true);
-      this.container!.height = 0;
-      this.onCreate(this.container!, entity);
-    });
-
-    return [row, el];
-  }
-  */
- 
 	
 	public onCreate(container: ScrollableContainer, entity: Entity): void {
 
         const seperator = this.add.dom(0, 0, 'hr').setClassName('sidepar-seperator base-input-container');
-
-
         const tabs = this.add.dom(0, 0).createFromHTML(` 
         <div id = "settings"> </div>`);
 ;
-
-        console.log("tabs", tabs);
-
-
         let createBtn = tabs.getChildByID("drag-source");
         createBtn.addEventListener("dragstart", () => {
             console.log("start");
@@ -139,9 +45,7 @@ export default class SettingScene extends SidebarScene {
         obj.addEventListener("drop", () => {
             console.log("end");
             obj.appendChild(createBtn.cloneNode());
-         });
-
-        
+         });		        
         
         const uiElements = entity.getAllComponents().map((component): Phaser.GameObjects.DOMElement[] => {
             const infoTip = component.getInfo()
@@ -180,9 +84,6 @@ export default class SettingScene extends SidebarScene {
                 return undefined;
             });
 
-
-            console.log(component.name, attributes);
-
             const attrs = attributes.map((element): Phaser.GameObjects.DOMElement | undefined => {
                 if (element) {
                     return element.node;
@@ -190,11 +91,9 @@ export default class SettingScene extends SidebarScene {
                 return undefined;
             });
 
-
-            return [title, deleteButton /*, ...attributes , ...attrs*/]; 
+            return [title, deleteButton]; 
         });
-
-     
+		     
         this.pack([seperator, tabs]); 
     }
 
@@ -243,7 +142,11 @@ export default class SettingScene extends SidebarScene {
    
 
     public addSolidBody(entity: Entity): void {
-        EntityManager.addComponent(entity.id, new SolidBodyComponent({}));
+
+        EntityManager.addComponent(entity.id, new SolidBodyComponent({
+			size: entity.getComponent('Rendering').size.get(),
+			shape: entity.getComponent('Rendering').shape.get(),
+		}));
    
         var event = new CustomEvent("attributeAdded", { detail: entity });
         document.dispatchEvent(event);
@@ -251,10 +154,8 @@ export default class SettingScene extends SidebarScene {
 
     public deleteSolidBody(entity: Entity, component: SolidBodyComponent): void {
         EntityManager.removeComponent(entity.id, component);
-        //console.log("delete SolidBody in settingsscene");
         var event = new CustomEvent("attributeAdded", { detail: entity });
         document.dispatchEvent(event);
     }
-
 
 }

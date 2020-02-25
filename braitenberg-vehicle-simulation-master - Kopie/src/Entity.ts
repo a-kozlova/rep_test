@@ -1,12 +1,22 @@
 import Noty from 'noty';
 
-import { ComponentType } from './enums';
+import { ComponentType, BodyShape } from './enums';
 import Component from './components/Component';
+import { Dimensions } from '@interactjs/types/types';
+
+import RenderComponent from './components/RenderComponent';
+import SolidBodyComponent from './components/SolidBodyComponent';
+
+
 
 export default class Entity {
   public id: number;
 
   private components: Component[] = [];
+
+  private size: Dimensions | number | null = null;
+
+  private shape: BodyShape | null = null;
 
   /**
    * Hier wird einmal gespeichert, wie viele ENtitäten es in der Welt gibt.
@@ -87,5 +97,44 @@ export default class Entity {
       id: this.id,
       components: this.components.map(component => component.serialize()),
     };
-  }
+    }
+
+    /*public getSize(): Dimensions | number {
+        const body = this.getComponent(ComponentType.SOLID_BODY) as SolidBodyComponent;
+
+
+        if (body.shape.get() === BodyShape.RECTANGLE) {
+            const test = body.size.get();
+            return test;
+        }
+        else {
+            return Math.sqrt(body.size.get().height / 2 + body.size.get().width / 2);
+        }
+       
+    }
+
+    public setSize(value: Dimensions): void {
+        const render = this.getComponent(ComponentType.RENDER) as RenderComponent;
+        const body = this.getComponent(ComponentType.SOLID_BODY) as SolidBodyComponent;
+
+        render.size.set(value);
+        body.size.set(value);
+    }
+*/
+    public getShape(): BodyShape {
+        const body = this.getComponent(ComponentType.SOLID_BODY) as SolidBodyComponent;
+        if (body) {
+            return body.shape.get();
+        }
+        return BodyShape.RECTANGLE;
+    }
+
+    public setShape(value: BodyShape): void {
+        const render = this.getComponent(ComponentType.RENDER) as RenderComponent;
+        const body = this.getComponent(ComponentType.SOLID_BODY) as SolidBodyComponent;
+
+        render.asset.set(value);
+        body.shape.set(value);
+    }
 }
+

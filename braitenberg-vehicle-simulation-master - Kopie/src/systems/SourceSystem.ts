@@ -22,7 +22,39 @@ export default class SourceSystem extends System {
     [componentId: number]: (() => void)[];
   } = {};
 
-  public update(): void {}
+    public update(): void {
+       /* this.entities.forEach(entity => {
+
+            const transform = entity.getComponent(ComponentType.TRANSFORMABLE) as TransformableComponent;
+            const source = entity.getComponent(ComponentType.SOURCE) as SourceComponent;
+
+            console.log("source", this.textures[source.id]);
+
+
+            if (!this.textures[source.id]) {
+                return;
+            }
+
+            let image = this.textures[source.id];
+
+            const bodyPosition = transform.position.get();
+            
+                      const x = bodyPosition.x ;
+                      const y = bodyPosition.y ;
+                      //console.log("sensorsys x y", x, y);
+            image.setPosition(x, y);
+            //image.setOrigin(0);
+           // image.setScale(CORRELATION_SCALE);
+            image.setBlendMode(Phaser.BlendModes.SCREEN);
+            image.setDepth(999);
+            //this.scene.children.bringToTop(image);
+
+            //image.setVisible(true);
+                  
+        });*/
+     
+
+  }
 
   private addHandler(componentId: number, handler: () => void): () => void {
     if (!this.handlers[componentId]) {
@@ -57,10 +89,11 @@ export default class SourceSystem extends System {
 
     const handleTransform = this.addHandler(
       source.id,
-      debounce(() => {
+      //debounce(
+       () => {
         this.removeSourceObject(source, currentType);
         this.addSourceObject(entity, source);
-      }, 200),
+      }//, 200),*/
     );
 
     transform.position.onChange(handleTransform);
@@ -150,7 +183,9 @@ export default class SourceSystem extends System {
     image.setDepth(99);
     this.scene.children.bringToTop(image);
 
-    this.textures[source.id] = image;
+      this.textures[source.id] = image;
+
+     // console.log('source system', values);
 
     EventBus.publish(EventType.SOURCE_CREATED, {
       id: source.id,

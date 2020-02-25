@@ -1,15 +1,10 @@
 {
   "ExpandedNodes": [
     "",
-    "\\bootstrap-4.3.1-dist",
+    "\\assets",
     "\\src",
-    "\\src\\components",
-    "\\src\\gui",
-    "\\src\\scenes",
-    "\\src\\systems",
-    "\\src\\utils",
-    "\\webpack"
+    "\\src\\systems"
   ],
-  "SelectedNode": "\\src\\index.ts",
+  "SelectedNode": "\\src\\systems\\SourceSystem.ts",
   "PreviewInSolutionExplorer": false
 }

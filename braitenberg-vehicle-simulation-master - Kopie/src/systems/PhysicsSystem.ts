@@ -95,7 +95,6 @@ export default class PhysicsSystem extends System {
         graphics.strokePath();
       }
     }
-      //console.log("physics sys body part", body, part);
   }
 
   protected onEntityCreated(entity: Entity): void {
@@ -107,14 +106,23 @@ export default class PhysicsSystem extends System {
 
     component.size.onChange((value, old) => {
       const { body } = this.physicsObjects[entity.id];
-      // Hier wird der Körper einmal in die "aufrechte" Position gedreht, weil `Matter.Body.scale`
-      // den Körper aus der "globalen" Sicht skaliert. D.h. sind scaleX und scaleY unterschied-
-      // lich, dann wird der Körper gequetscht und zu einem Parallelogramm.
-      Phaser.Physics.Matter.Matter.Body.rotate(body, -body.angle);
-      Phaser.Physics.Matter.Matter.Body.scale(body, value.width / old.width, value.height / old.height);
-      // Da wir den Körper vorher gedreht haben, muss er auch wieder in die Ausgangsdrehung
-      // gebracht werden.
-      Phaser.Physics.Matter.Matter.Body.rotate(body, body.angle);
+      
+      if (component.shape.get() === 'Kreis') {
+        //Fuer den Kreis muss Radius gesetzt werden, denn sonst wir er null und Body wird zur Ellipse 
+        Phaser.Physics.Matter.Matter.Body.set(body, 'circleRadius', value.width/2);
+
+      } else {
+
+        // Hier wird der Körper einmal in die "aufrechte" Position gedreht, weil `Matter.Body.scale`
+        // den Körper aus der "globalen" Sicht skaliert. D.h. sind scaleX und scaleY unterschied-
+        // lich, dann wird der Körper gequetscht und zu einem Parallelogramm.
+        Phaser.Physics.Matter.Matter.Body.rotate(body, -body.angle);
+        Phaser.Physics.Matter.Matter.Body.scale(body, value.width / old.width, value.height / old.height);
+        // Phaser.Physics.Matter.Matter.Body.scale(body, value.width / old.width, value.height / old.height);
+        // Da wir den Körper vorher gedreht haben, muss er auch wieder in die Ausgangsdrehung
+        // gebracht werden.
+        Phaser.Physics.Matter.Matter.Body.rotate(body, body.angle);
+      }
     });
 
     component.isStatic.onChange(value => {
@@ -175,7 +183,7 @@ export default class PhysicsSystem extends System {
         return Phaser.Physics.Matter.Matter.Bodies.circle(
           0,
           0,
-          component.size.get().width,
+          component.size.get().width / 2,
           pickBy(options, v => v !== undefined),
         );
       }

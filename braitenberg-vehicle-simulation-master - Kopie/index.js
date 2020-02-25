@@ -4,6 +4,11 @@ var entity = null;
 let motorComponents = [];
 let sensorComponents = [];
 let size = { "width": 200, "height": 250 };
+let rangeFA = 0;
+let angleFA = 0;
+let reactionFA = "Hindernis";
+let defaultSpeedFA = 0;
+let maxSpeedFA = 20;
 
 document.addEventListener("entitySelected", openSettings);
 document.addEventListener("attributeAdded", openSettings);
@@ -14,7 +19,6 @@ document.addEventListener("closeSettings", closeSettings);
 
 $(document).on('entity:delete', function (event, options) {
     let ev = new CustomEvent('delEnt', { detail: options });
-    console.log("html delte entiti", options);
     document.dispatchEvent(ev);
 });
 
@@ -23,17 +27,22 @@ $(document).on('entity:delete', function (event, options) {
         $(document).trigger('entity:delete', [entity]);
  });
 
+function resetSettings() {           
+
+//$('.switch-btn').removeClass('switch-on');
+
+$('input:radio').prop('checked', false);
+
+}
+
 function openSettings(event) {
     closeNav();
-  resetSettings();
+    resetSettings();
     //closeSettings();
     document.getElementById("myEntitySettings").style.width = "256px";
     document.getElementById("createEntityMenu").style.marginRight = "306px";
 
-    entity = event.detail;                  // die aufgerufene Entität
-    console.log("opensettings", entity);
-
-   
+    entity = event.detail;                  // die aufgerufene Entität  
 
     motorComponents = entity.components.filter(component => component.name == "Motor");
     sensorComponents = entity.components.filter(component => component.name == "Sensor");
@@ -48,7 +57,6 @@ function openSettings(event) {
     //var shape = "circle";
     if (solidBodyComponents[0]) {
         size = solidBodyComponents[0].size.value;
-        console.log("size db izmenen", size);
     }
 
 
@@ -63,10 +71,12 @@ function openSettings(event) {
 }
 
 function emissionSettings(sourceComponents) {
+    $('#emRange').remove();
+    $('#emissionRange').after('<input id = "emRange" class="col-4" style = "height: 25px;">');
+
 	$('#emRange').attr('value', sourceComponents[0].range.value);
     if (sourceComponents[0].isActive){
         $('#emis.switch-btn').addClass("switch-on");
-
 
         $("#barrier").prop('disabled', false);
         $("#sour").prop('disabled', false);
@@ -86,6 +96,7 @@ function emissionSettings(sourceComponents) {
             $("#flat").prop('checked', false);
             $('#emRange').prop('disabled', false);
             $('#emRange').removeClass('disabled');
+            $('#range-label').removeClass('disabled');
             $('#emRange').on('input', function () {
                 sourceComponents[0].setRange($(this).val());
             });
@@ -96,11 +107,14 @@ function emissionSettings(sourceComponents) {
             $("#flat").prop('checked', true);
             $('#emRange').prop('disabled', true);
             $('#emRange').addClass('disabled');
+            $('#range-label').addClass('disabled');
         }
     } else {
         $('#emis.switch-btn').removeClass("switch-on");
 
         $("#emRange").prop('disabled', true);
+        $('#emRange').addClass('disabled');
+        $('#range-label').addClass('disabled');
 
         $("#barrier").prop('checked', false);
         $("#sour").prop('checked', false);
@@ -114,15 +128,7 @@ function emissionSettings(sourceComponents) {
     }
 
 }
-function resetSettings() {           
-
-//$('.switch-btn').removeClass('switch-on');
-
-$('input:radio').prop('checked', false);
-
-}
-
-    
+   
 
 function bodySettings(components, renderComponents) {
 
@@ -136,7 +142,76 @@ function bodySettings(components, renderComponents) {
     $('#bodyWidth').after('<input id="width" class="col-3">');
     $('#bodyHeight').after('<input id="height" class="col-3">');
 
-    // wenn SolidBodyComponent vorhanden, den Button auf ON setzten
+        $("#width").val(renderComponents[0].size.value.width);
+        $("#height").val(renderComponents[0].size.value.height);
+
+        // die aktuelle Breite, Hoehe und Form der Entität anzeigen
+        if (renderComponents[0].shape.value === "Rechteck") {
+              $("#height").prop('disabled', false);
+		      $("#height").removeClass('disabled');
+              $("#rectangle").prop('checked', true);
+              $("#circle").prop('checked', false);
+        } else if (renderComponents[0].shape.value === "Kreis") {
+              $("#circle").prop('checked', true);
+              $("#rectangle").prop('checked', false);
+              $("#height").prop('disabled', true);
+		      $("#height").addClass('disabled');
+        }
+
+        $("#width").change(function () {
+            let newValue = $("#width").val(); // get the current value of the input field.
+
+            if (renderComponents[0].shape.get() === 'Kreis') {
+                let newWidth = parseInt(newValue)
+                if (components.length) {
+                    components[0].setSize({ width: newWidth, height: newWidth });
+                }
+                renderComponents[0].setSize({ width: newWidth, height: newWidth });
+                $("#height").val(newWidth);
+            } else {
+                if (components.length) {
+                    components[0].setSize({ width: parseInt(newValue), height: renderComponents[0].size.value.height });
+                }
+                renderComponents[0].setSize({ width: parseInt(newValue), height: renderComponents[0].size.value.height });  
+            }                       
+
+            size.width = parseInt(newValue);
+            paintMotorCanvas();
+            paintSensorCanvas();
+        });
+
+        $("#height").change(function () {
+            let newValue = $("#height").val(); // get the current value of the input field.
+            if (components.length) {
+                components[0].setSize({ width: renderComponents[0].size.value.width, height: parseInt(newValue) });
+            }
+            components[0].setSize({ width: renderComponents[0].size.value.width, height: parseInt(newValue) });
+            renderComponents[0].setSize({ width: renderComponents[0].size.value.width, height: parseInt(newValue) }); 
+            size.height = parseInt(newValue);
+            paintMotorCanvas();
+            paintSensorCanvas();
+        }); 
+
+
+    switch (renderComponents[0].asset.value) {
+        case 13421772: 
+            $("#grey").prop('checked', true);
+            break;
+    
+        case 13713746: 
+            $("#red").prop('checked', true);
+            break;
+    
+        case 5744185: 
+            $("#green").prop('checked', true);
+            break;
+    
+        case 1791363: 
+            $("#blue").prop('checked', true);
+            break;
+    }
+
+// wenn SolidBodyComponent vorhanden, den Button auf ON setzten
     if (components.length) {
         $("#static").prop('disabled', false); 
         $('#solidBody.switch-btn').addClass("switch-on");
@@ -147,65 +222,11 @@ function bodySettings(components, renderComponents) {
             $('#static.switch-btn').removeClass("switch-on");
         }
 
-        $("#rectangle").prop('disabled', false); 
-        $("#circle").prop('disabled', false); 
-
-        if (components[0].shape.value === "Rechteck") {
-            $("#rectangle").prop('checked', true);
-        } else if (components[0].shape.value === "Kreis") {
-            $("#circle").prop('checked', true);
-        }
-
-        // die aktuelle Breite und Hoehe der Entität anzeigen
-        $("#width").val(components[0].size.value.width);
-        $("#height").val(components[0].size.value.height);
-
-        $("#width").change(function () {
-            let newValue = $("#width").val(); // get the current value of the input field.
-            components[0].setSize({ width: parseInt(newValue), height: components[0].size.value.height });
-            size.width = parseInt(newValue);
-            paintMotorCanvas();
-            paintSensorCanvas();
-        });
-
-        $("#height").change(function () {
-            let newValue = $("#height").val(); // get the current value of the input field.
-            components[0].setSize({ width: components[0].size.value.width, height: parseInt(newValue) });
-            size.height = parseInt(newValue);
-            paintMotorCanvas();
-            paintSensorCanvas();
-        });
-
     } else {
-        $('#solidBody.switch-btn').removeClass("switch-on");
-        $("#rectangle").prop('checked', false);
-        $("#rectangle").prop('disabled', true); 
-        $("#circle").prop('checked', false);
-        $("#circle").prop('disabled', true); 
-
-        
+        $('#solidBody.switch-btn').removeClass("switch-on");            
         $('#static.switch-btn').removeClass("switch-on");
 
        return
-    }
-
-    switch (renderComponents[0].asset.value) {
-        case 13421772: 
-            $("#grey").prop('checked', true);
-            break;
-    
-        case 13713746: 
-            $("#red").prop('checked', true);
-            console.log('red');
-            break;
-    
-        case 5744185: 
-            $("#green").prop('checked', true);
-            break;
-    
-        case 1791363: 
-            $("#blue").prop('checked', true);
-            break;
     }
 
 }
@@ -236,14 +257,39 @@ function sensorSettings(components) {
         $("#sensorAngle").append(
             '<input id = "angle' + component.id + '" style = "background: ' + color[index] +
             '; margin-bottom:10px" placeholder = "' + component.angle.value + '">');
+        $("#sensorReaction").append(
+            '<div class="switch-btn switch-reaction" id = "react' + component.id + '" style = "background: ' + color[index] +
+            '; margin-bottom:10px">');
 
-        // ne rabotaet podklu4it bootstrap toggle?
-        $("#sensorReaction").append('<input type="checkbox" data-toggle="toggle" data-on="on" data-off="off" data-onstyle="success" data-offstyle="danger">');
+        switch (component.reactsTo.get()) {
+            case 'Licht': {
+                $('#react' + component.id).addClass('switch-on');
+                break;
+            }
+            case 'Hindernis': {
+                $('#react' + component.id).removeClass('switch-on');
+                break;
+            }
+        }
+
+            //switch reaction
+        $('#react' + component.id).click(function() {
+            $(this).toggleClass('switch-on');
+            if ($(this).hasClass('switch-on')) {
+                  $(this).trigger('on.switch');
+                  component.setReaction('source');
+            } else {
+                  $(this).trigger('off.switch');
+                  component.setReaction('barrier');
+            }
+
+        });
+        
             
-        $('#range' + component.id).on('input', function () {
+        $('#range' + component.id).on('input', function (event) {
             let newValue = $(this).val(); // get the current value of the input field.
-            //console.log(newValue);
             component.setRange(newValue);
+            event.preventDefault();
         });
 
         $('#angle' + component.id).on('input', function () {
@@ -252,33 +298,76 @@ function sensorSettings(components) {
         });  
     });
 
+//For all
+
     $("#sensorRangeFA").append(
-        '<input id = "rangeFA" style = "background: white"; margin-bottom:10px" placeholder = "0">');
+        '<input id = "rangeFA" style = "background: white"; margin-bottom:10px" placeholder = "' + rangeFA + '">');
     $("#sensorAngleFA").append(
-        '<input id = "angleFA" style = "background:  white"; margin-bottom:10px" placeholder = "0">');
+        '<input id = "angleFA" style = "background:  white"; margin-bottom:10px" placeholder = "' + angleFA + '">');
+    $("#sensorReactionFA").append(
+            '<div class="switch-btn switch-reaction" id = "reactFA" style = "margin-bottom:10px">');
+    switch (reactionFA) {
+            case 'Licht': {
+                $('#reactFA').addClass('switch-on');
+                break;
+            }
+            case 'Hindernis': {
+                $('#reactFA').removeClass('switch-on');
+                break;
+            }
+        }
     
     $('#rangeFA').on('input', function () {
         let newValue = $(this).val(); // get the current value of the input field.
-        //console.log(newValue);
+        rangeFA = newValue;
         components.forEach((component, index) => {
-            component.setRange(newValue);
-        });
+            component.setRange(newValue);       
+        });        
     });
+
     $('#angleFA').on('input', function () {
         let newValue = $(this).val(); // get the current value of the input field.
+        angleFA = newValue;
         components.forEach((component, index) => {
             component.setAngle(newValue);
         });
     });
+
+        $('#reactFA').click(function() {
+            $(this).toggleClass('switch-on');
+            if ($(this).hasClass('switch-on')) {
+                  $(this).trigger('on.switch');                  
+                  components.forEach((component, index) => {
+                      component.setReaction('source');
+                  });
+                  reactionFA = "Licht";
+            } else {
+                  $(this).trigger('off.switch');
+                  components.forEach((component, index) => {
+                      component.setReaction('barrier');
+                  });    
+                  reactionFA = "Hindernis";              
+            }
+            let event = new CustomEvent('componentChanged', { detail: entity });
+            document.dispatchEvent(event);
+        });
+
 }
 
 function drawSliders(components) {
     $('#slidecontainer').children().each((idx, child) => {
-            child.remove('div');
+        child.remove('div');
     });
+    $('#slidecontainerForAll').children().each((idx, child) => {
+        child.remove('div');
+    });
+    if (!components.length) {
+        return
+    }
     components.forEach(component => {
         $("#slidecontainer").append('<div id = "' + component.id + '" class="slider">');
     });
+        $("#slidecontainerForAll").append('<div id = "sliderForAll" class="slider">');
  
     components.forEach((component,index) => {
         var slider = $(function () {
@@ -292,15 +381,33 @@ function drawSliders(components) {
 
                 $("#" + component.id).val("$" + ui.values[0] + " - $" + ui.values[1]);
                 component.setDefaultSpeed(ui.values[0]);
-                component.setDefaultSpeed(ui.values[1]);
-                    console.log(component.defaultSpeed.get());
-                    console.log(component.maxSpeed.get());
+                component.setMaxSpeed(ui.values[1]);
                 }
             });
-        $("#" + component.id + " .ui-widget-header").css('background', color[index]);
+            $("#" + component.id + " .ui-widget-header").css('background', color[index]);
             
-        });
+        });    
     });
+$(function () {
+            $("#sliderForAll").slider({
+                range: true,
+                min: 0,
+                max: 100,
+                step: 10,
+                values: [defaultSpeedFA, maxSpeedFA],
+                slide: function (event, ui) {
+
+                $("#sliderForAll").val("$" + ui.values[0] + " - $" + ui.values[1]);
+                components.forEach((component, index)=>{
+                    component.setDefaultSpeed(ui.values[0]);
+                    component.setMaxSpeed(ui.values[1]);
+                $( "#" + component.id + "" ).slider('values', [ui.values[0],ui.values[1]]);
+                });  
+                    defaultSpeedFA = ui.values[0];
+                    maxSpeedFA = ui.values[1]; 
+               }
+            });            
+        }); 
 }
 
 
@@ -355,10 +462,6 @@ $(document).on("motor:del", function (event, options) {
         return x.id;
     }).indexOf(options.id);
 
-
-    console.log("delete motor", motorComponents[index]);
-
-
     let ev = new CustomEvent("deleteMotor", {
         detail: {
             component:  motorComponents[index]
@@ -391,6 +494,15 @@ $(document).on("motor:upd", function (event, options) {
 //color array this is unsafe because the array is of fixed size!
 //this needs a better solution!
 var color = ["#00ffff", "#00ff00", "#ff00ff", "#cecece", "#cece00", "#ce00ce", "#00cece", "#c00ece", "#cec00e", "#0000ce"];
+
+var col = {};
+
+
+function generateHexColor() {
+    let colr = '#' + ((0.5 + 0.5 * Math.random()) * 0xFFFFFF << 0).toString(16);
+    return colr;
+}
+
 
 var motorCanvasStage = new Konva.Stage({
     container: 'motorCanvasContainer'
@@ -453,9 +565,6 @@ function drawMotorCanvas(options) {
     let ratioY = 1;
     if (options.size) {
         ratioX = (gridWidth) / options.size.width;
-
-        //console.log("ratioX grid width size.width motor", ratioX ,gridWidth,options.size.width);
-
         ratioY = (gridHeight) / options.size.height;
     }
 
@@ -565,18 +674,19 @@ function drawMotorCanvas(options) {
     let colorCounter = 0;
 
     options.components.forEach(component => {
+        col[component.id] = generateHexColor();
         let motor = new Konva.Circle({
             x: startPoint.x - ratioX * component.position.value.x,
             y: startPoint.y - ratioY * component.position.value.y,
             radius: 7,
-            fill: color[colorCounter],
+            fill: color[colorCounter], //col[component.id],
             stroke: 'black',
             strokeWidth: 1,
             id: component.id,
             name: "Motor",
             draggable: true
         });
-
+        
 
         motor.on('dragstart', (e) => {
             shadowCircle.show();
@@ -589,8 +699,6 @@ function drawMotorCanvas(options) {
                     x: Math.min(corners.x.max, Math.max(corners.x.min, Math.round(motor.x() / options.grid.padding) * options.grid.padding)),
                     y: Math.min(corners.y.max, Math.max(corners.y.min, Math.round(motor.y() / options.grid.padding) * options.grid.padding))
                 });
-
-                //console.log("dragend motor ratio X Y startpoint size", motor.position(), ratioX, ratioY, startPoint, size);
 
                 $(document).trigger('motor:upd', [{
                     id: motor.id(),
@@ -665,10 +773,6 @@ $(document).on("sensor:del", function (event, options) {
     var index = sensorComponents.map(x => {
         return x.id;
     }).indexOf(options.id);
-
-
-    console.log("delete sensor",sensorComponents[index]);
-
 
     let ev = new CustomEvent("deleteSensor", {
         detail: {
@@ -764,8 +868,6 @@ function drawSensorCanvas(options) {
     let ratioY = 1;
     if (options.size) {
         ratioX = (gridWidth) / options.size.width;
-        //console.log("ratioX grid width size.width sensor", ratioX, gridWidth, options.size.width);
-
         ratioY = (gridHeight) / options.size.height;
     }
 
@@ -963,9 +1065,6 @@ function drawSensorCanvas(options) {
                 }
 
                 sensor.position({x: newX, y: newY});
-                
-                //console.log("dragend sensor ratio X Y startpoint size", motor.position(), ratioX, ratioY, startPoint, size);
-
                 $(document).trigger('sensor:upd', [{
                     id: sensor.id(),
                     x: -1 * (newX - startPoint.x) / ratioX,

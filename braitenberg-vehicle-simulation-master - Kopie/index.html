@@ -51,13 +51,10 @@
                     Settings
                 </div>
                 <div class="col-2 right">
-                    <button id="closeSettings" class="closebtn" >&times;</button>
+                    <button id="closeSettings" class="closebtn">&times;</button>
                 </div>
             </div>
         </div>
-
-        <div id="deleteEntity">Delete entity</div>
-
 
         <div id="settingsMenu">
             <!--TABS-->
@@ -81,6 +78,7 @@
                     <h4>Speed</h4>
                     <div id="slidecontainer"></div>
                     <div class="row" style="padding-left: 20px;"> For all motors</div>
+					<div id="slidecontainerForAll"></div>
                 </div>
                 <!--SENSOR-->
                 <div role="tabpanel" class="tab-pane fade" id="sensor">
@@ -92,7 +90,7 @@
                     <div class="row">
                         <h4 class="col-4">Range</h4>
                         <h4 class="col-4"> Angle</h4>
-                        <h4 class="col-4">Reaction</h4>
+                        <h4 class="col-4">B/L</h4>
                     </div>
 
                     <div class="row" id="sensorRow">
@@ -109,7 +107,7 @@
                 </div>
                 <!--EMISSION-->
                 <div role="tabpanel" class="tab-pane fade" id="emission">
-					<div class="row">
+                    <div class="row">
                         <div class="col-6 left">
                             Emission
                         </div>
@@ -128,24 +126,21 @@
                             <label class="custom-control-label" for="sour">Source</label>
                         </div>
                     </div>
-					<h4>Emission type</h4>
+                    <h4>Emission type</h4>
                     <div id="emission">
                         <div class="custom-control">
                             <input type="radio" id="gaus" name="emission" class="custom-control-input" value="gaus">
                             <label class="custom-control-label" for="gaus">Gaussian</label>
                         </div>
-						<!--FLAT??????? -->
                         <div class="custom-control">
                             <input type="radio" id="flat" name="emission" class="custom-control-input" value="flat">
                             <label class="custom-control-label" for="flat">Flat</label>
                         </div>
                     </div>
-					<div class="row">
-						<div class="col-4">Range</div>
-						<form id="emissionRange" class="col-4"> 
-							<input id = "emRange" style = "height: 25px;">
-						</form>
-					</div>
+                    <div class="row">
+                        <div id="range-label" class="col-4">Range</div>
+                        <form id="emissionRange"></form>
+                    </div>
                 </div>
                 <!--BODY-->
                 <div role="tabpanel" class="tab-pane fade" id="solidBody">
@@ -157,9 +152,9 @@
                             <div class="switch-btn" id="solidBody"></div>
                         </div>
                     </div>
-                    
 
-					<div class="row">
+
+                    <div class="row">
                         <div class="col-6 left">
                             Static
                         </div>
@@ -167,7 +162,7 @@
                             <div class="switch-btn" id="static"></div>
                         </div>
                     </div>
-                    
+
 
                     <h4>Form</h4>
 
@@ -209,7 +204,9 @@
                 <div role="tabpanel" class="tab-pane fade" id="connection">Connection</div>
 
             </div>
+
         </div>
+        <button id="deleteEntity" style="position: fixed; bottom:0; margin-left: auto; margin-right: auto; margin-top: 50px; ">Delete entity</button>
     </div>
 
 

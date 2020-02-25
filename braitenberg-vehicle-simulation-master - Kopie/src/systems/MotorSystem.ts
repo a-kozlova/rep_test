@@ -38,7 +38,9 @@ export default class MotorSystem extends System {
                 const y = bodyPosition.y + motorOffset.y;
               
                 this.grs[motor.id].lineStyle(2, 'black', 1);
-                this.grs[motor.id].fillStyle(0xff0000, motor.defaultSpeed.get() / 100);
+
+                let colorAlpha = Number(motor.visualThrottle.get())/100;
+                this.grs[motor.id].fillStyle(0xff0000, colorAlpha);
                 this.grs[motor.id].fillCircle(x, y, 7);
                 this.grs[motor.id].strokeCircle(x, y, 7);
             });

@@ -77,12 +77,15 @@ $('#emis.switch-btn').click(function() {
   if ($(this).hasClass('switch-on')) {
     $(this).trigger('on.switch');
     entity.getComponent('Quelle').activateSourceComponent();
+	$('#emRange').attr('placeholder', entity.getComponent('Quelle').range.value);
+	$('#emRange').attr('value', entity.getComponent('Quelle').range.value);
   } else {
     $(this).trigger('off.switch');
     entity.getComponent('Quelle').deactivateSourceComponent();
+	$('#emRange').attr('placeholder', 0);
+	$('#emRange').attr('value',0);
   }
-  $('#emRange').attr('placeholder', entity.getComponent('Quelle').range.value);
-  $('#emRange').attr('value', entity.getComponent('Quelle').range.value);
+
   var event = new CustomEvent('componentChanged', { detail: entity });
   document.dispatchEvent(event);
 });
@@ -105,10 +108,14 @@ $('input[name="farbe"]:radio').change(function() {
 //Form
 $('input[name="form"]:radio').change(function() {
   entity.components.forEach(component => {
-    if (component.name == 'Koerper') {
+      if (component.name == 'Koerper' || component.name == 'Rendering') {
       component.setShape($("input[name='form']:checked").val());
-    }
+	  component.setSize({ width: component.size.value.width, height: component.size.value.width});
+    }	
+
   });
+  var event = new CustomEvent('componentChanged', { detail: entity });
+  document.dispatchEvent(event);
 });
 
 //SubstanceType
@@ -158,7 +165,7 @@ $('#static.switch-btn').click(function() {
   }
 });
 
-// add sensor	!!!!!!!!!!!!!!!!!!!!!! peredelat dlya vsech
+// add sensor
 document.addEventListener('addSensor', function(event) {
   mytestgame.scene.scenes[3].addSensor(entity, event.detail.position);
 });
@@ -177,9 +184,10 @@ document.addEventListener('deleteMotor', function (event) {
 });
 
 
-
 document.addEventListener('delEnt', (event) => {
-    console.log("deleteEntity settscen", event);
-    EntityManager.destroyEntity(event.detail.id); 
+    //console.log("deleteEntity settscen", event);
+    if (confirm("Delete this entity?")) {
+        EntityManager.destroyEntity(entity.id);
+    }
 });
 

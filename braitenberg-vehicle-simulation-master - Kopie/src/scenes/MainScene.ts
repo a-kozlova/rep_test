@@ -54,7 +54,7 @@ export default class MainScene extends Phaser.Scene {
         var event = new CustomEvent("entitySelected", { detail: entity });
         event.preventDefault();
 		console.log("open");
-        // event to catch in html!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        // event to catch in html
       document.dispatchEvent(event);
     });
 
@@ -73,10 +73,12 @@ export default class MainScene extends Phaser.Scene {
       }),
       new RenderComponent({
         asset: 0xcccccc,
-        size: 110,
+        size: { width: 20, height: 400 },
+        shape: BodyShape.RECTANGLE,
       }),
     );
 
+	//Vehicle
     const entity = new Entity();
     const transform = new TransformableComponent({
       position: { x: 100, y: 500 },
@@ -85,7 +87,7 @@ export default class MainScene extends Phaser.Scene {
     entity.addComponent(transform);
     entity.addComponent(
       new SolidBodyComponent({
-        size: { width: 200, height: 250 },
+        size: { width: 100, height: 150 },
       }),
     );
 	entity.addComponent(
@@ -96,7 +98,7 @@ export default class MainScene extends Phaser.Scene {
     entity.addComponent(
       new RenderComponent({
         asset: 'vehicle',
-        size: 100,
+        size: { width: 100, height: 150 },
       }),
     );
     const motor1 = entity.addComponent(
@@ -156,10 +158,11 @@ export default class MainScene extends Phaser.Scene {
 
 	//Source
     EntityManager.createEntity(
-      new TransformableComponent({ position: { x: 950, y: 350 } }),
+        new TransformableComponent({ position: { x: 950, y: 350 }}),
       new RenderComponent({
         asset: 'prefab-source',
-        size: 100,
+        size: { width: 100, height: 100 },
+        shape: BodyShape.CIRCLE,
       }),
       new SourceComponent({
         range: 200,
@@ -289,7 +292,8 @@ export default class MainScene extends Phaser.Scene {
         }),
         new RenderComponent({
             asset: 0xcccccc,
-            size: 110,
+			size: { width: 100, height: 100 },
+			shape: BodyShape.RECTANGLE
         }),
     );
 }
@@ -300,7 +304,8 @@ export default class MainScene extends Phaser.Scene {
         new TransformableComponent({ position: { x: mouseX, y: mouseY }}),
         new RenderComponent({
             asset: 'prefab-blank',
-            size: 110,
+            size: { width: 100, height: 100 },
+			shape: BodyShape.CIRCLE
         }),
 		new SourceComponent({
         range: 0,
@@ -313,7 +318,9 @@ export default class MainScene extends Phaser.Scene {
         new SourceComponent({
           range: 100,
         }),
-        new RenderComponent({ asset: 'prefab-source', size: 100 }),
+        new RenderComponent({ asset: 'prefab-source',         
+		size: { width: 100, height: 100 },
+        shape: BodyShape.CIRCLE }),
       );
    
 }
@@ -337,7 +344,8 @@ export default class MainScene extends Phaser.Scene {
       entity.addComponent(
         new RenderComponent({
           asset: 'vehicle',
-          size: 100,
+          size: { width: 100, height: 150 },
+	      shape: BodyShape.RECTANGLE
         }),
       );
       const motor1 = entity.addComponent(
@@ -399,7 +407,8 @@ export default class MainScene extends Phaser.Scene {
       entity.addComponent(
         new RenderComponent({
           asset: 'vehicle',
-          size: 100,
+          size: { width: 100, height: 150 },
+	      shape: BodyShape.RECTANGLE
         }),
       );
       const motor1 = entity.addComponent(
@@ -440,7 +449,7 @@ export default class MainScene extends Phaser.Scene {
       EntityManager.addExistingEntity(entity);
    
 }
-    private createPrefab3a(mouseX: number, mouseY: number): void {
+  private createPrefab3a(mouseX: number, mouseY: number): void {
       const entity = new Entity();
       const transform = new TransformableComponent({
         position: { x: mouseX, y: mouseY },
@@ -461,7 +470,8 @@ export default class MainScene extends Phaser.Scene {
       entity.addComponent(
         new RenderComponent({
           asset: 'vehicle',
-          size: 100,
+          size: { width: 100, height: 150 },
+	      shape: BodyShape.RECTANGLE
         }),
       );
       const motor1 = entity.addComponent(
@@ -502,7 +512,7 @@ export default class MainScene extends Phaser.Scene {
       EntityManager.addExistingEntity(entity);
    
 }
-    private createPrefab3b(mouseX: number, mouseY: number): void {
+  private createPrefab3b(mouseX: number, mouseY: number): void {
       const entity = new Entity();
       const transform = new TransformableComponent({
         position: { x: mouseX, y: mouseY },
@@ -523,7 +533,8 @@ export default class MainScene extends Phaser.Scene {
       entity.addComponent(
         new RenderComponent({
           asset: 'vehicle',
-          size: 100,
+          size: { width: 100, height: 150 },
+	      shape: BodyShape.RECTANGLE
         }),
       );
       const motor1 = entity.addComponent(
@@ -566,7 +577,7 @@ export default class MainScene extends Phaser.Scene {
    
 }
 
-    public createObject(mouseX: number, mouseY: number, droppedItemID: number ) {
+  public createObject(mouseX: number, mouseY: number, droppedItemID: number ) {
 	switch(droppedItemID) { 
 		case 'blank': { 
 			this.createBlank(mouseX, mouseY);
@@ -595,9 +606,7 @@ export default class MainScene extends Phaser.Scene {
 		case 'barrier': { 
 			this.createBarrier(mouseX, mouseY);
 			break; 
-		}
-
-	
+		}	
     }
 }
 }
