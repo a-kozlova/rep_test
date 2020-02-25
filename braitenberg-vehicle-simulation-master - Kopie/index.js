@@ -3,7 +3,8 @@ var entity = null;
 //var color = ["#00ffff", "#00ff00", "#ff00ff", "#cecece", "#cece00", "#ce00ce", "#00cece", "#c00ece", "#cec00e", "#0000ce"];
 let motorComponents = [];
 let sensorComponents = [];
-let size = { "width": 200, "height": 250 };
+let size = { 'width': 200, 'height': 250 };
+var shape = 'Kreis';
 let rangeFA = 0;
 let angleFA = 0;
 let reactionFA = "Hindernis";
@@ -56,7 +57,7 @@ function openSettings(event) {
     size = { "width": 100, "height": 150 };
     //var shape = "circle";
     if (solidBodyComponents[0]) {
-        size = solidBodyComponents[0].size.value;
+        size = renderComponents[0].size.value;
     }
 
 
@@ -142,6 +143,8 @@ function bodySettings(components, renderComponents) {
     $('#bodyWidth').after('<input id="width" class="col-3">');
     $('#bodyHeight').after('<input id="height" class="col-3">');
 
+        $("#width").val(renderComponents[0].size.value.width);
+        $("#height").val(renderComponents[0].size.value.height);
 
         // die aktuelle Breite, Hoehe und Form der Entität anzeigen
         if (renderComponents[0].shape.value === "Rechteck") {
@@ -156,24 +159,23 @@ function bodySettings(components, renderComponents) {
 		      $("#height").addClass('disabled');
         }
 
-        $("#width").val(renderComponents[0].size.value.width);
-        $("#height").val(renderComponents[0].size.value.height);
-
         $("#width").change(function () {
             let newValue = $("#width").val(); // get the current value of the input field.
 
             if (renderComponents[0].shape.get() === 'Kreis') {
                 let newWidth = parseInt(newValue)
+                renderComponents[0].setSize({ width: newWidth, height: newWidth });
+
+                //wenn SolidBody vorhanden, auch size setzen
                 if (components.length) {
                     components[0].setSize({ width: newWidth, height: newWidth });
                 }
-                renderComponents[0].setSize({ width: newWidth, height: newWidth });
                 $("#height").val(newWidth);
             } else {
+                renderComponents[0].setSize({ width: parseInt(newValue), height: renderComponents[0].size.value.height });
                 if (components.length) {
                     components[0].setSize({ width: parseInt(newValue), height: renderComponents[0].size.value.height });
                 }
-                renderComponents[0].setSize({ width: parseInt(newValue), height: renderComponents[0].size.value.height });  
             }                       
 
             size.width = parseInt(newValue);
@@ -186,7 +188,7 @@ function bodySettings(components, renderComponents) {
             if (components.length) {
                 components[0].setSize({ width: renderComponents[0].size.value.width, height: parseInt(newValue) });
             }
-            components[0].setSize({ width: renderComponents[0].size.value.width, height: parseInt(newValue) });
+            //components[0].setSize({ width: renderComponents[0].size.value.width, height: parseInt(newValue) });
             renderComponents[0].setSize({ width: renderComponents[0].size.value.width, height: parseInt(newValue) }); 
             size.height = parseInt(newValue);
             paintMotorCanvas();
@@ -212,7 +214,9 @@ function bodySettings(components, renderComponents) {
             break;
     }
 
-// wenn SolidBodyComponent vorhanden, den Button auf ON setzten
+
+
+    // wenn SolidBodyComponent vorhanden, den Button auf ON setzten
     if (components.length) {
         $("#static").prop('disabled', false); 
         $('#solidBody.switch-btn').addClass("switch-on");
@@ -229,6 +233,11 @@ function bodySettings(components, renderComponents) {
 
        return
     }
+
+
+
+
+    //shape = renderComponents[0].shape.value;
 
 }
 
@@ -549,6 +558,8 @@ function drawMotorCanvas(options) {
     motorCanvasStage.width(options.width);
     motorCanvasStage.height(options.height);
 
+
+
     let gridHeight = options.grid.size.y * options.grid.padding;
     let gridWidth = options.grid.size.x * options.grid.padding;
     let corners = {
@@ -570,37 +581,56 @@ function drawMotorCanvas(options) {
     }
 
     let gridLayer = new Konva.Layer();
-    for (let i = 0; i <= options.grid.size.x; i++) {
-        gridLayer.add(new Konva.Line({
-            points: [options.grid.offset.x + i * options.grid.padding, options.grid.offset.y, options.grid.offset.x + i * options.grid.padding, gridHeight + options.grid.offset.y],
-            stroke: '#ddd',
-            strokeWidth: 0.5,
-        }));
+    if (shape === 'Kreis') {
+        for (let i = 0; i <= options.grid.size.x; i++) {
+            gridLayer.add(new Konva.Line({
+                points: [options.grid.offset.x + i * options.grid.padding, options.grid.offset.y, options.grid.offset.x + i * options.grid.padding, gridHeight + options.grid.offset.y],
+                stroke: '#ddd',
+                strokeWidth: 0.5,
+            }));
+        }
+        for (let j = 0; j <= options.grid.size.y; j++) {
+            gridLayer.add(new Konva.Line({
+                points: [options.grid.offset.x, options.grid.offset.y + j * options.grid.padding, gridWidth + options.grid.offset.x, options.grid.offset.y + j * options.grid.padding],
+                stroke: '#ddd',
+                strokeWidth: 0.5,
+            }));
+        }
     }
-    for (let j = 0; j <= options.grid.size.y; j++) {
-        gridLayer.add(new Konva.Line({
-            points: [options.grid.offset.x, options.grid.offset.y + j * options.grid.padding, gridWidth + options.grid.offset.x, options.grid.offset.y + j * options.grid.padding],
-            stroke: '#ddd',
-            strokeWidth: 0.5,
-        }));
-    }
+    
     motorCanvasStage.add(gridLayer);
 
     let pointLayer = new Konva.Layer();
+   
     for (let i = 0; i <= options.grid.size.x; i++) {
         for (let j = 0; j <= options.grid.size.y; j++) {
             let x = options.grid.offset.x + options.grid.padding * i;
             let y = options.grid.offset.y + options.grid.padding * j;
-            pointLayer.add(new Konva.Circle({
-                x: x,
-                y: y,
-                radius: 2,
-                fill: 'black',
-                stroke: 'black',
-                strokeWidth: 0
-            }));
+            if (shape === 'circle' && x * x + y * y < size.width * size.width) {
+                console.log("tuta canvas", x, y, size.width);
+                pointLayer.add(new Konva.Circle({
+                    x: x,
+                    y: y,
+                    radius: 2,
+                    fill: 'black',
+                    stroke: 'black',
+                    strokeWidth: 0
+                }));
+            } else {
+                pointLayer.add(new Konva.Circle({
+                        x: x,
+                        y: y,
+                        radius: 2,
+                        fill: 'red',
+                        stroke: 'red',
+                        strokeWidth: 0
+                }));
+
+            }
+            
         }
     }
+    
     motorCanvasStage.add(pointLayer);
 
     let shadowLayer = new Konva.Layer();
