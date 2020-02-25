@@ -27,74 +27,7 @@ export default class SettingScene extends SidebarScene {
 	
 	public onCreate(container: ScrollableContainer, entity: Entity): void {
 
-        const seperator = this.add.dom(0, 0, 'hr').setClassName('sidepar-seperator base-input-container');
-        const tabs = this.add.dom(0, 0).createFromHTML(` 
-        <div id = "settings"> </div>`);
-;
-        let createBtn = tabs.getChildByID("drag-source");
-        createBtn.addEventListener("dragstart", () => {
-            console.log("start");
-        });
-
-        let obj = tabs.getChildByID("object-container");
-        obj.addEventListener("dragover", (e) => {
-            e.preventDefault();
-            console.log("over");
-        });
-
-        obj.addEventListener("drop", () => {
-            console.log("end");
-            obj.appendChild(createBtn.cloneNode());
-         });		        
-        
-        const uiElements = entity.getAllComponents().map((component): Phaser.GameObjects.DOMElement[] => {
-            const infoTip = component.getInfo()
-                ? ` <div class="tooltip-left" data-tooltip="${component.getInfo()}"><i class="fa fa-xs fa-info-circle"></i></div>`
-                : '';
-            const title = this.add
-                .dom(0, 0)
-                .createFromHTML(
-                    `<h3>${component.name} <div class="component-title-info">[ID: ${component.id}]${infoTip}</div></h3>`,
-                )
-                .setClassName('component-title');
-
-            let deleteButton;
-            if (component.isDeletable()) {
-                deleteButton = this.add.dom(100, 30, 'div', '', '✖').setClassName('deleteButton');
-                deleteButton.setData('ignoreHeight', true);
-                deleteButton.addListener('click');
-                deleteButton.on('click', () => {
-                    EntityManager.removeComponent(entity.id, component);
-                    // alle Componenten der Enitität neu laden
-                    container.removeAll(true);
-                    container.reset();
-                    this.onCreate(container, entity);
-                });
-            }
-            else {
-                deleteButton = this.add.dom(0, 0, 'div', '')
-            }
-
-            const attributes = Object.keys(component).map(attribute => {
-                console.log(attribute);
-                if (component[attribute] instanceof Attribute) {
-                    return (component[attribute] as Attribute<any, any>).render(this, entity);
-                }
-
-                return undefined;
-            });
-
-            const attrs = attributes.map((element): Phaser.GameObjects.DOMElement | undefined => {
-                if (element) {
-                    return element.node;
-                }
-                return undefined;
-            });
-
-            return [title, deleteButton]; 
-        });
-		     
-        this.pack([seperator, tabs]); 
+       
     }
 
 

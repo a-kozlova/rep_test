@@ -54,11 +54,11 @@ function openSettings(event) {
     var connectionComponents = entity.components.filter(component => component.name == "Verbindung");
    
 
-    size = { "width": 100, "height": 150 };
+    //size = { "width": 100, "height": 150 };
     //var shape = "circle";
-    if (solidBodyComponents[0]) {
+   
         size = renderComponents[0].size.value;
-    }
+   
 
 
     drawSliders(motorComponents);
@@ -160,37 +160,38 @@ function bodySettings(components, renderComponents) {
         }
 
         $("#width").change(function () {
-            let newValue = $("#width").val(); // get the current value of the input field.
+            let newValue = parseInt($("#width").val()); // get the current value of the input field.
 
             if (renderComponents[0].shape.get() === 'Kreis') {
-                let newWidth = parseInt(newValue)
-                renderComponents[0].setSize({ width: newWidth, height: newWidth });
+                
+                renderComponents[0].setSize({ width: newValue, height: newValue });
 
                 //wenn SolidBody vorhanden, auch size setzen
                 if (components.length) {
-                    components[0].setSize({ width: newWidth, height: newWidth });
+                    components[0].setSize({ width: newValue, height: newValue });
                 }
-                $("#height").val(newWidth);
+                $("#height").val(newValue);
             } else {
-                renderComponents[0].setSize({ width: parseInt(newValue), height: renderComponents[0].size.value.height });
+                renderComponents[0].setSize({ width: newValue, height: renderComponents[0].size.value.height });
                 if (components.length) {
-                    components[0].setSize({ width: parseInt(newValue), height: renderComponents[0].size.value.height });
+                    components[0].setSize({ width: newValue, height: renderComponents[0].size.value.height });
                 }
             }                       
 
-            size.width = parseInt(newValue);
+            size = renderComponents[0].size.get();
             paintMotorCanvas();
             paintSensorCanvas();
         });
 
         $("#height").change(function () {
-            let newValue = $("#height").val(); // get the current value of the input field.
+            let newValue = parseInt($("#height").val()); // get the current value of the input field.
             if (components.length) {
-                components[0].setSize({ width: renderComponents[0].size.value.width, height: parseInt(newValue) });
+                components[0].setSize({ width: renderComponents[0].size.value.width, height: newValue });
             }
             //components[0].setSize({ width: renderComponents[0].size.value.width, height: parseInt(newValue) });
-            renderComponents[0].setSize({ width: renderComponents[0].size.value.width, height: parseInt(newValue) }); 
-            size.height = parseInt(newValue);
+            renderComponents[0].setSize({ width: renderComponents[0].size.value.width, height: newValue }); 
+
+            size = renderComponents[0].size.get();
             paintMotorCanvas();
             paintSensorCanvas();
         }); 
@@ -237,7 +238,7 @@ function bodySettings(components, renderComponents) {
 
 
 
-    //shape = renderComponents[0].shape.value;
+    shape = renderComponents[0].shape.get();
 
 }
 
@@ -461,6 +462,9 @@ $(document).on("motor:add", function (event, options) {
             position: options
         }
     });
+
+    console.log("motor opyat", options);
+
     document.dispatchEvent(ev);
     
 });
@@ -506,7 +510,9 @@ $(document).on("motor:upd", function (event, options) {
 var color = ["#00ffff", "#00ff00", "#ff00ff", "#cecece", "#cece00", "#ce00ce", "#00cece", "#c00ece", "#cec00e", "#0000ce"];
 
 var col = {};
+if (color.length < 0) {
 
+}
 
 function generateHexColor() {
     let colr = '#' + ((0.5 + 0.5 * Math.random()) * 0xFFFFFF << 0).toString(16);
@@ -547,7 +553,7 @@ function paintMotorCanvas() {
             padding: 20,
             size: {
                 x: 6,
-                y: 8
+                y: shape === 'Rechteck' ? 8 : 6 
             }
         }
     });
@@ -562,6 +568,7 @@ function drawMotorCanvas(options) {
 
     let gridHeight = options.grid.size.y * options.grid.padding;
     let gridWidth = options.grid.size.x * options.grid.padding;
+
     let corners = {
         x: {
             min: options.grid.offset.x,
@@ -581,23 +588,33 @@ function drawMotorCanvas(options) {
     }
 
     let gridLayer = new Konva.Layer();
-    if (shape === 'Kreis') {
-        for (let i = 0; i <= options.grid.size.x; i++) {
-            gridLayer.add(new Konva.Line({
-                points: [options.grid.offset.x + i * options.grid.padding, options.grid.offset.y, options.grid.offset.x + i * options.grid.padding, gridHeight + options.grid.offset.y],
-                stroke: '#ddd',
-                strokeWidth: 0.5,
-            }));
-        }
-        for (let j = 0; j <= options.grid.size.y; j++) {
-            gridLayer.add(new Konva.Line({
-                points: [options.grid.offset.x, options.grid.offset.y + j * options.grid.padding, gridWidth + options.grid.offset.x, options.grid.offset.y + j * options.grid.padding],
-                stroke: '#ddd',
-                strokeWidth: 0.5,
-            }));
-        }
-    }
+    let dirTriangle = new Konva.Line({
+        points: [ gridWidth / 2 + options.grid.offset.x, options.grid.offset.y + 5,  
+                  gridWidth / 2 + options.grid.offset.x + 10, options.grid.offset.y + 15,
+                  gridWidth / 2 + options.grid.offset.x - 10, options.grid.offset.y + 15 ], 
     
+        fill: '#ddd',
+        stroke: 'black',
+        strokeWidth: 1,
+        closed: true
+    });
+    
+    for (let i = 0; i <= options.grid.size.x; i++) {
+        gridLayer.add(new Konva.Line({
+            points: [options.grid.offset.x + i * options.grid.padding, options.grid.offset.y, options.grid.offset.x + i * options.grid.padding, gridHeight + options.grid.offset.y],
+            stroke: '#ddd',
+            strokeWidth: 0.5,
+        }));
+    }
+    for (let j = 0; j <= options.grid.size.y; j++) {
+        gridLayer.add(new Konva.Line({
+            points: [options.grid.offset.x, options.grid.offset.y + j * options.grid.padding, gridWidth + options.grid.offset.x, options.grid.offset.y + j * options.grid.padding],
+            stroke: '#ddd',
+            strokeWidth: 0.5,
+        }));
+    }
+
+    gridLayer.add(dirTriangle);
     motorCanvasStage.add(gridLayer);
 
     let pointLayer = new Konva.Layer();
@@ -606,23 +623,24 @@ function drawMotorCanvas(options) {
         for (let j = 0; j <= options.grid.size.y; j++) {
             let x = options.grid.offset.x + options.grid.padding * i;
             let y = options.grid.offset.y + options.grid.padding * j;
-            if (shape === 'circle' && x * x + y * y < size.width * size.width) {
-                console.log("tuta canvas", x, y, size.width);
-                pointLayer.add(new Konva.Circle({
-                    x: x,
-                    y: y,
-                    radius: 2,
-                    fill: 'black',
-                    stroke: 'black',
-                    strokeWidth: 0
-                }));
+            if (shape === 'Kreis') {
+                if ((x - startPoint.x) * (x - startPoint.x) + (y - startPoint.y) * (y - startPoint.y) <= gridWidth * gridHeight /4) {
+                    pointLayer.add(new Konva.Circle({
+                        x: x,
+                        y: y,
+                        radius: 2,
+                        fill: 'black',
+                        stroke: 'black',
+                        strokeWidth: 0
+                    }));
+                }
             } else {
                 pointLayer.add(new Konva.Circle({
                         x: x,
                         y: y,
                         radius: 2,
-                        fill: 'red',
-                        stroke: 'red',
+                        fill: 'black',
+                        stroke: 'black',
                         strokeWidth: 0
                 }));
 
@@ -635,7 +653,7 @@ function drawMotorCanvas(options) {
 
     let shadowLayer = new Konva.Layer();
     let shadowCircle = new Konva.Circle({
-        x: 40,
+        x: 120,
         y: 40,
         radius: 3,
         fill: 'red',
@@ -676,14 +694,27 @@ function drawMotorCanvas(options) {
         motorCanvasStage.batchDraw();
     });
     addMotor.on('dragend', (e) => {
+        let x = Math.min(corners.x.max, Math.max(corners.x.min, Math.round(addMotor.x() / options.grid.padding) * options.grid.padding));
+        let y = Math.min(corners.y.max, Math.max(corners.y.min, Math.round(addMotor.y() / options.grid.padding) * options.grid.padding));
 
-        // x: startPoint.x - ratioX * component.position.value.x,
-        //    y: startPoint.y - ratioY * component.position.value.y,
+       // let x = -1 * (Math.min(corners.x.max, Math.max(corners.x.min, Math.round(addMotor.x() / options.grid.padding) * options.grid.padding)) - startPoint.x) / ratioX;
+       // let y = -1 * (Math.min(corners.y.max, Math.max(corners.y.min, Math.round(addMotor.y() / options.grid.padding) * options.grid.padding)) - startPoint.y) / ratioY;
 
-        $(document).trigger('motor:add', [{
-            x: -1 * (Math.min(corners.x.max, Math.max(corners.x.min, Math.round(addMotor.x() / options.grid.padding) * options.grid.padding)) - startPoint.x) / ratioX,
-            y: -1 * (Math.min(corners.y.max, Math.max(corners.y.min, Math.round(addMotor.y() / options.grid.padding) * options.grid.padding)) - startPoint.y) / ratioY
-        }]);
+        if (shape === 'Kreis') {
+            if ((x - startPoint.x) * (x - startPoint.x) + (y - startPoint.y) * (y - startPoint.y) <= gridWidth * gridHeight / 4) {
+                $(document).trigger('motor:add', [{
+                    x: -1 * (x - startPoint.x) / ratioX,
+                    y: -1 * (y - startPoint.y) / ratioY
+                }]);
+            }
+        } else {
+            $(document).trigger('motor:add', [{
+                x: -1 * (x - startPoint.x) / ratioX,
+                y: -1 * (y - startPoint.y) / ratioY
+            }]);
+        }
+
+        
         addMotor.position({
             x: 190,
             y: 40
@@ -692,10 +723,26 @@ function drawMotorCanvas(options) {
         motorCanvasStage.batchDraw();
     });
     addMotor.on('dragmove', (e) => {
-        shadowCircle.position({
-            x: Math.min(corners.x.max, Math.max(corners.x.min, Math.round(addMotor.x() / options.grid.padding) * options.grid.padding)),
-            y: Math.min(corners.y.max, Math.max(corners.y.min, Math.round(addMotor.y() / options.grid.padding) * options.grid.padding))
-        });
+        console.log("tut", shape);
+        let x = Math.min(corners.x.max, Math.max(corners.x.min, Math.round(addMotor.x() / options.grid.padding) * options.grid.padding));
+        let y = Math.min(corners.y.max, Math.max(corners.y.min, Math.round(addMotor.y() / options.grid.padding) * options.grid.padding));
+
+        if (shape === 'Kreis') {
+            
+          
+            if ((x - startPoint.x) * (x - startPoint.x) + (y - startPoint.y) * (y - startPoint.y) <= gridWidth * gridHeight / 4) {
+                shadowCircle.position({
+                    x: x,
+                    y: y 
+                });
+            }
+        } else {
+            shadowCircle.position({
+                x: Math.min(corners.x.max, Math.max(corners.x.min, Math.round(addMotor.x() / options.grid.padding) * options.grid.padding)),
+                y: Math.min(corners.y.max, Math.max(corners.y.min, Math.round(addMotor.y() / options.grid.padding) * options.grid.padding))
+            });
+        }
+        
         motorCanvasStage.batchDraw();
     });
     optionsLayer.add(addMotor);
@@ -705,10 +752,18 @@ function drawMotorCanvas(options) {
     let colorCounter = 0;
 
     options.components.forEach(component => {
-        col[component.id] = generateHexColor();
+
+        let XX = startPoint.x - ratioX * component.position.value.x;
+        let YY = startPoint.y - ratioY * component.position.value.y
+
+        let x = Math.min(corners.x.max, Math.max(corners.x.min, Math.round(XX / options.grid.padding) * options.grid.padding));
+        let y = Math.min(corners.y.max, Math.max(corners.y.min, Math.round(YY / options.grid.padding) * options.grid.padding));
+
+
+
         let motor = new Konva.Circle({
-            x: startPoint.x - ratioX * component.position.value.x,
-            y: startPoint.y - ratioY * component.position.value.y,
+            x: x,
+            y: y,
             radius: 7,
             fill: color[colorCounter], //col[component.id],
             stroke: 'black',
