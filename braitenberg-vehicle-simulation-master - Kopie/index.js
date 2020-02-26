@@ -1,4 +1,5 @@
-﻿
+﻿'use strict'
+
 var entity = null;
 //var color = ["#00ffff", "#00ff00", "#ff00ff", "#cecece", "#cece00", "#ce00ce", "#00cece", "#c00ece", "#cec00e", "#0000ce"];
 var color = [];
@@ -8,6 +9,7 @@ let size = { 'width': 200, 'height': 250 };
 var shape = 'Kreis';
 let rangeFA = 0;
 let angleFA = 0;
+let orientationFA = 0;
 let reactionFA = "Hindernis";
 let defaultSpeedFA = 0;
 let maxSpeedFA = 20;
@@ -341,7 +343,7 @@ function sensorSettings(components) {
         $('#orientation' + component.id).change(function () {
             let newValue = parseInt($(this).val()); // get the current value of the input field.
             component.setOrientation(newValue);
-            //event.preventDefault();
+            event.preventDefault();
         });
     });
 
@@ -351,6 +353,8 @@ function sensorSettings(components) {
         '<input id = "rangeFA" style = "background: white"; margin-bottom:10px" placeholder = "' + rangeFA + '">');
     $("#sensorAngleFA").append(
         '<input id = "angleFA" style = "background:  white"; margin-bottom:10px" placeholder = "' + angleFA + '">');
+    $("#sensorOrientationFA").append(
+        '<input id = "orientationFA" style = "background:  white"; margin-bottom:10px" placeholder = "' + orientationFA + '">');
     $("#sensorReactionFA").append(
         '<div class="switch-btn switch-reaction" id = "reactFA" style = "margin-bottom:10px">');
     switch (reactionFA) {
@@ -364,20 +368,30 @@ function sensorSettings(components) {
         }
     }
 
-    $('#rangeFA').on('input', function () {
-        let newValue = $(this).val(); // get the current value of the input field.
+    $('#rangeFA').change( function () {
+        let newValue = parseInt($(this).val()); // get the current value of the input field.
         rangeFA = newValue;
         components.forEach((component, index) => {
             component.setRange(newValue);
         });
     });
 
-    $('#angleFA').on('input', function () {
-        let newValue = $(this).val(); // get the current value of the input field.
+    $('#angleFA').change( function () {
+        let newValue = parseInt($(this).val()); // get the current value of the input field.
         angleFA = newValue;
         components.forEach((component, index) => {
             component.setAngle(newValue);
         });
+    });
+
+    $('#orientationFA').on('change', function (event) {
+        let newValue = parseInt($(this).val()); // get the current value of the input field.
+        orientationFA = newValue;
+        components.forEach((component, index) => {
+            component.setOrientation(newValue);
+        });
+        event.preventDefault();
+
     });
 
     $('#reactFA').click(function () {
