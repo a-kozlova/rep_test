@@ -42,6 +42,10 @@ export default class LoadingScene extends Phaser.Scene {
     this.load.image('rotate', rotate);
 
     this.load.spritesheet('button', buttonSpriteSheet, { frameWidth: 50, frameHeight: 48 });
+
+	var url;  
+    url = 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexdragrotateplugin.min.js';
+    this.load.plugin('rexdragrotateplugin', url, true);
   }
 
   public create(): void {
