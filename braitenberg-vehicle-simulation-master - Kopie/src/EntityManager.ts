@@ -81,7 +81,7 @@ class EntityManager {
     const entity = this.entities[entityId];
 
     if (!entity) {
-      new Noty({ text: `Entität mit ID ${entityId} konnte nicht gefunden werden` }).show();
+      new Noty({ text: `Entity with ID ${entityId} could not be found.` }).show();
       return undefined;
     }
 
@@ -108,7 +108,7 @@ class EntityManager {
     const entity = this.entities[entityId];
 
     if (!entity) {
-      new Noty({ text: `Entität mit ID ${entityId} konnte nicht gefunden werden` }).show();
+      new Noty({ text: `Entity with ID ${entityId} could not be found.` }).show();
       return;
     }
 

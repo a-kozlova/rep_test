@@ -37,7 +37,7 @@ export default class ReactionSystem extends System {
 
     this.compute = debounce(() => {
       const noty = new Noty({
-        text: '<i class="fa fa-sync-alt fa-spin"></i> Berechnung wird durchgeführt...',
+        text: '<i class="fa fa-sync-alt fa-spin"></i> Calculation is being performed...',
         timeout: false,
         animation: {
           open: null,

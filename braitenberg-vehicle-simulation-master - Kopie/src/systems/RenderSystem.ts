@@ -65,9 +65,11 @@ export default class RenderSystem extends System {
 
     if (entity) {
       const transform = entity.getComponent(ComponentType.TRANSFORMABLE) as TransformableComponent;
-      const render = entity.getComponent(ComponentType.RENDER) as RenderComponent;
+        const render = entity.getComponent(ComponentType.RENDER) as RenderComponent;
+
+      const offsetX = render.shape.get() === 'Kreis' ? -render.size.get().width / 2: -render.size.get().width;
       const deleteBtnOffset = Phaser.Physics.Matter.Matter.Vector.rotate(
-              { x: -render.size.get().width - 15, y: render.size.get().width},
+              { x: offsetX - 15, y: render.size.get().width},
             transform.angle.get());
 
         const rotateBtnOffset = Phaser.Physics.Matter.Matter.Vector.rotate(

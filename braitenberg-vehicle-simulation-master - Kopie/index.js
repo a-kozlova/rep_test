@@ -1,11 +1,15 @@
-﻿
+﻿'use strict'
+
 var entity = null;
 //var color = ["#00ffff", "#00ff00", "#ff00ff", "#cecece", "#cece00", "#ce00ce", "#00cece", "#c00ece", "#cec00e", "#0000ce"];
+var color = [];
 let motorComponents = [];
 let sensorComponents = [];
-let size = { "width": 200, "height": 250 };
+let size = { 'width': 200, 'height': 250 };
+var shape = 'Kreis';
 let rangeFA = 0;
 let angleFA = 0;
+let orientationFA = 0;
 let reactionFA = "Hindernis";
 let defaultSpeedFA = 0;
 let maxSpeedFA = 20;
@@ -23,15 +27,15 @@ $(document).on('entity:delete', function (event, options) {
 });
 
 
- $('#deleteEntity').on('click', () => {
-        $(document).trigger('entity:delete', [entity]);
- });
+$('#deleteEntity').on('click', () => {
+    $(document).trigger('entity:delete', [entity]);
+});
 
-function resetSettings() {           
+function resetSettings() {
 
-//$('.switch-btn').removeClass('switch-on');
+    //$('.switch-btn').removeClass('switch-on');
 
-$('input:radio').prop('checked', false);
+    $('input:radio').prop('checked', false);
 
 }
 
@@ -39,8 +43,8 @@ function openSettings(event) {
     closeNav();
     resetSettings();
     //closeSettings();
-    document.getElementById("myEntitySettings").style.width = "256px";
-    document.getElementById("createEntityMenu").style.marginRight = "306px";
+    document.getElementById("myEntitySettings").style.width = "300px";
+    document.getElementById("createEntityMenu").style.marginRight = "356px";
 
     entity = event.detail;                  // die aufgerufene Entität  
 
@@ -51,17 +55,34 @@ function openSettings(event) {
     var sourceComponents = entity.components.filter(component => component.name == "Quelle");
     var transformableComponents = entity.components.filter(component => component.name == "Transform");
     var connectionComponents = entity.components.filter(component => component.name == "Verbindung");
-   
 
-    size = { "width": 100, "height": 150 };
+
+    //size = { "width": 100, "height": 150 };
     //var shape = "circle";
-    if (solidBodyComponents[0]) {
-        size = solidBodyComponents[0].size.value;
-    }
+
+    size = renderComponents[0].size.value;
+
 
 
     drawSliders(motorComponents);
 
+    
+
+    var smNumber = motorComponents.length > sensorComponents.length ? motorComponents.length : sensorComponents.length;
+    console.log("color length", color.lenght, smNumber);
+    if (color.length < smNumber) {
+        let i = color.length != 0 ? color.length: 0;
+
+        for (; i < smNumber; i++) {
+            console.log("color", i);
+            let temp = generateHexColor();
+            while (color.find(item => item == temp)) {
+                temp = generateHexColor();
+            }
+            color[i] = temp;
+        }
+    }
+    console.log("zweta", color);
 
     sensorSettings(sensorComponents);
     bodySettings(solidBodyComponents, renderComponents);
@@ -70,28 +91,39 @@ function openSettings(event) {
     paintSensorCanvas();
 }
 
+
+function generateHexColor() {
+    // Math.pow is slow, use constant instead.
+    var color = Math.floor(Math.random() * 16777216).toString(16);
+    // Avoid loops.
+    return '#000000'.slice(0, -color.length) + color;
+}
+
+
+
+
 function emissionSettings(sourceComponents) {
     $('#emRange').remove();
     $('#emissionRange').after('<input id = "emRange" class="col-4" style = "height: 25px;">');
 
-	$('#emRange').attr('value', sourceComponents[0].range.value);
-    if (sourceComponents[0].isActive){
+    $('#emRange').attr('value', sourceComponents[0].range.value);
+    if (sourceComponents[0].isActive) {
         $('#emis.switch-btn').addClass("switch-on");
 
         $("#barrier").prop('disabled', false);
         $("#sour").prop('disabled', false);
         $("#gaus").prop('disabled', false);
         $("#flat").prop('disabled', false);
-        if(sourceComponents[0].substance.value ==="Licht") {
+        if (sourceComponents[0].substance.value === "Licht") {
             $("#sour").prop('checked', true);
             $("#barrier").prop('checked', false);
         }
-        if(sourceComponents[0].substance.value ==="Hindernis") {
+        if (sourceComponents[0].substance.value === "Hindernis") {
             $("#sour").prop('checked', false);
             $("#barrier").prop('checked', true);
         }
 
-        if(sourceComponents[0].emissionType.value ==="GAUSSIAN") {
+        if (sourceComponents[0].emissionType.value === "GAUSSIAN") {
             $("#gaus").prop('checked', true);
             $("#flat").prop('checked', false);
             $('#emRange').prop('disabled', false);
@@ -102,7 +134,7 @@ function emissionSettings(sourceComponents) {
             });
         }
 
-        if(sourceComponents[0].emissionType.value ==="FLAT") {
+        if (sourceComponents[0].emissionType.value === "FLAT") {
             $("#gaus").prop('checked', false);
             $("#flat").prop('checked', true);
             $('#emRange').prop('disabled', true);
@@ -128,7 +160,7 @@ function emissionSettings(sourceComponents) {
     }
 
 }
-   
+
 
 function bodySettings(components, renderComponents) {
 
@@ -137,97 +169,104 @@ function bodySettings(components, renderComponents) {
     $('#bodySize').children("input").each((idx, child) => {
         child.remove();
     });
-  
+
     // input erneut erzeugen
     $('#bodyWidth').after('<input id="width" class="col-3">');
     $('#bodyHeight').after('<input id="height" class="col-3">');
 
-        $("#width").val(renderComponents[0].size.value.width);
-        $("#height").val(renderComponents[0].size.value.height);
+    $("#width").val(renderComponents[0].size.value.width);
+    $("#height").val(renderComponents[0].size.value.height);
 
-        // die aktuelle Breite, Hoehe und Form der Entität anzeigen
-        if (renderComponents[0].shape.value === "Rechteck") {
-              $("#height").prop('disabled', false);
-		      $("#height").removeClass('disabled');
-              $("#rectangle").prop('checked', true);
-              $("#circle").prop('checked', false);
-        } else if (renderComponents[0].shape.value === "Kreis") {
-              $("#circle").prop('checked', true);
-              $("#rectangle").prop('checked', false);
-              $("#height").prop('disabled', true);
-		      $("#height").addClass('disabled');
+    // die aktuelle Breite, Hoehe und Form der Entität anzeigen
+    if (renderComponents[0].shape.value === "Rechteck") {
+        $("#height").prop('disabled', false);
+        $("#height").removeClass('disabled');
+        $("#rectangle").prop('checked', true);
+        $("#circle").prop('checked', false);
+    } else if (renderComponents[0].shape.value === "Kreis") {
+        $("#circle").prop('checked', true);
+        $("#rectangle").prop('checked', false);
+        $("#height").prop('disabled', true);
+        $("#height").addClass('disabled');
+    }
+
+    $("#width").change(function () {
+        let newValue = parseInt($("#width").val()); // get the current value of the input field.
+
+        if (renderComponents[0].shape.get() === 'Kreis') {
+
+            renderComponents[0].setSize({ width: newValue, height: newValue });
+
+            //wenn SolidBody vorhanden, auch size setzen
+            if (components.length) {
+                components[0].setSize({ width: newValue, height: newValue });
+            }
+            $("#height").val(newValue);
+        } else {
+            renderComponents[0].setSize({ width: newValue, height: renderComponents[0].size.value.height });
+            if (components.length) {
+                components[0].setSize({ width: newValue, height: renderComponents[0].size.value.height });
+            }
         }
 
-        $("#width").change(function () {
-            let newValue = $("#width").val(); // get the current value of the input field.
+        size = renderComponents[0].size.get();
+        paintMotorCanvas();
+        paintSensorCanvas();
+    });
 
-            if (renderComponents[0].shape.get() === 'Kreis') {
-                let newWidth = parseInt(newValue)
-                if (components.length) {
-                    components[0].setSize({ width: newWidth, height: newWidth });
-                }
-                renderComponents[0].setSize({ width: newWidth, height: newWidth });
-                $("#height").val(newWidth);
-            } else {
-                if (components.length) {
-                    components[0].setSize({ width: parseInt(newValue), height: renderComponents[0].size.value.height });
-                }
-                renderComponents[0].setSize({ width: parseInt(newValue), height: renderComponents[0].size.value.height });  
-            }                       
+    $("#height").change(function () {
+        let newValue = parseInt($(this).val()); // get the current value of the input field.
+        if (components.length) {
+            components[0].setSize({ width: renderComponents[0].size.value.width, height: newValue });
+        }
+        //components[0].setSize({ width: renderComponents[0].size.value.width, height: parseInt(newValue) });
+        renderComponents[0].setSize({ width: renderComponents[0].size.value.width, height: newValue });
 
-            size.width = parseInt(newValue);
-            paintMotorCanvas();
-            paintSensorCanvas();
-        });
-
-        $("#height").change(function () {
-            let newValue = $("#height").val(); // get the current value of the input field.
-            if (components.length) {
-                components[0].setSize({ width: renderComponents[0].size.value.width, height: parseInt(newValue) });
-            }
-            components[0].setSize({ width: renderComponents[0].size.value.width, height: parseInt(newValue) });
-            renderComponents[0].setSize({ width: renderComponents[0].size.value.width, height: parseInt(newValue) }); 
-            size.height = parseInt(newValue);
-            paintMotorCanvas();
-            paintSensorCanvas();
-        }); 
+        size = renderComponents[0].size.get();
+        paintMotorCanvas();
+        paintSensorCanvas();
+    });
 
 
     switch (renderComponents[0].asset.value) {
-        case 13421772: 
+        case 13421772:
             $("#grey").prop('checked', true);
             break;
-    
-        case 13713746: 
+
+        case 13713746:
             $("#red").prop('checked', true);
             break;
-    
-        case 5744185: 
+
+        case 5744185:
             $("#green").prop('checked', true);
             break;
-    
-        case 1791363: 
+
+        case 1791363:
             $("#blue").prop('checked', true);
             break;
     }
 
-// wenn SolidBodyComponent vorhanden, den Button auf ON setzten
+
+
+    // wenn SolidBodyComponent vorhanden, den Button auf ON setzten
     if (components.length) {
-        $("#static").prop('disabled', false); 
+        $("#static").prop('disabled', false);
         $('#solidBody.switch-btn').addClass("switch-on");
 
-        if (components[0].isStatic.get()){
+        if (components[0].isStatic.get()) {
             $('#static.switch-btn').addClass("switch-on");
         } else {
             $('#static.switch-btn').removeClass("switch-on");
         }
 
     } else {
-        $('#solidBody.switch-btn').removeClass("switch-on");            
+        $('#solidBody.switch-btn').removeClass("switch-on");
         $('#static.switch-btn').removeClass("switch-on");
 
-       return
+        return
     }
+    
+    shape = renderComponents[0].shape.get();
 
 }
 
@@ -237,7 +276,7 @@ function sensorSettings(components) {
     if ($('#sensorRow  > form').children().length) {
         $('#sensorRow > form').children().each((idx, child) => {
             child.remove('input');
-        });    
+        });
     }
     if ($('#sensorRowForAll  > form').children().length) {
         $('#sensorRowForAll > form').children().each((idx, child) => {
@@ -260,6 +299,9 @@ function sensorSettings(components) {
         $("#sensorReaction").append(
             '<div class="switch-btn switch-reaction" id = "react' + component.id + '" style = "background: ' + color[index] +
             '; margin-bottom:10px">');
+        $("#sensorOrientation").append(
+            '<input id = "orientation' + component.id + '" style = "background: ' + color[index] +
+            '; margin-bottom:10px" placeholder = "' + component.orientation.value * 180 / Math.PI  + '">');
 
         switch (component.reactsTo.get()) {
             case 'Licht': {
@@ -272,85 +314,104 @@ function sensorSettings(components) {
             }
         }
 
-            //switch reaction
-        $('#react' + component.id).click(function() {
+        //switch reaction
+        $('#react' + component.id).click(function () {
             $(this).toggleClass('switch-on');
             if ($(this).hasClass('switch-on')) {
-                  $(this).trigger('on.switch');
-                  component.setReaction('source');
+                $(this).trigger('on.switch');
+                component.setReaction('source');
             } else {
-                  $(this).trigger('off.switch');
-                  component.setReaction('barrier');
+                $(this).trigger('off.switch');
+                component.setReaction('barrier');
             }
 
         });
-        
-            
-        $('#range' + component.id).on('input', function (event) {
-            let newValue = $(this).val(); // get the current value of the input field.
+
+
+        $('#range' + component.id).change(function (event) {
+            let newValue = parseInt($(this).val()); // get the current value of the input field.
             component.setRange(newValue);
+            //event.preventDefault();
+        });
+
+        $('#angle' + component.id).change(function () {
+            let newValue = parseInt($(this).val()); // get the current value of the input field.
+            component.setAngle(newValue);
             event.preventDefault();
         });
 
-        $('#angle' + component.id).on('input', function () {
-            let newValue = $(this).val(); // get the current value of the input field.
-            component.setAngle(newValue);
-        });  
+        $('#orientation' + component.id).change(function () {
+            let newValue = parseInt($(this).val()); // get the current value of the input field.
+            component.setOrientation(newValue);
+            event.preventDefault();
+        });
     });
 
-//For all
+    //For all
 
     $("#sensorRangeFA").append(
         '<input id = "rangeFA" style = "background: white"; margin-bottom:10px" placeholder = "' + rangeFA + '">');
     $("#sensorAngleFA").append(
         '<input id = "angleFA" style = "background:  white"; margin-bottom:10px" placeholder = "' + angleFA + '">');
+    $("#sensorOrientationFA").append(
+        '<input id = "orientationFA" style = "background:  white"; margin-bottom:10px" placeholder = "' + orientationFA + '">');
     $("#sensorReactionFA").append(
-            '<div class="switch-btn switch-reaction" id = "reactFA" style = "margin-bottom:10px">');
+        '<div class="switch-btn switch-reaction" id = "reactFA" style = "margin-bottom:10px">');
     switch (reactionFA) {
-            case 'Licht': {
-                $('#reactFA').addClass('switch-on');
-                break;
-            }
-            case 'Hindernis': {
-                $('#reactFA').removeClass('switch-on');
-                break;
-            }
+        case 'Licht': {
+            $('#reactFA').addClass('switch-on');
+            break;
         }
-    
-    $('#rangeFA').on('input', function () {
-        let newValue = $(this).val(); // get the current value of the input field.
+        case 'Hindernis': {
+            $('#reactFA').removeClass('switch-on');
+            break;
+        }
+    }
+
+    $('#rangeFA').change( function () {
+        let newValue = parseInt($(this).val()); // get the current value of the input field.
         rangeFA = newValue;
         components.forEach((component, index) => {
-            component.setRange(newValue);       
-        });        
+            component.setRange(newValue);
+        });
     });
 
-    $('#angleFA').on('input', function () {
-        let newValue = $(this).val(); // get the current value of the input field.
+    $('#angleFA').change( function () {
+        let newValue = parseInt($(this).val()); // get the current value of the input field.
         angleFA = newValue;
         components.forEach((component, index) => {
             component.setAngle(newValue);
         });
     });
 
-        $('#reactFA').click(function() {
-            $(this).toggleClass('switch-on');
-            if ($(this).hasClass('switch-on')) {
-                  $(this).trigger('on.switch');                  
-                  components.forEach((component, index) => {
-                      component.setReaction('source');
-                  });
-                  reactionFA = "Licht";
-            } else {
-                  $(this).trigger('off.switch');
-                  components.forEach((component, index) => {
-                      component.setReaction('barrier');
-                  });    
-                  reactionFA = "Hindernis";              
-            }
-            let event = new CustomEvent('componentChanged', { detail: entity });
-            document.dispatchEvent(event);
+    $('#orientationFA').on('change', function (event) {
+        let newValue = parseInt($(this).val()); // get the current value of the input field.
+        orientationFA = newValue;
+        components.forEach((component, index) => {
+            component.setOrientation(newValue);
         });
+        event.preventDefault();
+
+    });
+
+    $('#reactFA').click(function () {
+        $(this).toggleClass('switch-on');
+        if ($(this).hasClass('switch-on')) {
+            $(this).trigger('on.switch');
+            components.forEach((component, index) => {
+                component.setReaction('source');
+            });
+            reactionFA = "Licht";
+        } else {
+            $(this).trigger('off.switch');
+            components.forEach((component, index) => {
+                component.setReaction('barrier');
+            });
+            reactionFA = "Hindernis";
+        }
+        let event = new CustomEvent('componentChanged', { detail: entity });
+        document.dispatchEvent(event);
+    });
 
 }
 
@@ -367,9 +428,9 @@ function drawSliders(components) {
     components.forEach(component => {
         $("#slidecontainer").append('<div id = "' + component.id + '" class="slider">');
     });
-        $("#slidecontainerForAll").append('<div id = "sliderForAll" class="slider">');
- 
-    components.forEach((component,index) => {
+    $("#slidecontainerForAll").append('<div id = "sliderForAll" class="slider">');
+
+    components.forEach((component, index) => {
         var slider = $(function () {
             $("#" + component.id).slider({
                 range: true,
@@ -379,35 +440,35 @@ function drawSliders(components) {
                 values: [component.defaultSpeed.get(), component.maxSpeed.get()],
                 slide: function (event, ui) {
 
-                $("#" + component.id).val("$" + ui.values[0] + " - $" + ui.values[1]);
-                component.setDefaultSpeed(ui.values[0]);
-                component.setMaxSpeed(ui.values[1]);
+                    $("#" + component.id).val("$" + ui.values[0] + " - $" + ui.values[1]);
+                    component.setDefaultSpeed(ui.values[0]);
+                    component.setMaxSpeed(ui.values[1]);
                 }
             });
             $("#" + component.id + " .ui-widget-header").css('background', color[index]);
-            
-        });    
+
+        });
     });
-$(function () {
-            $("#sliderForAll").slider({
-                range: true,
-                min: 0,
-                max: 100,
-                step: 10,
-                values: [defaultSpeedFA, maxSpeedFA],
-                slide: function (event, ui) {
+    $(function () {
+        $("#sliderForAll").slider({
+            range: true,
+            min: 0,
+            max: 100,
+            step: 10,
+            values: [defaultSpeedFA, maxSpeedFA],
+            slide: function (event, ui) {
 
                 $("#sliderForAll").val("$" + ui.values[0] + " - $" + ui.values[1]);
-                components.forEach((component, index)=>{
+                components.forEach((component, index) => {
                     component.setDefaultSpeed(ui.values[0]);
                     component.setMaxSpeed(ui.values[1]);
-                $( "#" + component.id + "" ).slider('values', [ui.values[0],ui.values[1]]);
-                });  
-                    defaultSpeedFA = ui.values[0];
-                    maxSpeedFA = ui.values[1]; 
-               }
-            });            
-        }); 
+                    $("#" + component.id + "").slider('values', [ui.values[0], ui.values[1]]);
+                });
+                defaultSpeedFA = ui.values[0];
+                maxSpeedFA = ui.values[1];
+            }
+        });
+    });
 }
 
 
@@ -425,11 +486,11 @@ function closeSettings() {
     document.getElementById("myEntitySettings").style.width = "0";
     document.getElementById("createEntityMenu").style.marginRight = "60px";
     $(document).trigger('settings:closed', []);
-}     
+}
 
 function openNav() {
     closeSettings();
-    document.getElementById("mySidenav").style.width = "256px";		
+    document.getElementById("mySidenav").style.width = "300px";
 }
 
 function closeNav() {
@@ -451,8 +512,9 @@ $(document).on("motor:add", function (event, options) {
             position: options
         }
     });
+
     document.dispatchEvent(ev);
-    
+
 });
 
 //del motor event
@@ -464,7 +526,7 @@ $(document).on("motor:del", function (event, options) {
 
     let ev = new CustomEvent("deleteMotor", {
         detail: {
-            component:  motorComponents[index]
+            component: motorComponents[index]
         }
     });
     document.dispatchEvent(ev);
@@ -479,6 +541,8 @@ $(document).on("motor:upd", function (event, options) {
     }).indexOf(options.id);
 
     motorComponents[index].setPosition(options.x, options.y);
+    console.log("motor update", options);
+
 });
 
 
@@ -493,15 +557,7 @@ $(document).on("motor:upd", function (event, options) {
 
 //color array this is unsafe because the array is of fixed size!
 //this needs a better solution!
-var color = ["#00ffff", "#00ff00", "#ff00ff", "#cecece", "#cece00", "#ce00ce", "#00cece", "#c00ece", "#cec00e", "#0000ce"];
 
-var col = {};
-
-
-function generateHexColor() {
-    let colr = '#' + ((0.5 + 0.5 * Math.random()) * 0xFFFFFF << 0).toString(16);
-    return colr;
-}
 
 
 var motorCanvasStage = new Konva.Stage({
@@ -516,13 +572,13 @@ function paintMotorCanvas() {
 
     motorComponents.forEach(motor => {
         if (Math.abs(motor.position.value.x) > size.width / 2) {
-            motor.setPosition(size.width / 2, motor.position.value.y )
+            motor.setPosition(size.width / 2, motor.position.value.y)
         }
         if (Math.abs(motor.position.value.y) > size.height / 2) {
             motor.setPosition(motor.position.value.x, size.height / 2)
-        }    
+        }
     });
-   
+
 
     drawMotorCanvas({
         components: motorComponents, //entity.components.filter(component => component.name == "Motor"),
@@ -537,7 +593,7 @@ function paintMotorCanvas() {
             padding: 20,
             size: {
                 x: 6,
-                y: 8
+                y: shape === 'Rechteck' ? 8 : 6
             }
         }
     });
@@ -548,8 +604,11 @@ function drawMotorCanvas(options) {
     motorCanvasStage.width(options.width);
     motorCanvasStage.height(options.height);
 
+
+
     let gridHeight = options.grid.size.y * options.grid.padding;
     let gridWidth = options.grid.size.x * options.grid.padding;
+
     let corners = {
         x: {
             min: options.grid.offset.x,
@@ -569,6 +628,17 @@ function drawMotorCanvas(options) {
     }
 
     let gridLayer = new Konva.Layer();
+    let dirTriangle = new Konva.Line({
+        points: [gridWidth / 2 + options.grid.offset.x, options.grid.offset.y + 5,
+        gridWidth / 2 + options.grid.offset.x + 10, options.grid.offset.y + 15,
+        gridWidth / 2 + options.grid.offset.x - 10, options.grid.offset.y + 15],
+
+        fill: '#ddd',
+        stroke: 'black',
+        strokeWidth: 1,
+        closed: true
+    });
+
     for (let i = 0; i <= options.grid.size.x; i++) {
         gridLayer.add(new Konva.Line({
             points: [options.grid.offset.x + i * options.grid.padding, options.grid.offset.y, options.grid.offset.x + i * options.grid.padding, gridHeight + options.grid.offset.y],
@@ -583,36 +653,53 @@ function drawMotorCanvas(options) {
             strokeWidth: 0.5,
         }));
     }
+
+    gridLayer.add(dirTriangle);
     motorCanvasStage.add(gridLayer);
 
     let pointLayer = new Konva.Layer();
+
     for (let i = 0; i <= options.grid.size.x; i++) {
         for (let j = 0; j <= options.grid.size.y; j++) {
             let x = options.grid.offset.x + options.grid.padding * i;
             let y = options.grid.offset.y + options.grid.padding * j;
-            pointLayer.add(new Konva.Circle({
-                x: x,
-                y: y,
-                radius: 2,
-                fill: 'black',
-                stroke: 'black',
-                strokeWidth: 0
-            }));
+            if (shape === 'Kreis') {
+                if ((x - startPoint.x) * (x - startPoint.x) + (y - startPoint.y) * (y - startPoint.y) <= gridWidth * gridHeight / 4) {
+                    pointLayer.add(new Konva.Circle({
+                        x: x,
+                        y: y,
+                        radius: 2,
+                        fill: 'black',
+                        stroke: 'black',
+                        strokeWidth: 0
+                    }));
+                }
+            } else {
+                pointLayer.add(new Konva.Circle({
+                    x: x,
+                    y: y,
+                    radius: 2,
+                    fill: 'black',
+                    stroke: 'black',
+                    strokeWidth: 0
+                }));
+            }
         }
     }
+
     motorCanvasStage.add(pointLayer);
 
     let shadowLayer = new Konva.Layer();
     let shadowCircle = new Konva.Circle({
-        x: 40,
+        x: 120,
         y: 40,
         radius: 3,
         fill: 'red',
         stroke: 'black',
         strokeWidth: 0,
         id: 'shadowCircle'
-
     });
+
     shadowCircle.hide();
     shadowLayer.add(shadowCircle);
     motorCanvasStage.add(shadowLayer);
@@ -645,14 +732,23 @@ function drawMotorCanvas(options) {
         motorCanvasStage.batchDraw();
     });
     addMotor.on('dragend', (e) => {
+        let x = Math.min(corners.x.max, Math.max(corners.x.min, Math.round(addMotor.x() / options.grid.padding) * options.grid.padding));
+        let y = Math.min(corners.y.max, Math.max(corners.y.min, Math.round(addMotor.y() / options.grid.padding) * options.grid.padding));
 
-        // x: startPoint.x - ratioX * component.position.value.x,
-        //    y: startPoint.y - ratioY * component.position.value.y,
-
-        $(document).trigger('motor:add', [{
-            x: -1 * (Math.min(corners.x.max, Math.max(corners.x.min, Math.round(addMotor.x() / options.grid.padding) * options.grid.padding)) - startPoint.x) / ratioX,
-            y: -1 * (Math.min(corners.y.max, Math.max(corners.y.min, Math.round(addMotor.y() / options.grid.padding) * options.grid.padding)) - startPoint.y) / ratioY
-        }]);
+        if (shape === 'Kreis') {
+            if ((x - startPoint.x) * (x - startPoint.x) + (y - startPoint.y) * (y - startPoint.y) <= gridWidth * gridHeight / 4) {
+                $(document).trigger('motor:add', [{
+                    x: -1 * (x - startPoint.x) / ratioX,
+                    y: -1 * (y - startPoint.y) / ratioY
+                }]);
+            }
+        } else {
+            $(document).trigger('motor:add', [{
+                x: -1 * (x - startPoint.x) / ratioX,
+                y: -1 * (y - startPoint.y) / ratioY
+            }]);
+        }
+        
         addMotor.position({
             x: 190,
             y: 40
@@ -661,10 +757,24 @@ function drawMotorCanvas(options) {
         motorCanvasStage.batchDraw();
     });
     addMotor.on('dragmove', (e) => {
-        shadowCircle.position({
-            x: Math.min(corners.x.max, Math.max(corners.x.min, Math.round(addMotor.x() / options.grid.padding) * options.grid.padding)),
-            y: Math.min(corners.y.max, Math.max(corners.y.min, Math.round(addMotor.y() / options.grid.padding) * options.grid.padding))
-        });
+        console.log("tut", shape);
+        let x = Math.min(corners.x.max, Math.max(corners.x.min, Math.round(addMotor.x() / options.grid.padding) * options.grid.padding));
+        let y = Math.min(corners.y.max, Math.max(corners.y.min, Math.round(addMotor.y() / options.grid.padding) * options.grid.padding));
+
+        if (shape === 'Kreis') {
+            if ((x - startPoint.x) * (x - startPoint.x) + (y - startPoint.y) * (y - startPoint.y) <= gridWidth * gridHeight / 4) {
+                shadowCircle.position({
+                    x: x,
+                    y: y
+                });
+            }
+        } else {
+            shadowCircle.position({
+                x: x,
+                y: y
+            });
+        }
+
         motorCanvasStage.batchDraw();
     });
     optionsLayer.add(addMotor);
@@ -674,10 +784,16 @@ function drawMotorCanvas(options) {
     let colorCounter = 0;
 
     options.components.forEach(component => {
-        col[component.id] = generateHexColor();
+
+        let componentX = startPoint.x - ratioX * component.position.value.x;
+        let componentY = startPoint.y - ratioY * component.position.value.y
+
+        let x = Math.min(corners.x.max, Math.max(corners.x.min, Math.round(componentX / options.grid.padding) * options.grid.padding));
+        let y = Math.min(corners.y.max, Math.max(corners.y.min, Math.round(componentY / options.grid.padding) * options.grid.padding));
+
         let motor = new Konva.Circle({
-            x: startPoint.x - ratioX * component.position.value.x,
-            y: startPoint.y - ratioY * component.position.value.y,
+            x: x,
+            y: y,
             radius: 7,
             fill: color[colorCounter], //col[component.id],
             stroke: 'black',
@@ -686,25 +802,53 @@ function drawMotorCanvas(options) {
             name: "Motor",
             draggable: true
         });
-        
 
+        let oldX;
+        let oldY;
         motor.on('dragstart', (e) => {
+            oldX = motor.x();
+            oldY = motor.y();
             shadowCircle.show();
             motorCanvasStage.batchDraw();
         });
         motor.on('dragend', (e) => {
             if (!haveIntersection(e.target.getClientRect(), bin.getClientRect())) {
 
-                motor.position({
-                    x: Math.min(corners.x.max, Math.max(corners.x.min, Math.round(motor.x() / options.grid.padding) * options.grid.padding)),
-                    y: Math.min(corners.y.max, Math.max(corners.y.min, Math.round(motor.y() / options.grid.padding) * options.grid.padding))
-                });
+                let x = Math.min(corners.x.max, Math.max(corners.x.min, Math.round(motor.x() / options.grid.padding) * options.grid.padding));
+                let y = Math.min(corners.y.max, Math.max(corners.y.min, Math.round(motor.y() / options.grid.padding) * options.grid.padding));
+                if (shape === 'Kreis') {
+                    if ((x - startPoint.x) * (x - startPoint.x) + (y - startPoint.y) * (y - startPoint.y) <= gridWidth * gridHeight / 4) {
+                        motor.position({
+                            x: x,
+                            y: y
+                        });
+                        $(document).trigger('motor:upd', [{
+                            id: motor.id(),
+                            x: -1 * (motor.x() - startPoint.x) / ratioX,
+                            y: -1 * (motor.y() - startPoint.y) / ratioY
+                        }]);
+                        console.log("in move end", motor.x(), motor.y());
 
-                $(document).trigger('motor:upd', [{
-                    id: motor.id(),
-                    x: -1 * (motor.x() - startPoint.x) / ratioX,
-                    y: -1 * (motor.y() - startPoint.y) / ratioY
-                }]);
+                    } else {
+                        console.log("otmena motora", oldX, oldY);
+                        motor.position({
+                            x: oldX,
+                            y: oldY
+                        });
+                    }
+                    
+                } else {
+                    motor.position({
+                        x: x,
+                        y: y
+                    });
+                    $(document).trigger('motor:upd', [{
+                        id: motor.id(),
+                        x: -1 * (motor.x() - startPoint.x) / ratioX,
+                        y: -1 * (motor.y() - startPoint.y) / ratioY
+                    }]);
+                }
+
             } else {
                 bin.fill('grey');
                 e.target.destroy();
@@ -713,14 +857,27 @@ function drawMotorCanvas(options) {
             shadowCircle.hide();
             motorCanvasStage.batchDraw();
         });
+
         motor.on('dragmove', (e) => {
             if (!haveIntersection(e.target.getClientRect(), bin.getClientRect())) {
                 shadowCircle.show();
                 bin.fill('grey');
-                shadowCircle.position({
-                    x: Math.min(corners.x.max, Math.max(corners.x.min, Math.round(motor.x() / options.grid.padding) * options.grid.padding)),
-                    y: Math.min(corners.y.max, Math.max(corners.y.min, Math.round(motor.y() / options.grid.padding) * options.grid.padding))
-                });
+                let x = Math.min(corners.x.max, Math.max(corners.x.min, Math.round(motor.x() / options.grid.padding) * options.grid.padding));
+                let y = Math.min(corners.y.max, Math.max(corners.y.min, Math.round(motor.y() / options.grid.padding) * options.grid.padding));
+
+                if (shape === 'Kreis') {
+                    if ((x - startPoint.x) * (x - startPoint.x) + (y - startPoint.y) * (y - startPoint.y) <= gridWidth * gridHeight / 4) {
+                        shadowCircle.position({
+                            x: x,
+                            y: y
+                        });
+                    }
+                } else {
+                    shadowCircle.position({
+                        x: x,
+                        y: y
+                    });
+                }
             } else {
                 bin.fill('red');
                 shadowCircle.hide();
@@ -790,7 +947,7 @@ $(document).on("sensor:upd", function (event, options) {
         return x.id;
     }).indexOf(options.id);
 
-   sensorComponents[index].setPosition(options.x, options.y);
+    sensorComponents[index].setPosition(options.x, options.y);
 });
 
 
@@ -815,20 +972,51 @@ var sensorCanvasStage = new Konva.Stage({
 */
 
 function paintSensorCanvas() {
-
     sensorComponents.forEach(sensor => {
-        if (Math.abs(sensor.position.value.x) > size.width / 2) {
-            sensor.setPosition(size.width / 2, sensor.position.value.y)
-        }
-        if (Math.abs(sensor.position.value.y) > size.height / 2) {
-            sensor.setPosition(sensor.position.value.x, size.height / 2)
+        if (shape === 'Kreis') {
+            let radius = size.width / 2;
+
+            let x = sensor.position.value.x;
+            let y = sensor.position.value.y;
+
+            if (x * x + y * y != radius * radius) {
+                let angle;
+
+                if (x != 0) {
+                    angle = Math.atan(y / x);
+
+                    if (x < 0) {
+                        angle += Math.PI;
+                    }
+                    else if (x > 0 && y < 0) {
+                        angle += 2 * Math.PI;
+                    }
+                } else {
+                    angle = y > 0 ? Math.PI / 2 : 3 * Math.PI / 2;
+                }
+
+
+                let newX = radius * Math.cos(angle);
+                let newY = radius * Math.sin(angle);
+                console.log("perekinul dla id", sensor.id, newX, newY);
+                sensor.setPosition(newX, newY);
+            }
+
+
+        } else {
+
+            if (Math.abs(sensor.position.value.x) > size.width / 2) {
+                sensor.setPosition(size.width / 2, sensor.position.value.y)
+            }
+            if (Math.abs(sensor.position.value.y) > size.height / 2) {
+                sensor.setPosition(sensor.position.value.x, size.height / 2)
+            }
         }
     });
 
-
     drawSensorCanvas({
-        components: sensorComponents, //entity.components.filter(component => component.name == "Motor"),
-        size: size, //real: solidBodyComponents[0].size.value; ?
+        components: sensorComponents,
+        size: size,
         width: 240,
         height: 200,
         grid: {
@@ -839,7 +1027,7 @@ function paintSensorCanvas() {
             padding: 20,
             size: {
                 x: 6,
-                y: 8
+                y: shape === 'Rechteck' ? 8 : 6
             }
         }
     });
@@ -872,6 +1060,17 @@ function drawSensorCanvas(options) {
     }
 
     let gridLayer = new Konva.Layer();
+    let dirTriangle = new Konva.Line({
+        points: [gridWidth / 2 + options.grid.offset.x, options.grid.offset.y + 5,
+        gridWidth / 2 + options.grid.offset.x + 10, options.grid.offset.y + 15,
+        gridWidth / 2 + options.grid.offset.x - 10, options.grid.offset.y + 15],
+
+        fill: '#ddd',
+        stroke: 'black',
+        strokeWidth: 1,
+        closed: true
+    });
+
     for (let i = 0; i <= options.grid.size.x; i++) {
         gridLayer.add(new Konva.Line({
             points: [options.grid.offset.x + i * options.grid.padding, options.grid.offset.y, options.grid.offset.x + i * options.grid.padding, gridHeight + options.grid.offset.y],
@@ -886,28 +1085,61 @@ function drawSensorCanvas(options) {
             strokeWidth: 0.5,
         }));
     }
+
+    gridLayer.add(dirTriangle);
     sensorCanvasStage.add(gridLayer);
 
     let pointLayer = new Konva.Layer();
-    for (let i = 0; i <= options.grid.size.x; i++) {
-        for (let j = 0; j <= options.grid.size.y; j++) {
-            let x = options.grid.offset.x + options.grid.padding * i;
-            let y = options.grid.offset.y + options.grid.padding * j;
+    if (shape === 'Kreis') {
+        let radius = gridWidth / 2;
+        pointLayer.add(new Konva.Circle({
+            x: startPoint.x,
+            y: startPoint.y,
+            radius: radius,
+            stroke: 'black',
+            strokeWidth: 1
+        }));
+        /*for (let i = 0; i <= 24; i++) {
+            for (let j = 0; j <= 24; j++) {
+                let x = radius * Math.cos(i * 15 / 180 * Math.PI);
+                let y = radius * Math.sin(j * 15 / 180 * Math.PI);
 
-            if (x === corners.x.min || x === corners.x.max || y === corners.y.min || y === corners.y.max) {
-                pointLayer.add(new Konva.Circle({
-                    x: x,
-                    y: y,
-                    radius: 2,
-                    fill: 'black',
-                    stroke: 'black',
-                    strokeWidth: 0
-                }));
+
+                if (x * x + y * y == radius * radius) {
+                    //console.log("tut", x, y);
+                    pointLayer.add(new Konva.Circle({
+                        x: x + startPoint.x,
+                        y: y + startPoint.x,
+                        radius: 3,
+                        fill: 'red',
+                        stroke: 'red',
+                        strokeWidth: 1
+                    }));
+                }
             }
-           
+        }*/
+    } else {
+        for (let i = 0; i <= options.grid.size.x; i++) {
+            for (let j = 0; j <= options.grid.size.y; j++) {
+                let x = options.grid.offset.x + options.grid.padding * i;
+                let y = options.grid.offset.y + options.grid.padding * j;
+
+                if (x === corners.x.min || x === corners.x.max || y === corners.y.min || y === corners.y.max) {
+                    pointLayer.add(new Konva.Circle({
+                        x: x,
+                        y: y,
+                        radius: 2,
+                        fill: 'black',
+                        stroke: 'black',
+                        strokeWidth: 0
+                    }));
+                }
+
+            }
         }
     }
-   sensorCanvasStage.add(pointLayer);
+
+    sensorCanvasStage.add(pointLayer);
 
     let shadowLayer = new Konva.Layer();
     let shadowCircle = new Konva.Circle({
@@ -950,30 +1182,59 @@ function drawSensorCanvas(options) {
         draggable: true
     });
     addSensor.on('dragstart', (e) => {
-        shadowCircle.show();
+        if (shape !== 'Kreis') {
+            shadowCircle.show();
+        }
         sensorCanvasStage.batchDraw();
     });
+
     addSensor.on('dragend', (e) => {
 
-        // x: startPoint.x - ratioX * component.position.value.x,
-        //    y: startPoint.y - ratioY * component.position.value.y,
+        if (shape === 'Kreis') {
+            let radius = gridWidth / 2;
+            let x = -addSensor.x() + startPoint.x;
+            let y = addSensor.y() - startPoint.y;
+            let angle;
 
-        let newX = Math.min(corners.x.max, Math.max(corners.x.min, Math.round(addSensor.x() / options.grid.padding) * options.grid.padding));
-        let newY = Math.min(corners.y.max, Math.max(corners.y.min, Math.round(addSensor.y() / options.grid.padding) * options.grid.padding));
-        let minDistToX = Math.min(Math.abs(newX - corners.x.min), Math.abs(newX - corners.x.max));
-        let minDistToY = Math.min(Math.abs(newY - corners.y.min), Math.abs(newY - corners.y.max));
+            if (x != 0) {
+                angle = Math.atan(y / x);
+                if (x < 0) {
+                    angle += Math.PI;
+                }
+                else if (x > 0 && y < 0) {
+                    angle += 2 * Math.PI;
+                }
+            } else {
+                angle = y > 0 ? Math.PI / 2 : Math.PI * 3 / 2;
+            }
 
-        if (minDistToX <= minDistToY) {
+            let newX = radius * Math.cos(angle);
+            let newY = radius * Math.sin(angle);
 
-            newX = Math.abs(newX - corners.x.min) >= Math.abs(newX - corners.x.max) ? corners.x.max : corners.x.min;
+            //console.log('sensor new x y', x, y, angle, newX, newY);
+            $(document).trigger('sensor:add', [{
+                x: newX / ratioX,
+                y: -1 * newY / ratioY
+            }]);
+
         } else {
-            newY = Math.abs(newY - corners.y.min) >= Math.abs(newY - corners.y.max) ? corners.y.max : corners.y.min;
+            let newX = Math.min(corners.x.max, Math.max(corners.x.min, Math.round(addSensor.x() / options.grid.padding) * options.grid.padding));
+            let newY = Math.min(corners.y.max, Math.max(corners.y.min, Math.round(addSensor.y() / options.grid.padding) * options.grid.padding));
+            let minDistToX = Math.min(Math.abs(newX - corners.x.min), Math.abs(newX - corners.x.max));
+            let minDistToY = Math.min(Math.abs(newY - corners.y.min), Math.abs(newY - corners.y.max));
+
+            if (minDistToX <= minDistToY) {
+
+                newX = Math.abs(newX - corners.x.min) >= Math.abs(newX - corners.x.max) ? corners.x.max : corners.x.min;
+            } else {
+                newY = Math.abs(newY - corners.y.min) >= Math.abs(newY - corners.y.max) ? corners.y.max : corners.y.min;
+            }
+            $(document).trigger('sensor:add', [{
+                x: -1 * (newX - startPoint.x) / ratioX,
+                y: -1 * (newY - startPoint.y) / ratioY
+            }]);
         }
 
-        $(document).trigger('sensor:add', [{
-            x: -1 * (newX - startPoint.x) / ratioX,
-            y: -1 * (newY - startPoint.y) / ratioY
-        }]);
         addSensor.position({
             x: 190,
             y: 40
@@ -981,20 +1242,26 @@ function drawSensorCanvas(options) {
         shadowCircle.hide();
         sensorCanvasStage.batchDraw();
     });
+
     addSensor.on('dragmove', (e) => {
+        let newX;
+        let newY;
+        if (shape === ' Kreis') {
 
-        let newX = Math.min(corners.x.max, Math.max(corners.x.min, Math.round(addSensor.x() / options.grid.padding) * options.grid.padding));
-        let newY = Math.min(corners.y.max, Math.max(corners.y.min, Math.round(addSensor.y() / options.grid.padding) * options.grid.padding));
-        let minDistToX = Math.min(Math.abs(newX - corners.x.min), Math.abs(newX - corners.x.max));
-        let minDistToY = Math.min(Math.abs(newY - corners.y.min), Math.abs(newY - corners.y.max));
-
-        if (minDistToX <= minDistToY) {
-
-            newX = Math.abs(newX - corners.x.min) >= Math.abs(newX - corners.x.max) ? corners.x.max : corners.x.min;
         } else {
-            newY = Math.abs(newY - corners.y.min) >= Math.abs(newY - corners.y.max) ? corners.y.max : corners.y.min;
-        }
+            newX = Math.min(corners.x.max, Math.max(corners.x.min, Math.round(addSensor.x() / options.grid.padding) * options.grid.padding));
+            newY = Math.min(corners.y.max, Math.max(corners.y.min, Math.round(addSensor.y() / options.grid.padding) * options.grid.padding));
+            let minDistToX = Math.min(Math.abs(newX - corners.x.min), Math.abs(newX - corners.x.max));
+            let minDistToY = Math.min(Math.abs(newY - corners.y.min), Math.abs(newY - corners.y.max));
 
+            if (minDistToX <= minDistToY) {
+
+                newX = Math.abs(newX - corners.x.min) >= Math.abs(newX - corners.x.max) ? corners.x.max : corners.x.min;
+            } else {
+                newY = Math.abs(newY - corners.y.min) >= Math.abs(newY - corners.y.max) ? corners.y.max : corners.y.min;
+            }
+        }
+               
         shadowCircle.position({ x: newX, y: newY });
         sensorCanvasStage.batchDraw();
     });
@@ -1009,7 +1276,7 @@ function drawSensorCanvas(options) {
             x: startPoint.x - ratioX * component.position.value.x,
             y: startPoint.y - ratioY * component.position.value.y,
             radius: 10,
-            sides: 3,  
+            sides: 3,
             rotation: 180,
             fill: color[colorCounter],
             stroke: 'black',
@@ -1019,39 +1286,8 @@ function drawSensorCanvas(options) {
             draggable: true
         });
 
-
-        if ((sensor.x != corners.x.min || sensor.x != corners.x.max) && (sensor.y != corners.y.min || sensor.y != corners.y.max)) {
-            let newX = Math.min(corners.x.max, Math.max(corners.x.min, Math.round(sensor.x() / options.grid.padding) * options.grid.padding));
-            let newY = Math.min(corners.y.max, Math.max(corners.y.min, Math.round(sensor.y() / options.grid.padding) * options.grid.padding));
-            let minDistToX = Math.min(Math.abs(newX - corners.x.min), Math.abs(newX - corners.x.max));
-            let minDistToY = Math.min(Math.abs(newY - corners.y.min), Math.abs(newY - corners.y.max));
-
-            if (minDistToX <= minDistToY) {
-
-                newX = Math.abs(newX - corners.x.min) >= Math.abs(newX - corners.x.max) ? corners.x.max : corners.x.min;
-            } else {
-                newY = Math.abs(newY - corners.y.min) >= Math.abs(newY - corners.y.max) ? corners.y.max : corners.y.min;
-            }
-
-            sensor.position({ x: newX, y: newY });
-            $(document).trigger('sensor:upd', [{
-                id: sensor.id(),
-                x: -1 * (newX - startPoint.x) / ratioX,
-                y: -1 * (newY - startPoint.y) / ratioY
-            }]);
-        }
-
-
-
-
-        sensor.on('dragstart', (e) => {
-            shadowCircle.show();
-            sensorCanvasStage.batchDraw();
-        });
-        sensor.on('dragend', (e) => {
-            if (!haveIntersection(e.target.getClientRect(), bin.getClientRect())) {
-                
-
+        if (shape !== 'Kreis') {
+            if ((sensor.x != corners.x.min || sensor.x != corners.x.max) && (sensor.y != corners.y.min || sensor.y != corners.y.max)) {
                 let newX = Math.min(corners.x.max, Math.max(corners.x.min, Math.round(sensor.x() / options.grid.padding) * options.grid.padding));
                 let newY = Math.min(corners.y.max, Math.max(corners.y.min, Math.round(sensor.y() / options.grid.padding) * options.grid.padding));
                 let minDistToX = Math.min(Math.abs(newX - corners.x.min), Math.abs(newX - corners.x.max));
@@ -1064,12 +1300,77 @@ function drawSensorCanvas(options) {
                     newY = Math.abs(newY - corners.y.min) >= Math.abs(newY - corners.y.max) ? corners.y.max : corners.y.min;
                 }
 
-                sensor.position({x: newX, y: newY});
+                sensor.position({ x: newX, y: newY });
                 $(document).trigger('sensor:upd', [{
                     id: sensor.id(),
                     x: -1 * (newX - startPoint.x) / ratioX,
                     y: -1 * (newY - startPoint.y) / ratioY
                 }]);
+            }
+        }
+        
+
+        sensor.on('dragstart', (e) => {
+            if (shape !== 'Kreis') {
+                shadowCircle.show();
+            }
+            sensorCanvasStage.batchDraw();
+        });
+
+        sensor.on('dragend', (e) => {
+            if (!haveIntersection(e.target.getClientRect(), bin.getClientRect())) {
+                if (shape === 'Kreis') {
+                    let radius = gridWidth / 2;
+                    let x = -sensor.x() + startPoint.x;
+                    let y = sensor.y() - startPoint.y;
+                    let angle;
+
+                    if (x != 0) {
+                        angle = Math.atan(y / x);
+                        if (x < 0) {
+                            angle += Math.PI;
+                        }
+                        else if (x > 0 && y < 0) {
+                            angle += 2 * Math.PI;
+                        }
+                    } else {
+                        angle = y > 0 ? Math.PI / 2 : Math.PI * 3 / 2;
+                    }
+
+                    let newX = radius * Math.cos(angle);
+                    let newY = radius * Math.sin(angle);
+
+                    console.log('sensor update x y', x, y, angle, newX, newY);
+
+                    sensor.position({ x: -newX + startPoint.x, y: newY + startPoint.y });
+                    $(document).trigger('sensor:upd', [{
+                        id: sensor.id(),
+                        x:  newX / ratioX,
+                        y: -1 * newY / ratioY
+                    }]);
+
+                } else {
+                    let newX = Math.min(corners.x.max, Math.max(corners.x.min, Math.round(sensor.x() / options.grid.padding) * options.grid.padding));
+                    let newY = Math.min(corners.y.max, Math.max(corners.y.min, Math.round(sensor.y() / options.grid.padding) * options.grid.padding));
+                    let minDistToX = Math.min(Math.abs(newX - corners.x.min), Math.abs(newX - corners.x.max));
+                    let minDistToY = Math.min(Math.abs(newY - corners.y.min), Math.abs(newY - corners.y.max));
+
+                    if (minDistToX <= minDistToY) {
+
+                        newX = Math.abs(newX - corners.x.min) >= Math.abs(newX - corners.x.max) ? corners.x.max : corners.x.min;
+                    } else {
+                        newY = Math.abs(newY - corners.y.min) >= Math.abs(newY - corners.y.max) ? corners.y.max : corners.y.min;
+                    }
+
+                    sensor.position({ x: newX, y: newY });
+                    $(document).trigger('sensor:upd', [{
+                        id: sensor.id(),
+                        x: -1 * (newX - startPoint.x) / ratioX,
+                        y: -1 * (newY - startPoint.y) / ratioY
+                    }]);
+                }
+
+               
             } else {
                 bin.fill('grey');
                 e.target.destroy();
@@ -1080,25 +1381,25 @@ function drawSensorCanvas(options) {
         });
         sensor.on('dragmove', (e) => {
             if (!haveIntersection(e.target.getClientRect(), bin.getClientRect())) {
+                if (shape !== 'Kreis') {
+                    shadowCircle.show();
+                    bin.fill('grey');
 
+                    let newX = Math.min(corners.x.max, Math.max(corners.x.min, Math.round(sensor.x() / options.grid.padding) * options.grid.padding));
+                    let newY = Math.min(corners.y.max, Math.max(corners.y.min, Math.round(sensor.y() / options.grid.padding) * options.grid.padding));
+                    let minDistToX = Math.min(Math.abs(newX - corners.x.min), Math.abs(newX - corners.x.max));
+                    let minDistToY = Math.min(Math.abs(newY - corners.y.min), Math.abs(newY - corners.y.max));
 
-                shadowCircle.show();
-                bin.fill('grey');
+                    if (minDistToX <= minDistToY) {
 
-                let newX = Math.min(corners.x.max, Math.max(corners.x.min, Math.round(sensor.x() / options.grid.padding) * options.grid.padding));
-                let newY = Math.min(corners.y.max, Math.max(corners.y.min, Math.round(sensor.y() / options.grid.padding) * options.grid.padding));
-                let minDistToX = Math.min(Math.abs(newX - corners.x.min), Math.abs(newX - corners.x.max));
-                let minDistToY = Math.min(Math.abs(newY - corners.y.min), Math.abs(newY - corners.y.max));
+                        newX = Math.abs(newX - corners.x.min) >= Math.abs(newX - corners.x.max) ? corners.x.max : corners.x.min;
+                    } else {
+                        newY = Math.abs(newY - corners.y.min) >= Math.abs(newY - corners.y.max) ? corners.y.max : corners.y.min;
+                    }
 
-                if (minDistToX <= minDistToY) {
-
-                    newX = Math.abs(newX - corners.x.min) >= Math.abs(newX - corners.x.max) ? corners.x.max : corners.x.min;
-                } else {
-                    newY = Math.abs(newY - corners.y.min) >= Math.abs(newY - corners.y.max) ? corners.y.max : corners.y.min;
+                    shadowCircle.position({ x: newX, y: newY });
                 }
 
-                shadowCircle.position({ x: newX, y: newY });
-                
             } else {
                 bin.fill('red');
                 shadowCircle.hide();
