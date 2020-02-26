@@ -41,8 +41,8 @@ function openSettings(event) {
     closeNav();
     resetSettings();
     //closeSettings();
-    document.getElementById("myEntitySettings").style.width = "256px";
-    document.getElementById("createEntityMenu").style.marginRight = "306px";
+    document.getElementById("myEntitySettings").style.width = "300px";
+    document.getElementById("createEntityMenu").style.marginRight = "356px";
 
     entity = event.detail;                  // die aufgerufene Entität  
 
@@ -213,7 +213,7 @@ function bodySettings(components, renderComponents) {
     });
 
     $("#height").change(function () {
-        let newValue = parseInt($("#height").val()); // get the current value of the input field.
+        let newValue = parseInt($(this).val()); // get the current value of the input field.
         if (components.length) {
             components[0].setSize({ width: renderComponents[0].size.value.width, height: newValue });
         }
@@ -263,8 +263,7 @@ function bodySettings(components, renderComponents) {
 
         return
     }
-
-
+    
     shape = renderComponents[0].shape.get();
 
 }
@@ -298,6 +297,9 @@ function sensorSettings(components) {
         $("#sensorReaction").append(
             '<div class="switch-btn switch-reaction" id = "react' + component.id + '" style = "background: ' + color[index] +
             '; margin-bottom:10px">');
+        $("#sensorOrientation").append(
+            '<input id = "orientation' + component.id + '" style = "background: ' + color[index] +
+            '; margin-bottom:10px" placeholder = "' + component.orientation.value * 180 / Math.PI  + '">');
 
         switch (component.reactsTo.get()) {
             case 'Licht': {
@@ -324,15 +326,22 @@ function sensorSettings(components) {
         });
 
 
-        $('#range' + component.id).on('input', function (event) {
-            let newValue = $(this).val(); // get the current value of the input field.
+        $('#range' + component.id).change(function (event) {
+            let newValue = parseInt($(this).val()); // get the current value of the input field.
             component.setRange(newValue);
+            //event.preventDefault();
+        });
+
+        $('#angle' + component.id).change(function () {
+            let newValue = parseInt($(this).val()); // get the current value of the input field.
+            component.setAngle(newValue);
             event.preventDefault();
         });
 
-        $('#angle' + component.id).on('input', function () {
-            let newValue = $(this).val(); // get the current value of the input field.
-            component.setAngle(newValue);
+        $('#orientation' + component.id).change(function () {
+            let newValue = parseInt($(this).val()); // get the current value of the input field.
+            component.setOrientation(newValue);
+            //event.preventDefault();
         });
     });
 
@@ -467,7 +476,7 @@ function closeSettings() {
 
 function openNav() {
     closeSettings();
-    document.getElementById("mySidenav").style.width = "256px";
+    document.getElementById("mySidenav").style.width = "300px";
 }
 
 function closeNav() {

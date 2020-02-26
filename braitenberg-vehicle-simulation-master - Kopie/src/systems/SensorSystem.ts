@@ -77,6 +77,12 @@ export default class SensorSystem extends System {
         this.removeSensorObject(sensor);
         this.addSensorObject(entity, sensor);
       });
+
+      sensor.orientation.onChange(value => {
+        console.log("orient on change");
+        this.removeSensorObject(sensor);
+        this.addSensorObject(entity, sensor);
+      });
     });
   }
 
@@ -94,6 +100,7 @@ export default class SensorSystem extends System {
     this.addSensorObject(entity, sensor);
 
     sensor.angle.onChange(value => {
+          console.log("angle on change");
       this.removeSensorObject(sensor);
       this.addSensorObject(entity, sensor);
     });
@@ -104,9 +111,15 @@ export default class SensorSystem extends System {
     });
 
     sensor.reactsTo.onChange(value => {
-      this.removeSensorObject(sensor);
-      this.addSensorObject(entity, sensor);
+        this.removeSensorObject(sensor);
+        this.addSensorObject(entity, sensor);
     });
+
+    sensor.orientation.onChange(value => {
+          console.log("orient on change");
+       this.removeSensorObject(sensor);
+       this.addSensorObject(entity, sensor);
+     });
   }
 
   protected onEntityComponentRemoved(entity: Entity, component: Component): void {
@@ -177,13 +190,15 @@ export default class SensorSystem extends System {
       // image.setBlendMode(Phaser.BlendModes.SCREEN);
       image.setVisible(false);
       image.setDepth(99);
+      image.setRotation(sensor.orientation.get());
       this.scene.children.bringToTop(image);
 
       textures[angle] = image;
       values[angle] = angleValues;
     });
-
-    this.textures[sensor.id] = textures;
+     // textures.setRotation(sensor.orientation.get());
+      this.textures[sensor.id] = textures;
+      console.log("sensor textures", sensor.id, textures);
     //  console.log("sensorsystem textures", this.textures, sensor.id);
 
     EventBus.publish(EventType.SENSOR_CREATED, {

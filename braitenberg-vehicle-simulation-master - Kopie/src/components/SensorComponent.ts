@@ -25,6 +25,8 @@ export default class SensorComponent extends Component {
 
   public reactsTo: Attribute<SubstanceType, SelectInput<SubstanceType>>;
 
+  public orientation: Attribute<number, NumberInput>;
+
   // Konstruktor der Klasse mit Erstellung von Attributen für alle Parameter
   public constructor(data: SensorComponentData) {
     super();
@@ -36,6 +38,7 @@ export default class SensorComponent extends Component {
       SelectInput.create<SubstanceType, SelectInput<SubstanceType>>({ label: 'Reagiert auf', options: SubstanceType }),
     );
     this.activation = new Attribute(0 as number, NumberInput.create({ label: 'Grad der Aktivierung', toFixed: 4 }));
+    this.orientation = new Attribute(0 as number, NumberInput.create({ label: 'Orientierung' }));
   }
 
     // Für interaktion mit html
@@ -52,15 +55,19 @@ export default class SensorComponent extends Component {
         this.angle.set(newValue);
     }
 	public setReaction (newReaction: string) {
-			switch (newReaction) {
-		case 'source': {
-			this.reactsTo.set(SubstanceType.LIGHT);
-			break;
-		}
-		case 'barrier': {
-			this.reactsTo.set(SubstanceType.BARRIER);
-			break;
-		}
-	}
-	}
+		switch (newReaction) {
+		    case 'source': {
+			    this.reactsTo.set(SubstanceType.LIGHT);
+			    break;
+		    }
+		    case 'barrier': {
+			    this.reactsTo.set(SubstanceType.BARRIER);
+			    break;
+		    }
+	    }
+    }
+
+    public setOrientation(value: number): void {
+        this.orientation.set(value *  Math.PI / 180);
+    }
 }
