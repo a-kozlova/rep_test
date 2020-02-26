@@ -669,9 +669,7 @@ function drawMotorCanvas(options) {
                     stroke: 'black',
                     strokeWidth: 0
                 }));
-
             }
-
         }
     }
 
@@ -686,8 +684,8 @@ function drawMotorCanvas(options) {
         stroke: 'black',
         strokeWidth: 0,
         id: 'shadowCircle'
-
     });
+
     shadowCircle.hide();
     shadowLayer.add(shadowCircle);
     motorCanvasStage.add(shadowLayer);
@@ -736,8 +734,7 @@ function drawMotorCanvas(options) {
                 y: -1 * (y - startPoint.y) / ratioY
             }]);
         }
-
-
+        
         addMotor.position({
             x: 190,
             y: 40
@@ -792,8 +789,11 @@ function drawMotorCanvas(options) {
             draggable: true
         });
 
-
+        let oldX;
+        let oldY;
         motor.on('dragstart', (e) => {
+            oldX = motor.x();
+            oldY = motor.y();
             shadowCircle.show();
             motorCanvasStage.batchDraw();
         });
@@ -804,21 +804,25 @@ function drawMotorCanvas(options) {
                 let y = Math.min(corners.y.max, Math.max(corners.y.min, Math.round(motor.y() / options.grid.padding) * options.grid.padding));
                 if (shape === 'Kreis') {
                     if ((x - startPoint.x) * (x - startPoint.x) + (y - startPoint.y) * (y - startPoint.y) <= gridWidth * gridHeight / 4) {
-
-
                         motor.position({
                             x: x,
                             y: y
                         });
+                        $(document).trigger('motor:upd', [{
+                            id: motor.id(),
+                            x: -1 * (motor.x() - startPoint.x) / ratioX,
+                            y: -1 * (motor.y() - startPoint.y) / ratioY
+                        }]);
+                        console.log("in move end", motor.x(), motor.y());
 
+                    } else {
+                        console.log("otmena motora", oldX, oldY);
+                        motor.position({
+                            x: oldX,
+                            y: oldY
+                        });
                     }
-                    console.log("in move end", motor.x(), motor.y());
-
-                    $(document).trigger('motor:upd', [{
-                        id: motor.id(),
-                        x: -1 * (motor.x() - startPoint.x) / ratioX,
-                        y: -1 * (motor.y() - startPoint.y) / ratioY
-                    }]);
+                    
                 } else {
                     motor.position({
                         x: x,
@@ -831,7 +835,6 @@ function drawMotorCanvas(options) {
                     }]);
                 }
 
-
             } else {
                 bin.fill('grey');
                 e.target.destroy();
@@ -840,6 +843,7 @@ function drawMotorCanvas(options) {
             shadowCircle.hide();
             motorCanvasStage.batchDraw();
         });
+
         motor.on('dragmove', (e) => {
             if (!haveIntersection(e.target.getClientRect(), bin.getClientRect())) {
                 shadowCircle.show();
