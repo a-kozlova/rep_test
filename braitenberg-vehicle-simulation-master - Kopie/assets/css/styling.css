@@ -180,7 +180,6 @@ button,
 }
 
 
-/*VON HIER SIND LAPKIS*/
 /*settings menu*/
 .nav-tabs a {
     color: black;
@@ -420,6 +419,11 @@ input.disabled  {
 
 #deleteEntity{
 	color: red;
+	position: fixed;
+    bottom: 0;
+    right: 0;
+	display:none;
+	background-color: #f8f8f8;
 }
 
 .sensorInput::placeholder {
