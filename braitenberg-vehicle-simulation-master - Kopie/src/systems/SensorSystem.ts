@@ -158,7 +158,6 @@ export default class SensorSystem extends System {
 
           angleValues[y * width + x] = v;
 
-
 		  //Sensorenfarbe haengt von der Emissionsart ab
           if (sensor.reactsTo.get() == SubstanceType.LIGHT){
 			context.fillStyle = `rgba(255, 0, 0, ${v * 0.6})`;

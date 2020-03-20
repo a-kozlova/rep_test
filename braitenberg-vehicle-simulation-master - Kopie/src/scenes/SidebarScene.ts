@@ -80,7 +80,6 @@ export default abstract class SidebarScene extends Phaser.Scene {
       | undefined)[],
     usePadding: boolean = true,
   ): void {
-      console.log(this.container);
     if (this.container) {
       const padding = usePadding ? 15 : 0;
       let lastAddedHeight = 0;

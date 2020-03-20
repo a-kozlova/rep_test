@@ -184,9 +184,6 @@ export default class SourceSystem extends System {
     this.scene.children.bringToTop(image);
 
       this.textures[source.id] = image;
-
-     // console.log('source system', values);
-
     EventBus.publish(EventType.SOURCE_CREATED, {
       id: source.id,
       values,

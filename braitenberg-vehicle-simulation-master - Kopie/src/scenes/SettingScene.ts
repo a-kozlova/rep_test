@@ -22,14 +22,9 @@ type DropHandler = (position: { x: number; y: number }) => void;
 export default class SettingScene extends SidebarScene {
   public constructor() {
     super('SettingScene');
-  }
-
-	
-	public onCreate(container: ScrollableContainer, entity: Entity): void {
-
-       
+  }	
+	public onCreate(container: ScrollableContainer, entity: Entity): void {       
     }
-
 
     public addMotor(entity: Entity, position: Vector2D): void {
         EntityManager.addComponent(
@@ -71,8 +66,7 @@ export default class SettingScene extends SidebarScene {
 
         var event = new CustomEvent("attributeAdded", { detail: entity });
         document.dispatchEvent(event);
-    }
-   
+    }   
 
     public addSolidBody(entity: Entity): void {
 

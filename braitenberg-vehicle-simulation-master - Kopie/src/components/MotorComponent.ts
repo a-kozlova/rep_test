@@ -1,4 +1,4 @@
-import { ComponentType } from '../enums';
+﻿import { ComponentType } from '../enums';
 import Component from './Component';
 import Attribute from './Attribute';
 import NumberInput from '../dynamic_input/NumberInput';
@@ -46,8 +46,7 @@ export default class MotorComponent extends Component {
     );
   }
 
-
-    // F�r interaktion mit html
+    // Für interaktion mit html
     public setPosition( newX: number, newY: number ) {
         this.position.set({ x: newX, y: newY });
     }

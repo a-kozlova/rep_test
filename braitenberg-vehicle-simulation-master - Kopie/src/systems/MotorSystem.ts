@@ -61,7 +61,6 @@ export default class MotorSystem extends System {
                 this.removeMotorObject(motor);
                 this.addMotorObject(entity, motor);
             });
-            //console.log("motorsys test", motor);
 
         });
     }
@@ -116,29 +115,11 @@ export default class MotorSystem extends System {
         graphics.fillStyle(0xff0000, 1);
         graphics.fillCircle(x,y,5);
         graphics.strokeCircle(x, y, 5);
-
-
         this.grs[motor.id] = graphics;
-
-        //console.log("motorsys textures ", this.grs[motor.id]);
-
-        /*EventBus.publish(EventType.MOTOR_CREATED, {
-          id: motor.id,
-          type: motor.reactsTo.get(),
-          values,
-          width,
-          height,
-        });*/
     }
 
     private removeMotorObject(motor: MotorComponent): void {
         this.grs[motor.id].clear();
-
         delete this.grs[motor.id];
-
-        /*EventBus.publish(EventType.motor_DESTROYED, {
-          id: motor.id,
-          type: motor.reactsTo.get(),
-        });*/
     }
 }

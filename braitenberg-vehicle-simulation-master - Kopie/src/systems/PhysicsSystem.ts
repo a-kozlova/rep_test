@@ -244,8 +244,6 @@ export default class PhysicsSystem extends System {
     // damit entgegengesetztes Drehmoment die Rotatioin ausgleicht.
     body.torque -= (t + Math.sign(t)) ** 5;
 
-    // console.log(body.torque, t);
-
     Phaser.Physics.Matter.Matter.Body.applyForce(
       body,
       { x: body.position.x + offset.x, y: body.position.y + offset.y },

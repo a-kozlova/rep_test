@@ -43,8 +43,6 @@ export default class SensorComponent extends Component {
 
     // Für interaktion mit html
     public setPosition(newX: number, newY: number) {
-        //ubrat!!!!!!!!!!!!!!!!
-        //console.log("set vector in sensor", newX, newY);
         this.position.set({ x: newX, y: newY });
     }
 

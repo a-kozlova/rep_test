@@ -332,7 +332,6 @@ export default class EditorScene extends SidebarScene {
   }  
 
   private createObject(): void {
-  console.log("create Object");
   }
 
   private makeInteractable(image: Phaser.GameObjects.Image, onDrop: DropHandler): void {
