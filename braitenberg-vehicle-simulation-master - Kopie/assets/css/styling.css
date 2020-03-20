@@ -398,7 +398,7 @@ h4 {
 	height: 25px; /* Specified height */
 	background: #efefef; 
 	outline: none; /* Remove outline */
-	opacity: 0.5; /* Set transparency (for mouse-over effects on hover) */
+	opacity: 0.6; /* Set transparency (for mouse-over effects on hover) */
 	-webkit-transition: .2s; /* 0.2 seconds transition on hover */
 	transition: opacity .2s;
 	margin: 15px;
@@ -407,7 +407,7 @@ h4 {
 }
 /* Mouse-over effects */
 .slider:hover {
-    opacity: 0.7;
+    opacity: 0.9;
 }
 
 .disabled {

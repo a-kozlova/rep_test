@@ -270,7 +270,6 @@ export default class RenderSystem extends System {
                 image.setBlendMode(render.blendMode.get() as Phaser.BlendModes);
             }
 			if(source.range.get() !=0 && source.emissionType.get() == "GAUSSIAN") {
-			console.log(source.range.get());
 				image.setDepth(100);			
 			}
 
