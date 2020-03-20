@@ -42,6 +42,7 @@ export default class RenderComponent extends Component {
                 label: 'Anzeige',
                 options: {
                     ...LoadingScene.userOptions(),
+					'Farbe: Schwarz': 0x000000,
                     'Farbe: Grau': 0xcccccc,
                     'Farbe: Rot': 0xd14152,
                     'Farbe: Grün': 0x57a639,
@@ -71,6 +72,10 @@ export default class RenderComponent extends Component {
     public setColor(color: string) {
 
         switch (color) {
+		    case 'black': {
+                this.asset.set(0x000000);
+                break;
+            }
             case 'grey': {
                 this.asset.set(0xcccccc);
                 break;
@@ -100,13 +105,10 @@ export default class RenderComponent extends Component {
                   this.shape.set(BodyShape.RECTANGLE);
                   break;
               }
-          }
-  
+          }  
     }
     
     public setSize(size: Dimensions) {
-        console.log("set width", size.width);
         this.size.set(size)
-        console.log("set size", this.size);
     }
 }

@@ -53,7 +53,6 @@ export default class MainScene extends Phaser.Scene {
     EventBus.subscribe(EventType.ENTITY_SELECTED, (entity: Entity) => {
         var event = new CustomEvent("entitySelected", { detail: entity });
         event.preventDefault();
-		console.log("open");
         // event to catch in html
       document.dispatchEvent(event);
     });

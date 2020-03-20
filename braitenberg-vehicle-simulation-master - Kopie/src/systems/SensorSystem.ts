@@ -29,16 +29,13 @@ export default class SensorSystem extends System {
       const closestAngle = AVAILABLE_ANGLES.reduce((prev, curr) => {
         return Math.abs(curr - currentAngle) < Math.abs(prev - currentAngle) ? curr : prev;
       });
-
-      //  console.log("sensorsys cur close", currentAngle, closestAngle)
-
+	  
       sensors.forEach(sensor => {
         if (!this.textures[sensor.id]) {
           return;
         }
 
         Object.entries(this.textures[sensor.id]).forEach(([angle, image]) => {
-          //  console.log("sensorsys angle image", this.textures[sensor.id]);
           if (angle === String(closestAngle)) {
             const bodyPosition = transform.position.get();
             const sensorOffset = Phaser.Physics.Matter.Matter.Vector.rotate(
@@ -47,7 +44,6 @@ export default class SensorSystem extends System {
             );
             const x = bodyPosition.x + sensorOffset.x;
             const y = bodyPosition.y + sensorOffset.y;
-              //console.log("sensorsys x y", x, y);
             image.setPosition(x, y);
             image.setVisible(true);
           } else {
@@ -79,7 +75,6 @@ export default class SensorSystem extends System {
       });
 
       sensor.orientation.onChange(value => {
-        console.log("orient on change");
         this.removeSensorObject(sensor);
         this.addSensorObject(entity, sensor);
       });
@@ -100,7 +95,6 @@ export default class SensorSystem extends System {
     this.addSensorObject(entity, sensor);
 
     sensor.angle.onChange(value => {
-          console.log("angle on change");
       this.removeSensorObject(sensor);
       this.addSensorObject(entity, sensor);
     });
@@ -116,7 +110,6 @@ export default class SensorSystem extends System {
     });
 
     sensor.orientation.onChange(value => {
-          console.log("orient on change");
        this.removeSensorObject(sensor);
        this.addSensorObject(entity, sensor);
      });
@@ -198,8 +191,6 @@ export default class SensorSystem extends System {
     });
      // textures.setRotation(sensor.orientation.get());
       this.textures[sensor.id] = textures;
-      console.log("sensor textures", sensor.id, textures);
-    //  console.log("sensorsystem textures", this.textures, sensor.id);
 
     EventBus.publish(EventType.SENSOR_CREATED, {
       id: sensor.id,

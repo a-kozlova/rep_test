@@ -62,19 +62,13 @@ function openSettings(event) {
 
     size = renderComponents[0].size.value;
 
-
-
-    drawSliders(motorComponents);
-
-    
+    drawSliders(motorComponents);    
 
     var smNumber = motorComponents.length > sensorComponents.length ? motorComponents.length : sensorComponents.length;
-    console.log("color length", color.lenght, smNumber);
     if (color.length < smNumber) {
         let i = color.length != 0 ? color.length: 0;
 
         for (; i < smNumber; i++) {
-            console.log("color", i);
             let temp = generateHexColor();
             while (color.find(item => item == temp)) {
                 temp = generateHexColor();
@@ -82,7 +76,6 @@ function openSettings(event) {
             color[i] = temp;
         }
     }
-    console.log("zweta", color);
 
     sensorSettings(sensorComponents);
     bodySettings(solidBodyComponents, renderComponents);
@@ -158,7 +151,6 @@ function emissionSettings(sourceComponents) {
         $("#gaus").prop('disabled', true);
         $("#flat").prop('disabled', true);
     }
-
 }
 
 
@@ -244,6 +236,9 @@ function bodySettings(components, renderComponents) {
         case 1791363:
             $("#blue").prop('checked', true);
             break;
+        default:
+            $("#black").prop('checked', true);
+            break;            
     }
 
 
@@ -541,14 +536,8 @@ $(document).on("motor:upd", function (event, options) {
     }).indexOf(options.id);
 
     motorComponents[index].setPosition(options.x, options.y);
-    console.log("motor update", options);
 
 });
-
-
-
-
-
 
 
 /*
@@ -757,7 +746,6 @@ function drawMotorCanvas(options) {
         motorCanvasStage.batchDraw();
     });
     addMotor.on('dragmove', (e) => {
-        console.log("tut", shape);
         let x = Math.min(corners.x.max, Math.max(corners.x.min, Math.round(addMotor.x() / options.grid.padding) * options.grid.padding));
         let y = Math.min(corners.y.max, Math.max(corners.y.min, Math.round(addMotor.y() / options.grid.padding) * options.grid.padding));
 
@@ -827,10 +815,8 @@ function drawMotorCanvas(options) {
                             x: -1 * (motor.x() - startPoint.x) / ratioX,
                             y: -1 * (motor.y() - startPoint.y) / ratioY
                         }]);
-                        console.log("in move end", motor.x(), motor.y());
 
                     } else {
-                        console.log("otmena motora", oldX, oldY);
                         motor.position({
                             x: oldX,
                             y: oldY
@@ -998,7 +984,6 @@ function paintSensorCanvas() {
 
                 let newX = radius * Math.cos(angle);
                 let newY = radius * Math.sin(angle);
-                console.log("perekinul dla id", sensor.id, newX, newY);
                 sensor.setPosition(newX, newY);
             }
 
@@ -1106,7 +1091,6 @@ function drawSensorCanvas(options) {
 
 
                 if (x * x + y * y == radius * radius) {
-                    //console.log("tut", x, y);
                     pointLayer.add(new Konva.Circle({
                         x: x + startPoint.x,
                         y: y + startPoint.x,
@@ -1211,7 +1195,6 @@ function drawSensorCanvas(options) {
             let newX = radius * Math.cos(angle);
             let newY = radius * Math.sin(angle);
 
-            //console.log('sensor new x y', x, y, angle, newX, newY);
             $(document).trigger('sensor:add', [{
                 x: newX / ratioX,
                 y: -1 * newY / ratioY
@@ -1339,8 +1322,6 @@ function drawSensorCanvas(options) {
 
                     let newX = radius * Math.cos(angle);
                     let newY = radius * Math.sin(angle);
-
-                    console.log('sensor update x y', x, y, angle, newX, newY);
 
                     sensor.position({ x: -newX + startPoint.x, y: newY + startPoint.y });
                     $(document).trigger('sensor:upd', [{
