@@ -22,39 +22,7 @@ export default class SourceSystem extends System {
     [componentId: number]: (() => void)[];
   } = {};
 
-    public update(): void {
-       /* this.entities.forEach(entity => {
-
-            const transform = entity.getComponent(ComponentType.TRANSFORMABLE) as TransformableComponent;
-            const source = entity.getComponent(ComponentType.SOURCE) as SourceComponent;
-
-            console.log("source", this.textures[source.id]);
-
-
-            if (!this.textures[source.id]) {
-                return;
-            }
-
-            let image = this.textures[source.id];
-
-            const bodyPosition = transform.position.get();
-            
-                      const x = bodyPosition.x ;
-                      const y = bodyPosition.y ;
-                      //console.log("sensorsys x y", x, y);
-            image.setPosition(x, y);
-            //image.setOrigin(0);
-           // image.setScale(CORRELATION_SCALE);
-            image.setBlendMode(Phaser.BlendModes.SCREEN);
-            image.setDepth(999);
-            //this.scene.children.bringToTop(image);
-
-            //image.setVisible(true);
-                  
-        });*/
-     
-
-  }
+  public update(): void {}
 
   private addHandler(componentId: number, handler: () => void): () => void {
     if (!this.handlers[componentId]) {

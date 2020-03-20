@@ -1,7 +1,6 @@
 import Phaser from 'phaser';
 import swal from 'sweetalert';
 
-//import EditorScene from './EditorScene';
 import SettingScene from './SettingScene';
 
 import SolidBodyComponent from '../components/SolidBodyComponent';
@@ -46,7 +45,6 @@ export default class MainScene extends Phaser.Scene {
     this.scale.on('resize', this.handleResize.bind(this));
     this.matter.world.setBounds();
 
-    //this.scene.add('editor', EditorScene, false);
     this.scene.add('settings', SettingScene, false);
     
     EventBus.subscribe(EventType.ENTITY_SELECTED, (entity: Entity) => {
@@ -166,12 +164,6 @@ export default class MainScene extends Phaser.Scene {
         range: 200,
       }),
     );
-
-    // EntityManager.createEntity(
-    //   new TransformableComponent({ x: 200, y: 400 }),
-    //   new RenderComponent('source', 150, Phaser.BlendModes.ADD),
-    //   new SourceComponent(150, SubstanceType.BARRIER),
-    // );
   }
 
   private createSystems(): void {

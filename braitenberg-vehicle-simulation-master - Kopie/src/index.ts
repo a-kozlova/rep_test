@@ -112,7 +112,6 @@ $('input[name="form"]:radio').change(function() {
       component.setShape($("input[name='form']:checked").val());
       component.setSize({ width: component.size.value.width, height: component.size.value.width });
           shape = $("input[name='form']:checked").val();
-          console.log("tuta", typeof shape);
     }	
 
   });
@@ -185,9 +184,7 @@ document.addEventListener('deleteMotor', function (event) {
     mytestgame.scene.scenes[3].deleteMotor(entity, event.detail.component);
 });
 
-
 document.addEventListener('delEnt', (event) => {
-    //console.log("deleteEntity settscen", event);
     if (confirm("Delete this entity?")) {
         EntityManager.destroyEntity(entity.id);
     }
