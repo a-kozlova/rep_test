@@ -96,7 +96,6 @@ export default class RenderSystem extends System {
         imgRotate.setDepth(999);
 
         imgRotate.setInteractive({ useHandCursor: true }).on('drag', (gameObject: unknown) => {
-            console.log(gameObject);
             //transform.angle.set();
         });
 
@@ -110,7 +109,6 @@ export default class RenderSystem extends System {
        
         this.deleteBtn = imgDel;
         this.rotateBtn = imgRotate;
-      //console.log("deleteBtn", this.deleteBtn);
     }   
   }
 
@@ -126,7 +124,6 @@ export default class RenderSystem extends System {
       this.selected.setDepth(this.selected.getData('originalDepth') || 0);
       }
 
-      //console.log("removehigh", this.selected);
       this.selected = null;
 
 
@@ -173,7 +170,6 @@ export default class RenderSystem extends System {
                 transform.angle.get(),
             );
                        
-            //console.log("diroffset angle", dirOffset1, transform.angle.get(), entity);
             const x1 = bodyPosition.x + dirOffset1.x;
             const y1 = bodyPosition.y + dirOffset1.y;
             const x2 = bodyPosition.x + dirOffset2.x;
@@ -195,11 +191,8 @@ export default class RenderSystem extends System {
                
                 const deleteBtnOffset = Phaser.Physics.Matter.Matter.Vector.rotate(
                     { x: -render.size.get().width - 15, y: render.size.get().width },
-                    transform.angle.get());
-                                
-                //console.log("rend update delete delbtn", transform.position.get().x, deleteBtnOffset.x, transform.position.get().x-deleteBtnOffset.x,
-                //    transform.position.get().y, deleteBtnOffset.y, transform.position.get().y-deleteBtnOffset.y);
-
+                    transform.angle.get());                                
+            
                 /* ????????????????????????????????????????????????????????????????????????????????????????????????????
                 * Wenn dieser Code eingesetzt wird, wird die Position des Buttons richtig berechnet und gezeichnet, 
                 * der Button reagiert aber nur in dem Punkt, der ursprünglich in setIneraktive() übergeben wurde
@@ -288,10 +281,6 @@ export default class RenderSystem extends System {
             image.setStrokeStyle(5, render.asset.get() as number)
 
            
-
-            console.log("render sys", image);
-
-
             if (render.blendMode.get()) {
                 image.setBlendMode(render.blendMode.get() as Phaser.BlendModes);
             }
