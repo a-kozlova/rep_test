@@ -43,8 +43,12 @@ function openSettings(event) {
     closeNav();
     resetSettings();
     //closeSettings();
+    document.getElementById("deleteEntity").style.height = "5%";
+    document.getElementById("deleteEntity").style.width = "300px";
+    document.getElementById("myEntitySettings").style.height = "95%";
     document.getElementById("myEntitySettings").style.width = "300px";
     document.getElementById("createEntityMenu").style.marginRight = "356px";
+    document.getElementById("deleteEntity").style.display = "block";
 
     entity = event.detail;                  // die aufgerufene Entität  
 
@@ -473,7 +477,7 @@ $(document).on("settigs:closed", function (event, options) {
 
 
 function closeSettings() {
-
+    document.getElementById("deleteEntity").style.display = "none";
     document.getElementById("myEntitySettings").style.width = "0";
     document.getElementById("createEntityMenu").style.marginRight = "60px";
     $(document).trigger('settings:closed', []);
@@ -487,7 +491,6 @@ function openNav() {
 function closeNav() {
     document.getElementById("mySidenav").style.width = "0";
 }
-
 
 
 
