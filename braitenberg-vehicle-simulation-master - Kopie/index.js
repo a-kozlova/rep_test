@@ -93,8 +93,6 @@ function generateHexColor() {
 }
 
 
-
-
 function emissionSettings(sourceComponents) {
     $('#emRange').remove();
     $('#emissionRange').after('<input id = "emRange" class="col-4" style = "height: 25px;">');
@@ -262,7 +260,6 @@ function bodySettings(components, renderComponents) {
     }
     
     shape = renderComponents[0].shape.get();
-
 }
 
 function sensorSettings(components) {
@@ -286,17 +283,17 @@ function sensorSettings(components) {
 
     components.forEach((component, index) => {
         $("#sensorRange").append(
-            '<input id = "range' + component.id + '" style = "background: ' + color[index] +
+            '<input class="sensorInput" id = "range' + component.id + '" style = "background: ' + color[index] +
             '; margin-bottom:10px" placeholder = "' + component.range.value + '">');
         $("#sensorAngle").append(
-            '<input id = "angle' + component.id + '" style = "background: ' + color[index] +
+            '<input class="sensorInput" id = "angle' + component.id + '" style = "background: ' + color[index] +
             '; margin-bottom:10px" placeholder = "' + component.angle.value + '">');
+        $("#sensorOrientation").append(
+            '<input class="sensorInput" id = "orientation' + component.id + '" style = "background: ' + color[index] +
+            '; margin-bottom:10px" placeholder = "' + component.orientation.value * 180 / Math.PI  + '">');
         $("#sensorReaction").append(
             '<div class="switch-btn switch-reaction" id = "react' + component.id + '" style = "background: ' + color[index] +
             '; margin-bottom:10px">');
-        $("#sensorOrientation").append(
-            '<input id = "orientation' + component.id + '" style = "background: ' + color[index] +
-            '; margin-bottom:10px" placeholder = "' + component.orientation.value * 180 / Math.PI  + '">');
 
         switch (component.reactsTo.get()) {
             case 'Licht': {
@@ -319,7 +316,6 @@ function sensorSettings(components) {
                 $(this).trigger('off.switch');
                 component.setReaction('barrier');
             }
-
         });
 
 
@@ -345,11 +341,11 @@ function sensorSettings(components) {
     //For all
 
     $("#sensorRangeFA").append(
-        '<input id = "rangeFA" style = "background: white"; margin-bottom:10px" placeholder = "' + rangeFA + '">');
+        '<input class="sensorInput" id = "rangeFA" style = "background: white"; margin-bottom:10px" placeholder = "' + rangeFA + '">');
     $("#sensorAngleFA").append(
-        '<input id = "angleFA" style = "background:  white"; margin-bottom:10px" placeholder = "' + angleFA + '">');
+        '<input class="sensorInput" id = "angleFA" style = "background:  white"; margin-bottom:10px" placeholder = "' + angleFA + '">');
     $("#sensorOrientationFA").append(
-        '<input id = "orientationFA" style = "background:  white"; margin-bottom:10px" placeholder = "' + orientationFA + '">');
+        '<input class="sensorInput" id = "orientationFA" style = "background:  white"; margin-bottom:10px" placeholder = "' + orientationFA + '">');
     $("#sensorReactionFA").append(
         '<div class="switch-btn switch-reaction" id = "reactFA" style = "margin-bottom:10px">');
     switch (reactionFA) {
@@ -546,7 +542,6 @@ $(document).on("motor:upd", function (event, options) {
 
 //color array this is unsafe because the array is of fixed size!
 //this needs a better solution!
-
 
 
 var motorCanvasStage = new Konva.Stage({
@@ -892,8 +887,6 @@ function haveIntersection(r1, r2) {
 }
 
 
-
-
 /*
 * GLOBAL EVENTS
 */
@@ -935,11 +928,6 @@ $(document).on("sensor:upd", function (event, options) {
 
     sensorComponents[index].setPosition(options.x, options.y);
 });
-
-
-
-
-
 
 
 /*

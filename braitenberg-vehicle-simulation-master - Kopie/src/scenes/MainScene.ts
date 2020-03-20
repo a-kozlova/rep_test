@@ -391,7 +391,7 @@ export default class MainScene extends Phaser.Scene {
         position: { x: mouseX, y: mouseY },
         angle: Math.PI,
       });
-      transform.angle.set(-Math.PI / 2);
+      //transform.angle.set(-Math.PI / 2);
       entity.addComponent(transform);
 	  entity.addComponent(
       new SourceComponent({
@@ -454,7 +454,7 @@ export default class MainScene extends Phaser.Scene {
         position: { x: mouseX, y: mouseY },
         angle: Math.PI,
       });
-      transform.angle.set(-Math.PI / 2);
+      //transform.angle.set(-Math.PI / 2);
       entity.addComponent(transform);
 	  entity.addComponent(
       new SourceComponent({
@@ -517,7 +517,7 @@ export default class MainScene extends Phaser.Scene {
         position: { x: mouseX, y: mouseY },
         angle: Math.PI,
       });
-      transform.angle.set(-Math.PI / 2);
+      //transform.angle.set(-Math.PI / 2);
       entity.addComponent(transform);
 	  entity.addComponent(
       new SourceComponent({
