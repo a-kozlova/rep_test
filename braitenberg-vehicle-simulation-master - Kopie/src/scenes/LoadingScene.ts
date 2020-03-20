@@ -10,6 +10,7 @@ import vehicle3a from '../../assets/prefabs/3a.png';
 import vehicle3b from '../../assets/prefabs/3b.png';
 import source from '../../assets/prefabs/source.png';
 import blank from '../../assets/prefabs/blank.png';
+import barrier from '../../assets/prefabs/barrier.png';
 
 import del from '../../assets/delete-button.png';
 import rotate from '../../assets/rotate.png';
@@ -36,7 +37,7 @@ export default class LoadingScene extends Phaser.Scene {
     this.load.image('prefab-3a', vehicle3a);
     this.load.image('prefab-3b', vehicle3b);
     this.load.image('prefab-source', source);
-    this.load.image('prefab-blank', blank);
+    this.load.image('barrier', barrier);
 
     this.load.image('del', del);
     this.load.image('rotate', rotate);

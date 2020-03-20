@@ -32,11 +32,8 @@ $('#deleteEntity').on('click', () => {
 });
 
 function resetSettings() {
-
     //$('.switch-btn').removeClass('switch-on');
-
     $('input:radio').prop('checked', false);
-
 }
 
 function openSettings(event) {
@@ -282,7 +279,10 @@ function sensorSettings(components) {
 
     // falls Entity keine Sensoren hat
     if (!components.length) {
+        document.getElementById("sensorFA").style.display = "none";
         return
+    } else {    
+        document.getElementById("sensorFA").style.display = "block";
     }
 
     components.forEach((component, index) => {
@@ -418,7 +418,10 @@ function drawSliders(components) {
         child.remove('div');
     });
     if (!components.length) {
+        document.getElementById("motorFA").style.display = "none";
         return
+    } else {    
+        document.getElementById("motorFA").style.display = "block";
     }
     components.forEach(component => {
         $("#slidecontainer").append('<div id = "' + component.id + '" class="slider">');

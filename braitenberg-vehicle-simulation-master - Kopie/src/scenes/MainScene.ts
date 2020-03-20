@@ -281,7 +281,7 @@ export default class MainScene extends Phaser.Scene {
         new TransformableComponent({ position: { x: mouseX, y: mouseY } }),
         new SolidBodyComponent({
             size: { width: 20, height: 400 },
-            shape: BodyShape.CIRCLE,
+            shape: BodyShape.RECTANGLE,
             isStatic: true,
         }),
         new SourceComponent({
@@ -291,7 +291,7 @@ export default class MainScene extends Phaser.Scene {
         }),
         new RenderComponent({
             asset: 0xcccccc,
-			size: { width: 100, height: 100 },
+			size: { width: 20, height: 400 },
 			shape: BodyShape.RECTANGLE
         }),
     );

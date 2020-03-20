@@ -78,7 +78,7 @@
 
                     <h4>Speed</h4>
                     <div id="slidecontainer"></div>
-                    <div class="row" style="padding-left: 20px;"> For all motors</div>
+                    <div class="row" id="motorFA" style="padding-left: 20px;"> For all motors</div>
 					<div id="slidecontainerForAll"></div>
                 </div>
                 <!--SENSOR-->
@@ -101,7 +101,7 @@
                         <form id="sensorReaction" class="col-3"> </form>
                         <form id="sensorOrientation" class="col-3"> </form>
                     </div>
-                    <div class="row" style="padding-left: 20px;"> For all sensors</div>
+                    <div class="row" id="sensorFA" style="padding-left: 20px;"> For all sensors</div>
                     <div class="row" id="sensorRowForAll">
                         <form id="sensorRangeFA" class="col-3"> </form>
                         <form id="sensorAngleFA" class="col-3"> </form>
@@ -240,20 +240,25 @@
 
             <div class="accordion" id="accordionExample">
                 <div class="card">
-                    <button id="blank" class="prefab-btn draggable"><img src="assets/prefabs/blank.png" alt="blank"></button>
+				    <button type="button" class="my-btn collapsed" data-toggle="collapse" data-target="#collapseOne">Blank</button>
+                    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+                        <div class="card-body">
+							<button id="blank" class="prefab-btn draggable"><img src="assets/prefabs/blank.png" alt="blank"></button>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="card">
-                    <button type="button" class="my-btn collapsed" data-toggle="collapse" data-target="#collapseOne">Source</button>
-                    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+                    <button type="button" class="my-btn collapsed" data-toggle="collapse" data-target="#collapseTwo">Source</button>
+                    <div id="collapseTwo" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
                         <div class="card-body">
                             <button id="source" class="prefab-btn draggable"><img src="assets/prefabs/source.png" alt="source"></button>
                         </div>
                     </div>
                 </div>
                 <div class="card">
-                    <button type="button" class="my-btn collapsed" data-toggle="collapse" data-target="#collapseTwo">Vehicle</button>
-                    <div id="collapseTwo" class="collapse show" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                    <button type="button" class="my-btn collapsed" data-toggle="collapse" data-target="#collapseThree">Vehicle</button>
+                    <div id="collapseThree" class="collapse show" aria-labelledby="headingTwo" data-parent="#accordionExample">
                         <div class="card-body">
                             <button id="prefab2a" class="prefab-btn draggable"><img src="assets/prefabs/2a.png" alt="vehicle-2a"></button>
                             <button id="prefab2b" class="prefab-btn draggable"><img src="assets/prefabs/2b.png" alt="vehicle-2b"></button>
@@ -265,10 +270,10 @@
                 </div>
 
                 <div class="card">
-                    <button type="button" class="my-btn collapsed" data-toggle="collapse" data-target="#collapseThree">Barrier</button>
-                    <div id="collapseThree" class="collapse show" aria-labelledby="headingThree" data-parent="#accordionExample">
+                    <button type="button" class="my-btn collapsed" data-toggle="collapse" data-target="#collapseFour">Barrier</button>
+                    <div id="collapseFour" class="collapse show" aria-labelledby="headingThree" data-parent="#accordionExample">
                         <div class="card-body">
-                            <button id="barrier" class="prefab-btn draggable">Create A Barrier</button>
+                            <button id="barrier" class="prefab-btn draggable"><img src="assets/prefabs/barrier.png" alt="barrier"></button>
                         </div>
                     </div>
                 </div>

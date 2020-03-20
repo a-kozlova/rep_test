@@ -6,16 +6,13 @@ import RenderComponent from '../components/RenderComponent';
 import TransformableComponent from '../components/TransformableComponent';
 import EventBus from '../EventBus';
 import SolidBodyComponent from '../components/SolidBodyComponent';
+import SourceComponent from '../components/SourceComponent';
 import Component from '../components/Component';
-
 import EntityManager from '../EntityManager';
-
-
 
 interface RenderObjectDictionary {
   [entityId: number]: Phaser.GameObjects.Image | Phaser.GameObjects.Rectangle;
 }
-
 
 export default class RenderSystem extends System {
   public expectedComponents: ComponentType[] = [ComponentType.TRANSFORMABLE, ComponentType.RENDER];
@@ -65,7 +62,7 @@ export default class RenderSystem extends System {
 
     if (entity) {
       const transform = entity.getComponent(ComponentType.TRANSFORMABLE) as TransformableComponent;
-        const render = entity.getComponent(ComponentType.RENDER) as RenderComponent;
+      const render = entity.getComponent(ComponentType.RENDER) as RenderComponent;
 
       const offsetX = render.shape.get() === 'Kreis' ? -render.size.get().width / 2: -render.size.get().width;
       const deleteBtnOffset = Phaser.Physics.Matter.Matter.Vector.rotate(
@@ -75,14 +72,11 @@ export default class RenderSystem extends System {
         const rotateBtnOffset = Phaser.Physics.Matter.Matter.Vector.rotate(
             { x: -render.size.get().width - 15, y: -render.size.get().width },
             transform.angle.get());
-
         
         let imgDel = this.scene.add.image(transform.position.get().x - deleteBtnOffset.x,
             transform.position.get().y - deleteBtnOffset.y, 'del');
         imgDel.setScale(0.04, 0.04);
-        imgDel.setDepth(999);
-
-       
+        imgDel.setDepth(999);       
            
         imgDel.setInteractive( { useHandCursor: true }).on('pointerdown', () => {
                  if (confirm("Delete this entity?")) {
@@ -126,7 +120,6 @@ export default class RenderSystem extends System {
 
       this.selected = null;
 
-
       if (this.deleteBtn) {
           this.deleteBtn.setVisible(false);
           this.deleteBtn.removeInteractive();
@@ -136,8 +129,7 @@ export default class RenderSystem extends System {
       if (this.rotateBtn) {
           this.rotateBtn.setVisible(false);
           this.rotateBtn.removeInteractive();
-      }
-      
+      }      
   }
 
   public update(): void {
@@ -147,7 +139,6 @@ export default class RenderSystem extends System {
 
       renderObject.setPosition(transform.position.get().x, transform.position.get().y);
       renderObject.setRotation(transform.angle.get());
-
 
       const render = entity.getComponent(ComponentType.RENDER) as RenderComponent;
       const renderHeight = render.size.get().height === 0 ? render.size.get().width : render.size.get().height;
@@ -181,7 +172,6 @@ export default class RenderSystem extends System {
             dir.fillStyle(0x000000, 1);
             dir.fillTriangle(x1, y1, x2, y2, x3, y3);
             dir.strokeTriangle(x1, y1, x2, y2, x3, y3);
-
         }
 
         if (this.selectedId === entity.id) {
@@ -217,8 +207,7 @@ export default class RenderSystem extends System {
                 del.setPosition(transform.position.get().x - deleteBtnOffset.x,
                     transform.position.get().y - deleteBtnOffset.y);
             }  
-        }
-        
+        }        
     });
   }
 
@@ -248,6 +237,7 @@ export default class RenderSystem extends System {
     protected createImage(entity: Entity, render: RenderComponent): void {
         const transform = entity.getComponent(ComponentType.TRANSFORMABLE) as TransformableComponent;
         const body = entity.getComponent(ComponentType.SOLID_BODY) as SolidBodyComponent;
+		const source = entity.getComponent(ComponentType.SOURCE) as SourceComponent;
 
         let image: Phaser.GameObjects.Image | Phaser.GameObjects.Rectangle | Phaser.GameObjects.Arc;
         if (render) {
@@ -264,26 +254,25 @@ export default class RenderSystem extends System {
                     transform.position.get().y,
                     body ? body.size.get().width : render.size.get().width,
                     body ? body.size.get().height : renderHeight,
-
                 );
-
-
             } else {
                 image = this.scene.add.ellipse(
                     transform.position.get().x ,
                     transform.position.get().y ,
                     render.size.get().width,
-                    render.size.get().width,
-                    
+                    render.size.get().width,                    
                 );
                 //image.setDisplayOrigin(0, 0);
             }
             image.setStrokeStyle(5, render.asset.get() as number)
-
            
             if (render.blendMode.get()) {
                 image.setBlendMode(render.blendMode.get() as Phaser.BlendModes);
             }
+			if(source.range.get() !=0 && source.emissionType.get() == "GAUSSIAN") {
+			console.log(source.range.get());
+				image.setDepth(100);			
+			}
 
             const direction = this.scene.add.graphics();
 
