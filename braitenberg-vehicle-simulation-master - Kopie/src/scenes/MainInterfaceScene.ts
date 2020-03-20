@@ -20,7 +20,10 @@ export default class MainInterfaceScene extends Phaser.Scene {
     });
 
     const newFile = new Button(this, 45 + start.getWidth(), 35, 5, () => {
-      MainScene.loadSnapshot();
+	if (confirm("Delete all objects?")) {
+                     MainScene.loadSnapshot();
+                 }
+      
     }, 'New file');
 
     const save = new Button(this, 110 + start.getWidth(), 35, 18, () => {

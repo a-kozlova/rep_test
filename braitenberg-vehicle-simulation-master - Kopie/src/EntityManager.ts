@@ -56,11 +56,7 @@ class EntityManager {
     EventBus.publish(EventType.ENTITY_DESTROYED, entity);
 
     var event = new CustomEvent("closeSettings");
-    
-    console.log("close");
     document.dispatchEvent(event);
-  
-
 
     delete this.entities[id];
   }
