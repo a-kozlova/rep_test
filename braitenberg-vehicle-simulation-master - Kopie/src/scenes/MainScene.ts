@@ -266,7 +266,7 @@ export default class MainScene extends Phaser.Scene {
     this.matter.world.setBounds();
   }
 
-    // test funktion 14.11.19
+  // create entities for mainscene
   public createBarrier(mouseX: number, mouseY: number): void {
     EntityManager.createEntity(
         new TransformableComponent({ position: { x: mouseX, y: mouseY } }),
