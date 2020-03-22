@@ -335,22 +335,30 @@ function sensorSettings(components) {
 
 
         $('#range' + component.id).change(function (event) {
-            let newValue = parseInt($(this).val()); // get the current value of the input field.
-            component.setRange(newValue);
-            //event.preventDefault();
+            let newValue = parseInt($(this).val()); 
+            if (newValue < 0) {
+                alert('Invalid value. Its should be greater than 0');
+            } else {
+                component.setRange(newValue);
+            }
         });
 
         $('#angle' + component.id).change(function () {
-            let newValue = parseFloat($(this).val()); // get the current value of the input field.
-            component.setAngle(newValue);
-            console.log("angle", newValue);
-            event.preventDefault();
+            let newValue = parseFloat($(this).val()); 
+            if (newValue < 0 || newValue > 1) {
+                alert('Invalid value. Its should be greater than 0 and less then 1');
+            } else {
+                component.setAngle(newValue);
+            }
         });
 
         $('#orientation' + component.id).change(function () {
-            let newValue = parseInt($(this).val()); // get the current value of the input field.
-            component.setOrientation(newValue);
-            event.preventDefault();
+            let newValue = parseInt($(this).val()); 
+            if (newValue < 0 || newValue > 360) {
+                alert('Invalid value. Its should be greater than 0 and less than 360');
+            } else {
+                component.setOrientation(newValue);
+            }
         });
     });
 
@@ -377,29 +385,41 @@ function sensorSettings(components) {
 
     $('#rangeFA').change( function () {
         let newValue = parseInt($(this).val()); 
-        rangeFA = newValue;
-        components.forEach((component, index) => {
-            component.setRange(newValue);
-        });
+        if (newValue < 0) {
+            alert('Invalid value. Its should be greater than 0');
+        } else {
+            rangeFA = newValue;
+            components.forEach((component, index) => {
+                component.setRange(newValue);
+            });
+        }
         event.preventDefault();
     });
 
     $('#angleFA').change( function () {
-        let newValue = parseFloat($(this).val()); // get the current value of the input field.
-        angleFA = newValue;
-        components.forEach((component, index) => {
-            component.setAngle(newValue);
-        });
+        let newValue = parseFloat($(this).val()); 
+        if (newValue < 0 || newValue > 1) {
+            alert('Invalid value. Its should be greater than 0 and les than 1');
+        } else {
+            angleFA = newValue;
+            components.forEach((component, index) => {
+                component.setAngle(newValue);
+            });
+        }
         event.preventDefault();
 
     });
 
     $('#orientationFA').on('change', function (event) {
-        let newValue = parseInt($(this).val()); // get the current value of the input field.
-        orientationFA = newValue;
-        components.forEach((component, index) => {
-            component.setOrientation(newValue);
-        });
+        let newValue = parseInt($(this).val()); 
+        if (newValue < 0 || newValue > 360) {
+            alert('Invalid value. Its should be greater than 0 and less than 360');
+        } else {
+            orientationFA = newValue;
+            components.forEach((component, index) => {
+                component.setOrientation(newValue);
+            });
+        }
         event.preventDefault();
 
     });
