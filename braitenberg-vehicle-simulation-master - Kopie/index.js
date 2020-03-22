@@ -25,7 +25,7 @@ document.addEventListener("closeSettings", closeSettings);
 
 
 $(document).on('entity:delete', function (event, options) {
-    let ev = new CustomEvent('delEnt', { detail: options });
+    let ev = new CustomEvent('deleteEntityEvent', { detail: options });
     document.dispatchEvent(ev);
 });
 
@@ -509,7 +509,7 @@ function closeNav() {
 
 
 /*
-* GLOBAL EVENTS
+* MOTOR CANVAS and its events
 */
 
 //add motor event
@@ -553,37 +553,29 @@ $(document).on("motor:upd", function (event, options) {
 });
 
 
-/*
-* GLOBAL VARS
-*/
-
-//color array this is unsafe because the array is of fixed size!
-//this needs a better solution!
-
 
 var motorCanvasStage = new Konva.Stage({
     container: 'motorCanvasContainer'
 });
 
-/*
-* FUNCTIONS
-*/
 
 function paintMotorCanvas() {
 
     motorComponents.forEach(motor => {
         if (Math.abs(motor.position.value.x) > size.width / 2) {
-            motor.setPosition(size.width / 2, motor.position.value.y)
+            let newValueX = motor.position.value.x > 0 ? size.width / 2 : -size.width / 2;
+            motor.setPosition(newValueX, motor.position.value.y)
         }
         if (Math.abs(motor.position.value.y) > size.height / 2) {
-            motor.setPosition(motor.position.value.x, size.height / 2)
+            let newValueY = motor.position.value.y > 0 ? size.height / 2 : -size.height / 2;
+            motor.setPosition(motor.position.value.x, newValueY)
         }
     });
 
 
     drawMotorCanvas({
-        components: motorComponents, //entity.components.filter(component => component.name == "Motor"),
-        size: size, //real: solidBodyComponents[0].size.value; ?
+        components: motorComponents, 
+        size: size, 
         width: 240,
         height: 200,
         grid: {
@@ -600,12 +592,12 @@ function paintMotorCanvas() {
     });
 }
 
+
 function drawMotorCanvas(options) {
     motorCanvasStage.destroyChildren();
     motorCanvasStage.width(options.width);
     motorCanvasStage.height(options.height);
-
-
+    
 
     let gridHeight = options.grid.size.y * options.grid.padding;
     let gridWidth = options.grid.size.x * options.grid.padding;
@@ -795,7 +787,7 @@ function drawMotorCanvas(options) {
             x: x,
             y: y,
             radius: 7,
-            fill: color[colorCounter], //col[component.id],
+            fill: color[colorCounter], 
             stroke: 'black',
             strokeWidth: 1,
             id: component.id,
@@ -905,7 +897,7 @@ function haveIntersection(r1, r2) {
 
 
 /*
-* GLOBAL EVENTS
+* SENSOR CANVAS and its events
 */
 
 //add sensor event
@@ -947,20 +939,11 @@ $(document).on("sensor:upd", function (event, options) {
 });
 
 
-/*
-* GLOBAL VARS
-*/
-
-//color array this is unsafe because the array is of fixed size!
-//this needs a better solution!
 
 var sensorCanvasStage = new Konva.Stage({
     container: 'sensorCanvasContainer'
 });
 
-/*
-* FUNCTIONS
-*/
 
 function paintSensorCanvas() {
     sensorComponents.forEach(sensor => {
@@ -996,10 +979,12 @@ function paintSensorCanvas() {
         } else {
 
             if (Math.abs(sensor.position.value.x) > size.width / 2) {
-                sensor.setPosition(size.width / 2, sensor.position.value.y)
+                let newValueX = sensor.position.value.x > 0 ? size.width / 2 : -size.width / 2;
+                sensor.setPosition(newValueX, sensor.position.value.y)
             }
             if (Math.abs(sensor.position.value.y) > size.height / 2) {
-                sensor.setPosition(sensor.position.value.x, size.height / 2)
+                let newValueY = sensor.position.value.y > 0 ? size.height / 2 : -size.height / 2;
+                sensor.setPosition(sensor.position.value.x, newValueY)
             }
         }
     });
@@ -1089,24 +1074,7 @@ function drawSensorCanvas(options) {
             stroke: 'black',
             strokeWidth: 1
         }));
-        /*for (let i = 0; i <= 24; i++) {
-            for (let j = 0; j <= 24; j++) {
-                let x = radius * Math.cos(i * 15 / 180 * Math.PI);
-                let y = radius * Math.sin(j * 15 / 180 * Math.PI);
-
-
-                if (x * x + y * y == radius * radius) {
-                    pointLayer.add(new Konva.Circle({
-                        x: x + startPoint.x,
-                        y: y + startPoint.x,
-                        radius: 3,
-                        fill: 'red',
-                        stroke: 'red',
-                        strokeWidth: 1
-                    }));
-                }
-            }
-        }*/
+        
     } else {
         for (let i = 0; i <= options.grid.size.x; i++) {
             for (let j = 0; j <= options.grid.size.y; j++) {
