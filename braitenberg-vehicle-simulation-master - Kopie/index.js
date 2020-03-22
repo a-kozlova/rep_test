@@ -121,7 +121,7 @@ function emissionSettings(sourceComponents) {
             $('#emRange').prop('disabled', false);
             $('#emRange').removeClass('disabled');
             $('#range-label').removeClass('disabled');
-            $('#emRange').on('input', function () {
+            $('#emRange').change( function () {
                 sourceComponents[0].setRange($(this).val());
             });
         }
@@ -354,7 +354,7 @@ function sensorSettings(components) {
         });
     });
 
-    //For all
+    //For all sensors
 
     $("#sensorRangeFA").append(
         '<input class="sensorInput" id = "rangeFA" style = "background: white"; margin-bottom:10px" placeholder = "' + rangeFA + '">');
