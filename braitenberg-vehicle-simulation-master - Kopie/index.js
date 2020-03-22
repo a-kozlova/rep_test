@@ -239,6 +239,23 @@ function bodySettings(bodyComponents, renderComponents) {
             break;            
     }
 
+
+    //Form
+    $('input[name="form"]:radio').on('change', function () {
+        entity.components.forEach(component => {
+            if (component.name == 'Koerper' || component.name == 'Rendering') {
+                component.setShape($("input[name='form']:checked").val());
+                component.setSize({ width: component.size.value.width, height: component.size.value.width });
+                shape = $("input[name='form']:checked").val() === 'rectangle' ? 'Rechteck' : 'Kreis';
+            }
+
+        });
+        var event = new CustomEvent('componentChanged', { detail: entity });
+        document.dispatchEvent(event);
+        console.log("change form", shape);
+
+    });
+
     // wenn SolidBodyComponent vorhanden, den Button auf ON setzten
     if (bodyComponents.length) {
         $("#static").prop('disabled', false);
@@ -254,22 +271,9 @@ function bodySettings(bodyComponents, renderComponents) {
         $('#solidBody.switch-btn').removeClass("switch-on");
         $('#static.switch-btn').removeClass("switch-on");
 
-        return
+  
     }
 
-    //Form
-    $('input[name="form"]:radio').change(function () {
-        entity.components.forEach(component => {
-            if (component.name == 'Koerper' || component.name == 'Rendering') {
-                component.setShape($("input[name='form']:checked").val());
-                component.setSize({ width: component.size.value.width, height: component.size.value.width });
-                shape = $("input[name='form']:checked").val() === 'rectangle' ? 'Rechteck' : 'Kreis';
-                console.log("change form", shape);
-            }
-        });
-        var event = new CustomEvent('componentChanged', { detail: entity });
-        document.dispatchEvent(event);
-    });
 
     //shape = renderComponents[0].shape.get();
 }
