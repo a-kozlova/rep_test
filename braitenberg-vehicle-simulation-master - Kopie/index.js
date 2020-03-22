@@ -282,7 +282,7 @@ function sensorSettings(components) {
             child.remove('input');
         });
     }
-    if ($('#sensorRowForAll  > form').children().length) {
+    if ($('#sensorRowForAll > form').children().length) {
         $('#sensorRowForAll > form').children().each((idx, child) => {
             child.remove('input');
         });
@@ -341,8 +341,9 @@ function sensorSettings(components) {
         });
 
         $('#angle' + component.id).change(function () {
-            let newValue = parseInt($(this).val()); // get the current value of the input field.
+            let newValue = parseFloat($(this).val()); // get the current value of the input field.
             component.setAngle(newValue);
+            console.log("angle", newValue);
             event.preventDefault();
         });
 
@@ -375,19 +376,22 @@ function sensorSettings(components) {
     }
 
     $('#rangeFA').change( function () {
-        let newValue = parseInt($(this).val()); // get the current value of the input field.
+        let newValue = parseInt($(this).val()); 
         rangeFA = newValue;
         components.forEach((component, index) => {
             component.setRange(newValue);
         });
+        event.preventDefault();
     });
 
     $('#angleFA').change( function () {
-        let newValue = parseInt($(this).val()); // get the current value of the input field.
+        let newValue = parseFloat($(this).val()); // get the current value of the input field.
         angleFA = newValue;
         components.forEach((component, index) => {
             component.setAngle(newValue);
         });
+        event.preventDefault();
+
     });
 
     $('#orientationFA').on('change', function (event) {
