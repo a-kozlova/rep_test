@@ -395,6 +395,7 @@ function sensorSettings(components) {
             rangeFA = newValue;
             components.forEach((component, index) => {
                 component.setRange(newValue);
+                $('#range' + component.id).attr('placeholder', component.range.value);
             });
         }
         event.preventDefault();
@@ -408,6 +409,7 @@ function sensorSettings(components) {
             angleFA = newValue;
             components.forEach((component, index) => {
                 component.setAngle(newValue);
+                $('#angle' + component.id).attr('placeholder', component.angle.value);
             });
         }
         event.preventDefault();
@@ -422,6 +424,7 @@ function sensorSettings(components) {
             orientationFA = newValue;
             components.forEach((component, index) => {
                 component.setOrientation(newValue);
+                $('#orientation' + component.id).attr('placeholder', Math.round(component.orientation.value * 180 / Math.PI));
             });
         }
         event.preventDefault();
