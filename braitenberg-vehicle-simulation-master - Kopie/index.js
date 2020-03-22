@@ -7,10 +7,13 @@ let motorComponents = [];
 let sensorComponents = [];
 let size = { 'width': 200, 'height': 250 };
 var shape = 'Kreis';
+
+// Sensor settings
 let rangeFA = 0;
 let angleFA = 0;
 let orientationFA = 0;
 let reactionFA = "Hindernis";
+// Motor settings
 let defaultSpeedFA = 0;
 let maxSpeedFA = 20;
 
@@ -26,7 +29,7 @@ $(document).on('entity:delete', function (event, options) {
     document.dispatchEvent(ev);
 });
 
-
+// Delete button in settings menu
 $('#deleteEntity').on('click', () => {
     $(document).trigger('entity:delete', [entity]);
 });
@@ -39,7 +42,7 @@ function resetSettings() {
 function openSettings(event) {
     closeNav();
     resetSettings();
-    //closeSettings();
+
     document.getElementById("deleteEntity").style.height = "5%";
     document.getElementById("deleteEntity").style.width = "300px";
     document.getElementById("myEntitySettings").style.height = "95%";
@@ -57,19 +60,17 @@ function openSettings(event) {
     var transformableComponents = entity.components.filter(component => component.name == "Transform");
     var connectionComponents = entity.components.filter(component => component.name == "Verbindung");
 
-
-    //size = { "width": 100, "height": 150 };
-    //var shape = "circle";
-
     size = renderComponents[0].size.value;
+    shape = renderComponents[0].shape.get();
 
     drawSliders(motorComponents);    
 
-    var smNumber = motorComponents.length > sensorComponents.length ? motorComponents.length : sensorComponents.length;
-    if (color.length < smNumber) {
+    // Generate color for motors and sensors on canvas
+    var largestComponentNumber = motorComponents.length > sensorComponents.length ? motorComponents.length : sensorComponents.length;
+    if (color.length < largestComponentNumber) {
         let i = color.length != 0 ? color.length: 0;
 
-        for (; i < smNumber; i++) {
+        for (; i < largestComponentNumber; i++) {
             let temp = generateHexColor();
             while (color.find(item => item == temp)) {
                 temp = generateHexColor();
@@ -87,9 +88,8 @@ function openSettings(event) {
 
 
 function generateHexColor() {
-    // Math.pow is slow, use constant instead.
     var color = Math.floor(Math.random() * 16777216).toString(16);
-    // Avoid loops.
+
     return '#000000'.slice(0, -color.length) + color;
 }
 
@@ -153,8 +153,7 @@ function emissionSettings(sourceComponents) {
 }
 
 
-function bodySettings(components, renderComponents) {
-
+function bodySettings(bodyComponents, renderComponents) {
     // Zuerst alle input-Kindknoten löschen, 
     // damit keine Abhaengigkeiten zwischen Komponenten der verschiedenen Entitäten entstehen
     $('#bodySize').children("input").each((idx, child) => {
@@ -168,7 +167,7 @@ function bodySettings(components, renderComponents) {
     $("#width").val(renderComponents[0].size.value.width);
     $("#height").val(renderComponents[0].size.value.height);
 
-    // die aktuelle Breite, Hoehe und Form der Entität anzeigen
+    // die aktuelle Form der Entität anzeigen (bei einem Kreis wird die Hoehe deaktiviert)
     if (renderComponents[0].shape.value === "Rechteck") {
         $("#height").prop('disabled', false);
         $("#height").removeClass('disabled');
@@ -181,22 +180,23 @@ function bodySettings(components, renderComponents) {
         $("#height").addClass('disabled');
     }
 
+    // die aktuelle Breite bzw. Hoehe aendern 
     $("#width").change(function () {
-        let newValue = parseInt($("#width").val()); // get the current value of the input field.
+        let newValue = parseInt($("#width").val()); 
 
         if (renderComponents[0].shape.get() === 'Kreis') {
 
             renderComponents[0].setSize({ width: newValue, height: newValue });
 
             //wenn SolidBody vorhanden, auch size setzen
-            if (components.length) {
-                components[0].setSize({ width: newValue, height: newValue });
+            if (bodyComponents.length) {
+                bodyComponents[0].setSize({ width: newValue, height: newValue });
             }
             $("#height").val(newValue);
         } else {
             renderComponents[0].setSize({ width: newValue, height: renderComponents[0].size.value.height });
-            if (components.length) {
-                components[0].setSize({ width: newValue, height: renderComponents[0].size.value.height });
+            if (bodyComponents.length) {
+                bodyComponents[0].setSize({ width: newValue, height: renderComponents[0].size.value.height });
             }
         }
 
@@ -206,11 +206,10 @@ function bodySettings(components, renderComponents) {
     });
 
     $("#height").change(function () {
-        let newValue = parseInt($(this).val()); // get the current value of the input field.
-        if (components.length) {
-            components[0].setSize({ width: renderComponents[0].size.value.width, height: newValue });
+        let newValue = parseInt($(this).val()); 
+        if (bodyComponents.length) {
+            bodyComponents[0].setSize({ width: renderComponents[0].size.value.width, height: newValue });
         }
-        //components[0].setSize({ width: renderComponents[0].size.value.width, height: parseInt(newValue) });
         renderComponents[0].setSize({ width: renderComponents[0].size.value.width, height: newValue });
 
         size = renderComponents[0].size.get();
@@ -240,14 +239,12 @@ function bodySettings(components, renderComponents) {
             break;            
     }
 
-
-
     // wenn SolidBodyComponent vorhanden, den Button auf ON setzten
-    if (components.length) {
+    if (bodyComponents.length) {
         $("#static").prop('disabled', false);
         $('#solidBody.switch-btn').addClass("switch-on");
 
-        if (components[0].isStatic.get()) {
+        if (bodyComponents[0].isStatic.get()) {
             $('#static.switch-btn').addClass("switch-on");
         } else {
             $('#static.switch-btn').removeClass("switch-on");
@@ -259,8 +256,22 @@ function bodySettings(components, renderComponents) {
 
         return
     }
-    
-    shape = renderComponents[0].shape.get();
+
+    //Form
+    $('input[name="form"]:radio').change(function () {
+        entity.components.forEach(component => {
+            if (component.name == 'Koerper' || component.name == 'Rendering') {
+                component.setShape($("input[name='form']:checked").val());
+                component.setSize({ width: component.size.value.width, height: component.size.value.width });
+                shape = $("input[name='form']:checked").val() === 'rectangle' ? 'Rechteck' : 'Kreis';
+                console.log("change form", shape);
+            }
+        });
+        var event = new CustomEvent('componentChanged', { detail: entity });
+        document.dispatchEvent(event);
+    });
+
+    //shape = renderComponents[0].shape.get();
 }
 
 function sensorSettings(components) {

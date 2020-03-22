@@ -105,19 +105,7 @@ $('input[name="farbe"]:radio').change(function() {
   });
 });
 
-//Form
-$('input[name="form"]:radio').change(function() {
-  entity.components.forEach(component => {
-      if (component.name == 'Koerper' || component.name == 'Rendering') {
-      component.setShape($("input[name='form']:checked").val());
-      component.setSize({ width: component.size.value.width, height: component.size.value.width });
-          shape = $("input[name='form']:checked").val();
-    }	
 
-  });
-  var event = new CustomEvent('componentChanged', { detail: entity });
-  document.dispatchEvent(event);
-});
 
 //SubstanceType
 $('input[name="substance"]:radio').change(function() {
