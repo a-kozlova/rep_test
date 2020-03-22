@@ -11,7 +11,7 @@ import Component from '../components/Component';
 import EntityManager from '../EntityManager';
 
 interface RenderObjectDictionary {
-  [entityId: number]: Phaser.GameObjects.Image | Phaser.GameObjects.Rectangle;
+  [entityId: number]: Phaser.GameObjects.Image | Phaser.GameObjects.Rectangle | Phaser.GameObjects.Arc;
 }
 
 export default class RenderSystem extends System {
@@ -19,7 +19,7 @@ export default class RenderSystem extends System {
 
   private renderObjects: RenderObjectDictionary = {};
 
-  private selected: Phaser.GameObjects.Image | Phaser.GameObjects.Rectangle | null = null;
+  private selected: Phaser.GameObjects.Image | Phaser.GameObjects.Rectangle | Phaser.GameObjects.Arc | null = null;
 
   private deleteBtn: Phaser.GameObjects.Image | null = null;
   private rotateBtn: Phaser.GameObjects.Image | null = null;
@@ -49,13 +49,10 @@ export default class RenderSystem extends System {
       this.selected.setDepth(999);
       this.selectedId = entity.id;
 
-      /*if (image instanceof Phaser.GameObjects.Image) {
-        image.setTint(0xddddff);
-      }
-
-      if (image instanceof Phaser.GameObjects.Rectangle) {
+      /*
+      if (image instanceof Phaser.GameObjects.Rectangle || image instanceof Phaser.GameObjects.Arc) {
         this.selected.setData('originalColor', image.fillColor);
-        image.setFillStyle(0xddddff);
+        image.setFillStyle(0xddddff, 0.5);
       }*/
         
     }
@@ -64,9 +61,8 @@ export default class RenderSystem extends System {
       const transform = entity.getComponent(ComponentType.TRANSFORMABLE) as TransformableComponent;
       const render = entity.getComponent(ComponentType.RENDER) as RenderComponent;
 
-      const offsetX = render.shape.get() === 'Kreis' ? -render.size.get().width / 2: -render.size.get().width;
       const deleteBtnOffset = Phaser.Physics.Matter.Matter.Vector.rotate(
-              { x: offsetX - 15, y: render.size.get().width},
+          { x: -render.size.get().width / 2 - 30, y: render.size.get().height /2},
             transform.angle.get());
 
         const rotateBtnOffset = Phaser.Physics.Matter.Matter.Vector.rotate(
@@ -107,16 +103,13 @@ export default class RenderSystem extends System {
   }
 
   private removeHighlight(): void {
+
     if (this.selected && this.scene.children.exists(this.selected)) {
-      if (this.selected instanceof Phaser.GameObjects.Image) {
-        //this.selected.setTint(0xffffff);
-      }
-      if (this.selected instanceof Phaser.GameObjects.Rectangle) {
-        const color = this.selected.getData('originalColor') || 0xcccccc;
-        //this.selected.setFillStyle(color);
-      }
+      /*if (this.selected instanceof Phaser.GameObjects.Rectangle || this.selected instanceof Phaser.GameObjects.Arc) {
+        this.selected.setFillStyle(0xcccccc, 0);
+      }*/
       this.selected.setDepth(this.selected.getData('originalDepth') || 0);
-      }
+    }
 
       this.selected = null;
 
@@ -180,8 +173,8 @@ export default class RenderSystem extends System {
                 const del = this.deleteBtn;
                
                 const deleteBtnOffset = Phaser.Physics.Matter.Matter.Vector.rotate(
-                    { x: -render.size.get().width - 15, y: render.size.get().width },
-                    transform.angle.get());                                
+                    { x: -render.size.get().width / 2 - 30, y: render.size.get().height / 2 },
+                    transform.angle.get());                            
             
                 /* ????????????????????????????????????????????????????????????????????????????????????????????????????
                 * Wenn dieser Code eingesetzt wird, wird die Position des Buttons richtig berechnet und gezeichnet, 
