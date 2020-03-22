@@ -7,10 +7,13 @@ let motorComponents = [];
 let sensorComponents = [];
 let size = { 'width': 200, 'height': 250 };
 var shape = 'Kreis';
+
+// Sensor settings
 let rangeFA = 0;
 let angleFA = 0;
 let orientationFA = 0;
 let reactionFA = "Hindernis";
+// Motor settings
 let defaultSpeedFA = 0;
 let maxSpeedFA = 20;
 
@@ -22,11 +25,11 @@ document.addEventListener("closeSettings", closeSettings);
 
 
 $(document).on('entity:delete', function (event, options) {
-    let ev = new CustomEvent('delEnt', { detail: options });
+    let ev = new CustomEvent('deleteEntityEvent', { detail: options });
     document.dispatchEvent(ev);
 });
 
-
+// Delete button in settings menu
 $('#deleteEntity').on('click', () => {
     $(document).trigger('entity:delete', [entity]);
 });
@@ -39,7 +42,7 @@ function resetSettings() {
 function openSettings(event) {
     closeNav();
     resetSettings();
-    //closeSettings();
+
     document.getElementById("deleteEntity").style.height = "5%";
     document.getElementById("deleteEntity").style.width = "300px";
     document.getElementById("myEntitySettings").style.height = "95%";
@@ -57,19 +60,17 @@ function openSettings(event) {
     var transformableComponents = entity.components.filter(component => component.name == "Transform");
     var connectionComponents = entity.components.filter(component => component.name == "Verbindung");
 
-
-    //size = { "width": 100, "height": 150 };
-    //var shape = "circle";
-
     size = renderComponents[0].size.value;
+    shape = renderComponents[0].shape.get();
 
     drawSliders(motorComponents);    
 
-    var smNumber = motorComponents.length > sensorComponents.length ? motorComponents.length : sensorComponents.length;
-    if (color.length < smNumber) {
+    // Generate color for motors and sensors on canvas
+    var largestComponentNumber = motorComponents.length > sensorComponents.length ? motorComponents.length : sensorComponents.length;
+    if (color.length < largestComponentNumber) {
         let i = color.length != 0 ? color.length: 0;
 
-        for (; i < smNumber; i++) {
+        for (; i < largestComponentNumber; i++) {
             let temp = generateHexColor();
             while (color.find(item => item == temp)) {
                 temp = generateHexColor();
@@ -87,9 +88,8 @@ function openSettings(event) {
 
 
 function generateHexColor() {
-    // Math.pow is slow, use constant instead.
     var color = Math.floor(Math.random() * 16777216).toString(16);
-    // Avoid loops.
+
     return '#000000'.slice(0, -color.length) + color;
 }
 
@@ -121,7 +121,7 @@ function emissionSettings(sourceComponents) {
             $('#emRange').prop('disabled', false);
             $('#emRange').removeClass('disabled');
             $('#range-label').removeClass('disabled');
-            $('#emRange').on('input', function () {
+            $('#emRange').change( function () {
                 sourceComponents[0].setRange($(this).val());
             });
         }
@@ -153,8 +153,7 @@ function emissionSettings(sourceComponents) {
 }
 
 
-function bodySettings(components, renderComponents) {
-
+function bodySettings(bodyComponents, renderComponents) {
     // Zuerst alle input-Kindknoten löschen, 
     // damit keine Abhaengigkeiten zwischen Komponenten der verschiedenen Entitäten entstehen
     $('#bodySize').children("input").each((idx, child) => {
@@ -168,7 +167,7 @@ function bodySettings(components, renderComponents) {
     $("#width").val(renderComponents[0].size.value.width);
     $("#height").val(renderComponents[0].size.value.height);
 
-    // die aktuelle Breite, Hoehe und Form der Entität anzeigen
+    // die aktuelle Form der Entität anzeigen (bei einem Kreis wird die Hoehe deaktiviert)
     if (renderComponents[0].shape.value === "Rechteck") {
         $("#height").prop('disabled', false);
         $("#height").removeClass('disabled');
@@ -181,22 +180,23 @@ function bodySettings(components, renderComponents) {
         $("#height").addClass('disabled');
     }
 
+    // die aktuelle Breite bzw. Hoehe aendern 
     $("#width").change(function () {
-        let newValue = parseInt($("#width").val()); // get the current value of the input field.
+        let newValue = parseInt($("#width").val()); 
 
         if (renderComponents[0].shape.get() === 'Kreis') {
 
             renderComponents[0].setSize({ width: newValue, height: newValue });
 
             //wenn SolidBody vorhanden, auch size setzen
-            if (components.length) {
-                components[0].setSize({ width: newValue, height: newValue });
+            if (bodyComponents.length) {
+                bodyComponents[0].setSize({ width: newValue, height: newValue });
             }
             $("#height").val(newValue);
         } else {
             renderComponents[0].setSize({ width: newValue, height: renderComponents[0].size.value.height });
-            if (components.length) {
-                components[0].setSize({ width: newValue, height: renderComponents[0].size.value.height });
+            if (bodyComponents.length) {
+                bodyComponents[0].setSize({ width: newValue, height: renderComponents[0].size.value.height });
             }
         }
 
@@ -206,11 +206,10 @@ function bodySettings(components, renderComponents) {
     });
 
     $("#height").change(function () {
-        let newValue = parseInt($(this).val()); // get the current value of the input field.
-        if (components.length) {
-            components[0].setSize({ width: renderComponents[0].size.value.width, height: newValue });
+        let newValue = parseInt($(this).val()); 
+        if (bodyComponents.length) {
+            bodyComponents[0].setSize({ width: renderComponents[0].size.value.width, height: newValue });
         }
-        //components[0].setSize({ width: renderComponents[0].size.value.width, height: parseInt(newValue) });
         renderComponents[0].setSize({ width: renderComponents[0].size.value.width, height: newValue });
 
         size = renderComponents[0].size.get();
@@ -240,14 +239,12 @@ function bodySettings(components, renderComponents) {
             break;            
     }
 
-
-
     // wenn SolidBodyComponent vorhanden, den Button auf ON setzten
-    if (components.length) {
+    if (bodyComponents.length) {
         $("#static").prop('disabled', false);
         $('#solidBody.switch-btn').addClass("switch-on");
 
-        if (components[0].isStatic.get()) {
+        if (bodyComponents[0].isStatic.get()) {
             $('#static.switch-btn').addClass("switch-on");
         } else {
             $('#static.switch-btn').removeClass("switch-on");
@@ -259,8 +256,22 @@ function bodySettings(components, renderComponents) {
 
         return
     }
-    
-    shape = renderComponents[0].shape.get();
+
+    //Form
+    $('input[name="form"]:radio').change(function () {
+        entity.components.forEach(component => {
+            if (component.name == 'Koerper' || component.name == 'Rendering') {
+                component.setShape($("input[name='form']:checked").val());
+                component.setSize({ width: component.size.value.width, height: component.size.value.width });
+                shape = $("input[name='form']:checked").val() === 'rectangle' ? 'Rechteck' : 'Kreis';
+                console.log("change form", shape);
+            }
+        });
+        var event = new CustomEvent('componentChanged', { detail: entity });
+        document.dispatchEvent(event);
+    });
+
+    //shape = renderComponents[0].shape.get();
 }
 
 function sensorSettings(components) {
@@ -271,7 +282,7 @@ function sensorSettings(components) {
             child.remove('input');
         });
     }
-    if ($('#sensorRowForAll  > form').children().length) {
+    if ($('#sensorRowForAll > form').children().length) {
         $('#sensorRowForAll > form').children().each((idx, child) => {
             child.remove('input');
         });
@@ -324,25 +335,34 @@ function sensorSettings(components) {
 
 
         $('#range' + component.id).change(function (event) {
-            let newValue = parseInt($(this).val()); // get the current value of the input field.
-            component.setRange(newValue);
-            //event.preventDefault();
+            let newValue = parseInt($(this).val()); 
+            if (newValue < 0) {
+                alert('Invalid value. Its should be greater than 0');
+            } else {
+                component.setRange(newValue);
+            }
         });
 
         $('#angle' + component.id).change(function () {
-            let newValue = parseInt($(this).val()); // get the current value of the input field.
-            component.setAngle(newValue);
-            event.preventDefault();
+            let newValue = parseFloat($(this).val()); 
+            if (newValue < 0 || newValue > 1) {
+                alert('Invalid value. Its should be greater than 0 and less then 1');
+            } else {
+                component.setAngle(newValue);
+            }
         });
 
         $('#orientation' + component.id).change(function () {
-            let newValue = parseInt($(this).val()); // get the current value of the input field.
-            component.setOrientation(newValue);
-            event.preventDefault();
+            let newValue = parseInt($(this).val()); 
+            if (newValue < 0 || newValue > 360) {
+                alert('Invalid value. Its should be greater than 0 and less than 360');
+            } else {
+                component.setOrientation(newValue);
+            }
         });
     });
 
-    //For all
+    //For all sensors
 
     $("#sensorRangeFA").append(
         '<input class="sensorInput" id = "rangeFA" style = "background: white"; margin-bottom:10px" placeholder = "' + rangeFA + '">');
@@ -364,27 +384,42 @@ function sensorSettings(components) {
     }
 
     $('#rangeFA').change( function () {
-        let newValue = parseInt($(this).val()); // get the current value of the input field.
-        rangeFA = newValue;
-        components.forEach((component, index) => {
-            component.setRange(newValue);
-        });
+        let newValue = parseInt($(this).val()); 
+        if (newValue < 0) {
+            alert('Invalid value. Its should be greater than 0');
+        } else {
+            rangeFA = newValue;
+            components.forEach((component, index) => {
+                component.setRange(newValue);
+            });
+        }
+        event.preventDefault();
     });
 
     $('#angleFA').change( function () {
-        let newValue = parseInt($(this).val()); // get the current value of the input field.
-        angleFA = newValue;
-        components.forEach((component, index) => {
-            component.setAngle(newValue);
-        });
+        let newValue = parseFloat($(this).val()); 
+        if (newValue < 0 || newValue > 1) {
+            alert('Invalid value. Its should be greater than 0 and les than 1');
+        } else {
+            angleFA = newValue;
+            components.forEach((component, index) => {
+                component.setAngle(newValue);
+            });
+        }
+        event.preventDefault();
+
     });
 
     $('#orientationFA').on('change', function (event) {
-        let newValue = parseInt($(this).val()); // get the current value of the input field.
-        orientationFA = newValue;
-        components.forEach((component, index) => {
-            component.setOrientation(newValue);
-        });
+        let newValue = parseInt($(this).val()); 
+        if (newValue < 0 || newValue > 360) {
+            alert('Invalid value. Its should be greater than 0 and less than 360');
+        } else {
+            orientationFA = newValue;
+            components.forEach((component, index) => {
+                component.setOrientation(newValue);
+            });
+        }
         event.preventDefault();
 
     });
@@ -498,7 +533,7 @@ function closeNav() {
 
 
 /*
-* GLOBAL EVENTS
+* MOTOR CANVAS and its events
 */
 
 //add motor event
@@ -542,37 +577,29 @@ $(document).on("motor:upd", function (event, options) {
 });
 
 
-/*
-* GLOBAL VARS
-*/
-
-//color array this is unsafe because the array is of fixed size!
-//this needs a better solution!
-
 
 var motorCanvasStage = new Konva.Stage({
     container: 'motorCanvasContainer'
 });
 
-/*
-* FUNCTIONS
-*/
 
 function paintMotorCanvas() {
 
     motorComponents.forEach(motor => {
         if (Math.abs(motor.position.value.x) > size.width / 2) {
-            motor.setPosition(size.width / 2, motor.position.value.y)
+            let newValueX = motor.position.value.x > 0 ? size.width / 2 : -size.width / 2;
+            motor.setPosition(newValueX, motor.position.value.y)
         }
         if (Math.abs(motor.position.value.y) > size.height / 2) {
-            motor.setPosition(motor.position.value.x, size.height / 2)
+            let newValueY = motor.position.value.y > 0 ? size.height / 2 : -size.height / 2;
+            motor.setPosition(motor.position.value.x, newValueY)
         }
     });
 
 
     drawMotorCanvas({
-        components: motorComponents, //entity.components.filter(component => component.name == "Motor"),
-        size: size, //real: solidBodyComponents[0].size.value; ?
+        components: motorComponents, 
+        size: size, 
         width: 240,
         height: 200,
         grid: {
@@ -589,12 +616,12 @@ function paintMotorCanvas() {
     });
 }
 
+
 function drawMotorCanvas(options) {
     motorCanvasStage.destroyChildren();
     motorCanvasStage.width(options.width);
     motorCanvasStage.height(options.height);
-
-
+    
 
     let gridHeight = options.grid.size.y * options.grid.padding;
     let gridWidth = options.grid.size.x * options.grid.padding;
@@ -784,7 +811,7 @@ function drawMotorCanvas(options) {
             x: x,
             y: y,
             radius: 7,
-            fill: color[colorCounter], //col[component.id],
+            fill: color[colorCounter], 
             stroke: 'black',
             strokeWidth: 1,
             id: component.id,
@@ -894,7 +921,7 @@ function haveIntersection(r1, r2) {
 
 
 /*
-* GLOBAL EVENTS
+* SENSOR CANVAS and its events
 */
 
 //add sensor event
@@ -936,20 +963,11 @@ $(document).on("sensor:upd", function (event, options) {
 });
 
 
-/*
-* GLOBAL VARS
-*/
-
-//color array this is unsafe because the array is of fixed size!
-//this needs a better solution!
 
 var sensorCanvasStage = new Konva.Stage({
     container: 'sensorCanvasContainer'
 });
 
-/*
-* FUNCTIONS
-*/
 
 function paintSensorCanvas() {
     sensorComponents.forEach(sensor => {
@@ -985,10 +1003,12 @@ function paintSensorCanvas() {
         } else {
 
             if (Math.abs(sensor.position.value.x) > size.width / 2) {
-                sensor.setPosition(size.width / 2, sensor.position.value.y)
+                let newValueX = sensor.position.value.x > 0 ? size.width / 2 : -size.width / 2;
+                sensor.setPosition(newValueX, sensor.position.value.y)
             }
             if (Math.abs(sensor.position.value.y) > size.height / 2) {
-                sensor.setPosition(sensor.position.value.x, size.height / 2)
+                let newValueY = sensor.position.value.y > 0 ? size.height / 2 : -size.height / 2;
+                sensor.setPosition(sensor.position.value.x, newValueY)
             }
         }
     });
@@ -1078,24 +1098,7 @@ function drawSensorCanvas(options) {
             stroke: 'black',
             strokeWidth: 1
         }));
-        /*for (let i = 0; i <= 24; i++) {
-            for (let j = 0; j <= 24; j++) {
-                let x = radius * Math.cos(i * 15 / 180 * Math.PI);
-                let y = radius * Math.sin(j * 15 / 180 * Math.PI);
-
-
-                if (x * x + y * y == radius * radius) {
-                    pointLayer.add(new Konva.Circle({
-                        x: x + startPoint.x,
-                        y: y + startPoint.x,
-                        radius: 3,
-                        fill: 'red',
-                        stroke: 'red',
-                        strokeWidth: 1
-                    }));
-                }
-            }
-        }*/
+        
     } else {
         for (let i = 0; i <= options.grid.size.x; i++) {
             for (let j = 0; j <= options.grid.size.y; j++) {
