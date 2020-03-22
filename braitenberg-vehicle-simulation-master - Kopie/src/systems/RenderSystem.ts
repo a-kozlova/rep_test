@@ -28,6 +28,7 @@ export default class RenderSystem extends System {
 
   private direction: { [entityId: number]: Phaser.GameObjects.Graphics } = {};
 
+
   public constructor(scene: Phaser.Scene) {
     super(scene);
 
@@ -96,6 +97,21 @@ export default class RenderSystem extends System {
             }
             EventBus.publish(EventType.ENTITY_SELECTED, entity);*/
         });
+		let radius = Math.sqrt((transform.position.get().x - rotateBtnOffset.x)*(transform.position.get().x - rotateBtnOffset.x) +
+					 (transform.position.get().y- rotateBtnOffset.y)*(transform.position.get().y - rotateBtnOffset.y));
+					 console.log(radius);
+
+		 this.scene.plugins.get('rexdragrotateplugin').add(this.scene, {
+				x: transform.position.get().x,
+				y: transform.position.get().y,
+				maxRadius: radius+5,
+				minRadius: radius-5,
+				// enable: true,
+			})
+		.on('drag', function (dragRotate) {
+			imgRotate.rotation += dragRotate.deltaRotation;
+			this.renderObjects[entity.id].rotation += dragRotate.deltaRotation;
+        })
        
         this.deleteBtn = imgDel;
         this.rotateBtn = imgRotate;
@@ -320,3 +336,4 @@ export default class RenderSystem extends System {
     this.onEntityDestroyed(entity);
   }
 }
+
