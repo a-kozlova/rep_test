@@ -90,17 +90,39 @@ export default class RenderSystem extends System {
             //transform.angle.set();
         });
 
-        imgRotate.on('pointerup', (pointer: Phaser.Input.Pointer) => {
-            /*const dragThreshold = 1;
-            if (pointer.getDistance() > dragThreshold) {
-                return;
-            }
-            EventBus.publish(EventType.ENTITY_SELECTED, entity);*/
+        imgRotate.on('pointerdown', (point: Phaser.Input.Pointer) => {
+            console.log("test");
+
+            imgRotate.on('pointermove', (pointer: Phaser.Input.Pointer) => {
+
+                const vec1 = {
+                    x: pointer.downX - transform.position.get().x,
+                    y: pointer.downY - transform.position.get().y
+                } 
+
+                const vec2 = {
+                    x: pointer.upX - transform.position.get().x,
+                    y: pointer.upY - transform.position.get().y
+                } 
+
+                const angleTest = Math.acos(Math.cos((vec1.x * vec2.x + vec1.y * vec2.y) / (Math.sqrt(vec1.x * vec1.x + vec1.y * vec1.y) * Math.sqrt(vec2.x * vec2.x + vec2.y * vec2.y))));
+                console.log("move  angle", angleTest);
+
+                transform.angle.set(angleTest);
+            });
+
+            imgRotate.on('pointerup', (pointer: Phaser.Input.Pointer) => {
+                console.log("up pointer x y", pointer.x, pointer.y);
+            });
+           
         });
+
+       /*
+
 		let radius = Math.sqrt((transform.position.get().x - rotateBtnOffset.x)*(transform.position.get().x - rotateBtnOffset.x) +
 					 (transform.position.get().y- rotateBtnOffset.y)*(transform.position.get().y - rotateBtnOffset.y));
 					 console.log(radius);
-
+        
 		 this.scene.plugins.get('rexdragrotateplugin').add(this.scene, {
 				x: transform.position.get().x,
 				y: transform.position.get().y,
@@ -111,7 +133,7 @@ export default class RenderSystem extends System {
 		.on('drag', function (dragRotate) {
 			imgRotate.rotation += dragRotate.deltaRotation;
 			this.renderObjects[entity.id].rotation += dragRotate.deltaRotation;
-        })
+        })*/
        
         this.deleteBtn = imgDel;
         this.rotateBtn = imgRotate;
@@ -184,8 +206,8 @@ export default class RenderSystem extends System {
         }
 
         if (this.selectedId === entity.id) {
-            
-            if (this.deleteBtn) {
+
+            if (this.deleteBtn && this.rotateBtn) {
                 const del = this.deleteBtn;
                
                 const deleteBtnOffset = Phaser.Physics.Matter.Matter.Vector.rotate(
@@ -194,6 +216,14 @@ export default class RenderSystem extends System {
             
                 del.setPosition(transform.position.get().x - deleteBtnOffset.x,
                     transform.position.get().y - deleteBtnOffset.y);
+
+
+                const rotateBtnOffset = Phaser.Physics.Matter.Matter.Vector.rotate(
+                    { x: -render.size.get().width / 2 - 30, y: - render.size.get().height / 2 },
+                    transform.angle.get());
+
+                this.rotateBtn.setPosition(transform.position.get().x - rotateBtnOffset.x,
+                    transform.position.get().y - rotateBtnOffset.y);
             }  
         }        
     });
