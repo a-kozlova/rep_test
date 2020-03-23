@@ -416,7 +416,7 @@ function sensorSettings(components) {
 
     });
 
-    $('#orientationFA').on('change', function (event) {
+    $('#orientationFA').change( function (event) {
         let newValue = parseInt($(this).val()); 
         if (newValue < 0 || newValue > 360) {
             alert('Invalid value. Its should be greater than 0 and less than 360');
