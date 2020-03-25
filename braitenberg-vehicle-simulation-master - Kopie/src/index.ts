@@ -90,11 +90,7 @@ $('#emis.switch-btn').click(function() {
   document.dispatchEvent(event);
 });
 
-$('#closeSettings').click(function(){
-	var event = new CustomEvent('closeSettings');
-	document.dispatchEvent(event);
 
-})
 
 //Farbe
 $('input[name="farbe"]:radio').change(function() {

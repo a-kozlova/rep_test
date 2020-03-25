@@ -30,6 +30,12 @@ $('#deleteEntity').on('click', () => {
     document.dispatchEvent(ev);
 });
 
+// CloseSettings button (Sidebar allgemein)
+$('#closeSettings').click(function () {
+    var event = new CustomEvent('closeSettings');
+    document.dispatchEvent(event);
+})
+
 function resetSettings() {
     //$('.switch-btn').removeClass('switch-on');
     $('input:radio').prop('checked', false);
@@ -152,7 +158,7 @@ function emissionSettings(sourceComponents) {
 
 
 function bodySettings(bodyComponents, renderComponents) {
-    // Zuerst alle input-Kindknoten löschen, 
+    // Zuerst alle input-Kindknoten loeschen, 
     // damit keine Abhaengigkeiten zwischen Komponenten der verschiedenen Entiaeten entstehen
     $('#bodySize').children("input").each((idx, child) => {
         child.remove();
@@ -199,10 +205,12 @@ function bodySettings(bodyComponents, renderComponents) {
         }
 
         size = renderComponents[0].size.get();
+        // Canvas muss aktualisiert werden
         paintMotorCanvas();
         paintSensorCanvas();
     });
 
+    // Hoehe aendern 
     $("#height").change(function () {
         let newValue = parseInt($(this).val()); 
         if (bodyComponents.length) {
@@ -211,11 +219,13 @@ function bodySettings(bodyComponents, renderComponents) {
         renderComponents[0].setSize({ width: renderComponents[0].size.value.width, height: newValue });
 
         size = renderComponents[0].size.get();
+
+        // Canvas muss aktualisiert werden
         paintMotorCanvas();
         paintSensorCanvas();
     });
 
-
+    // Farbe anzeigen
     switch (renderComponents[0].asset.value) {
         case 13421772:
             $("#grey").prop('checked', true);
