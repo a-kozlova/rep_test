@@ -98,54 +98,65 @@ export default class RenderSystem extends System {
         // transform.angle.set();
       });
 
-      imgRotate.on('pointerdown', (pointer: Phaser.Input.Pointer) => {
-          console.log('POINTERDOWN trans', transform.position.get());
-          console.log("down vec1", pointer.downX, pointer.downY);
+      imgRotate.on('pointerdown', (point: Phaser.Input.Pointer) => {
+        this.scene.input.on('pointermove', (pointer: Phaser.Input.Pointer) => {
+          let rotateAngle = 0;
 
-          imgRotate.on('pointermove', (pointer: Phaser.Input.Pointer) => {
-              var rotateAngle = 0;
-              if (pointer.isDown) {
+          if (pointer.isDown) {
+            const vec1 = {
+              x: pointer.downX - transform.position.get().x,
+              y: pointer.downY - transform.position.get().y,
+            };
 
-                  const vec1 = {
-                      x: pointer.downX - transform.position.get().x,
-                      y: pointer.downY - transform.position.get().y
-                  }
+            const vec2 = {
+              x: pointer.event.clientX - transform.position.get().x,
+              y: pointer.event.clientY - transform.position.get().y,
+            };
 
-                  const vec2 = {
-                      x: pointer.event.clientX - transform.position.get().x,
-                      y: pointer.event.clientY - transform.position.get().y
-                  }
+            rotateAngle = Math.acos(
+              (vec1.x * vec2.x + vec1.y * vec2.y) /
+                (Math.sqrt(vec1.x * vec1.x + vec1.y * vec1.y) * Math.sqrt(vec2.x * vec2.x + vec2.y * vec2.y)),
+            );
+            const cos = Math.cos(
+              (vec1.x * vec2.x + vec1.y * vec2.y) /
+                (Math.sqrt(vec1.x * vec1.x + vec1.y * vec1.y) * Math.sqrt(vec2.x * vec2.x + vec2.y * vec2.y)),
+            );
+            const verh = vec1.x * vec2.x + vec1.y * vec2.y;
+            const niz = Math.sqrt(vec1.x * vec1.x + vec1.y * vec1.y) * Math.sqrt(vec2.x * vec2.x + vec2.y * vec2.y);
 
-                  rotateAngle = Math.acos(
-                      (vec1.x * vec2.x + vec1.y * vec2.y) /
-                      (Math.sqrt(vec1.x * vec1.x + vec1.y * vec1.y) * Math.sqrt(vec2.x * vec2.x + vec2.y * vec2.y))
-                  );
-                  const cos = Math.cos(
-                      (vec1.x * vec2.x + vec1.y * vec2.y) /
-                      (Math.sqrt(vec1.x * vec1.x + vec1.y * vec1.y) * Math.sqrt(vec2.x * vec2.x + vec2.y * vec2.y)));
-                  const verh = vec1.x * vec2.x + vec1.y * vec2.y;
-                  const niz = Math.sqrt(vec1.x * vec1.x + vec1.y * vec1.y) * Math.sqrt(vec2.x * vec2.x + vec2.y * vec2.y);
+            let angle = Phaser.Math.Angle.Between(
+              transform.position.get().x,
+              transform.position.get().y,
+              pointer.x,
+              pointer.y,
+            );
 
+            console.log('MOVE down  x y', pointer.downX, pointer.downY);
+            console.log('MOVE client x y', pointer.event.clientX, pointer.event.clientY);
+            //console.log("pointer i down", pointer);
+            console.log('MOVE angle', rotateAngle);
+            //console.log('move angle cos', cos);
+            //console.log('move angle verh', verh);
+            //console.log('move angle niz', niz);
+            console.log('angle', angle);
 
-                  console.log("MOVE down  x y", pointer.downX, pointer.downY);
-                  console.log("MOVE client x y", pointer.event.clientX, pointer.event.clientY);
-                  //console.log("pointer i down", pointer);
-                  console.log('MOVE angle', rotateAngle);
-                  //console.log('move angle cos', cos);
-                  //console.log('move angle verh', verh);
-                  //console.log('move angle niz', niz);
-                 // console.log("transform", transform.position.get());
+            /*
+             *  von fayras
+             *
+             */
 
-              }
-              transform.angle.set(transform.angle.get() + rotateAngle);
+            transform.angle.set(angle);
+          }
+          //transform.angle.set(transform.angle.get() + rotateAngle);
+        });
 
-          });
-                 
+        this.scene.input.on('pointerup', (pointer: Phaser.Input.Pointer) => {
+          //pointer.();
+        });
       });
 
       /*
-		let radius = Math.sqrt((transform.position.get().x - rotateBtnOffset.x)*(transform.position.get().x - rotateBtnOffset.x) +
-					 (transform.position.get().y- rotateBtnOffset.y)*(transform.position.get().y - rotateBtnOffset.y));
+		
 					 console.log(radius);
         
 		 this.scene.plugins.get('rexdragrotateplugin').add(this.scene, {
