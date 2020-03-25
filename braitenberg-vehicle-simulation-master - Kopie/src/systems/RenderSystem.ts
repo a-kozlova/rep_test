@@ -145,13 +145,16 @@ export default class RenderSystem extends System {
              *
              */
 
-            transform.angle.set(angle);
+            //transform.angle.set(angle);
           }
-          //transform.angle.set(transform.angle.get() + rotateAngle);
+
+          transform.angle.set(transform.angle.get() + rotateAngle);
         });
 
         this.scene.input.on('pointerup', (pointer: Phaser.Input.Pointer) => {
-          //pointer.();
+          const moving = false;
+          console.log('pointerup', moving);
+          this.scene.input.removeListener('pointermove');
         });
       });
 
