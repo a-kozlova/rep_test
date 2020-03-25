@@ -42,12 +42,11 @@ const config: Phaser.Types.Core.GameConfig = {
 };
 
 // eslint-disable-next-line
+
 //create a variable
+var myGame = new Phaser.Game(config);
 
-var mytestgame = new Phaser.Game(config);
 
-//Have a look at all the members of mytestgame in the console
-//console.log(mytestgame);
 
 // Create objects from sidebar menu by drag and drop
 $(function() {
@@ -62,13 +61,13 @@ $(function() {
       $(ui.draggable).show();
     },
     drop: function(event, ui) {
-      mytestgame.scene.scenes[1].createObject(event.clientX, event.clientY, ui.draggable.attr('id'));
+      myGame.scene.scenes[1].createObject(event.clientX, event.clientY, ui.draggable.attr('id'));
     },
   });
 });
 
 $('.prefab-btn').click(function() {
-  mytestgame.scene.scenes[1].createObject(300, 200, $(this).attr('id'));
+  myGame.scene.scenes[1].createObject(300, 200, $(this).attr('id'));
 });
 
 // add remove emission
@@ -129,10 +128,10 @@ $('#solidBody.switch-btn').click(function() {
   $(this).toggleClass('switch-on');
   if ($(this).hasClass('switch-on')) {
     $(this).trigger('on.switch');
-    mytestgame.scene.scenes[3].addSolidBody(entity);
+    myGame.scene.scenes[3].addSolidBody(entity);
   } else {
     $(this).trigger('off.switch');
-    mytestgame.scene.scenes[3].deleteSolidBody(entity, entity.getComponent(ComponentType.SOLID_BODY));
+    myGame.scene.scenes[3].deleteSolidBody(entity, entity.getComponent(ComponentType.SOLID_BODY));
   }
 });
 
@@ -152,20 +151,20 @@ $('#static.switch-btn').click(function() {
 
 // add sensor
 document.addEventListener('addSensor', function(event) {
-  mytestgame.scene.scenes[3].addSensor(entity, event.detail.position);
+  myGame.scene.scenes[3].addSensor(entity, event.detail.position);
 });
 
 // add motor
 document.addEventListener('addMotor', function() {
-  mytestgame.scene.scenes[3].addMotor(entity, event.detail.position);
+  myGame.scene.scenes[3].addMotor(entity, event.detail.position);
 });
 
 document.addEventListener('deleteSensor', function(event) {
-    mytestgame.scene.scenes[3].deleteSensor(entity, event.detail.component);
+    myGame.scene.scenes[3].deleteSensor(entity, event.detail.component);
 });
 
 document.addEventListener('deleteMotor', function (event) {
-    mytestgame.scene.scenes[3].deleteMotor(entity, event.detail.component);
+    myGame.scene.scenes[3].deleteMotor(entity, event.detail.component);
 });
 
 document.addEventListener('deleteEntityEvent', (event) => {

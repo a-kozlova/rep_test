@@ -205,12 +205,10 @@ function bodySettings(bodyComponents, renderComponents) {
         }
 
         size = renderComponents[0].size.get();
-        // Canvas muss aktualisiert werden
         paintMotorCanvas();
         paintSensorCanvas();
     });
 
-    // Hoehe aendern 
     $("#height").change(function () {
         let newValue = parseInt($(this).val()); 
         if (bodyComponents.length) {
@@ -219,13 +217,11 @@ function bodySettings(bodyComponents, renderComponents) {
         renderComponents[0].setSize({ width: renderComponents[0].size.value.width, height: newValue });
 
         size = renderComponents[0].size.get();
-
-        // Canvas muss aktualisiert werden
         paintMotorCanvas();
         paintSensorCanvas();
     });
 
-    // Farbe anzeigen
+
     switch (renderComponents[0].asset.value) {
         case 13421772:
             $("#grey").prop('checked', true);
@@ -261,12 +257,12 @@ function bodySettings(bodyComponents, renderComponents) {
         });
 
         // Event für Aktualisierung von Canvas
-        //var event = new CustomEvent('componentChanged', { detail: entity });
-        //document.dispatchEvent(event);
+        var event = new CustomEvent('componentChanged', { detail: entity });
+        document.dispatchEvent(event);
 
         // Canvas muss aktualisiert werden
-        paintMotorCanvas();
-        paintSensorCanvas();
+        //paintMotorCanvas();
+        //paintSensorCanvas();
     });
 
     // wenn SolidBodyComponent vorhanden, den Button auf ON setzten
