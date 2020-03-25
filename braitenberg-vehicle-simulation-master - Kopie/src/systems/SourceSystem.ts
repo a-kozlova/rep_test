@@ -57,11 +57,11 @@ export default class SourceSystem extends System {
 
     const handleTransform = this.addHandler(
       source.id,
-      //debounce(
+      debounce(
        () => {
         this.removeSourceObject(source, currentType);
         this.addSourceObject(entity, source);
-      }//, 200),*/
+      }, 200),
     );
 
     transform.position.onChange(handleTransform);
