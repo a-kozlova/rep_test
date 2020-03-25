@@ -1,37 +1,33 @@
-﻿'use strict'
-
+﻿
 var entity = null;
-//var color = ["#00ffff", "#00ff00", "#ff00ff", "#cecece", "#cece00", "#ce00ce", "#00cece", "#c00ece", "#cec00e", "#0000ce"];
-var color = [];
 let motorComponents = [];
 let sensorComponents = [];
-let size = { 'width': 200, 'height': 250 };
-var shape = 'Kreis';
+
+let color = [];
+let size = { width: 200, height: 250 };
+let shape = 'Kreis';
 
 // Sensor settings
 let rangeFA = 0;
 let angleFA = 0;
 let orientationFA = 0;
-let reactionFA = "Hindernis";
+let reactionFA = 'Hindernis';
 // Motor settings
 let defaultSpeedFA = 0;
 let maxSpeedFA = 20;
 
-document.addEventListener("entitySelected", openSettings);
-document.addEventListener("attributeAdded", openSettings);
 
-document.addEventListener("componentChanged", openSettings);
-document.addEventListener("closeSettings", closeSettings);
-
-
-$(document).on('entity:delete', function (event, options) {
-    let ev = new CustomEvent('deleteEntityEvent', { detail: options });
-    document.dispatchEvent(ev);
-});
+// Events für Manipulation von Sidebar
+document.addEventListener('entitySelected', openSettings);
+document.addEventListener('attributeAdded', openSettings);
+document.addEventListener('componentChanged', openSettings);
+document.addEventListener('closeSettings', closeSettings);
 
 // Delete button in settings menu
 $('#deleteEntity').on('click', () => {
-    $(document).trigger('entity:delete', [entity]);
+    // Event wird in index.ts abgefangen, führt zum Aufruf der Löschfunktion
+    let ev = new CustomEvent('deleteEntityEvent', { detail: entity });
+    document.dispatchEvent(ev);
 });
 
 function resetSettings() {
@@ -50,7 +46,8 @@ function openSettings(event) {
     document.getElementById("createEntityMenu").style.marginRight = "356px";
     document.getElementById("deleteEntity").style.display = "block";
 
-    entity = event.detail;                  // die aufgerufene Entität  
+    // Initialisiert die Entität mit event.detail aus hightlight-Methode von Rendersystem;
+    entity = event.detail;                  
 
     motorComponents = entity.components.filter(component => component.name == "Motor");
     sensorComponents = entity.components.filter(component => component.name == "Sensor");
@@ -95,6 +92,7 @@ function generateHexColor() {
 
 
 function emissionSettings(sourceComponents) {
+    // Alle Kindknoten werden zuerst gelöscht und neu erzeigt, um Abhängigkeiten zwischen Komponenten von verschiedenen Entitäten zu vermeiden
     $('#emRange').remove();
     $('#emissionRange').after('<input id = "emRange" class="col-4" style = "height: 25px;">');
 
@@ -155,7 +153,7 @@ function emissionSettings(sourceComponents) {
 
 function bodySettings(bodyComponents, renderComponents) {
     // Zuerst alle input-Kindknoten löschen, 
-    // damit keine Abhaengigkeiten zwischen Komponenten der verschiedenen Entitäten entstehen
+    // damit keine Abhaengigkeiten zwischen Komponenten der verschiedenen Entiaeten entstehen
     $('#bodySize').children("input").each((idx, child) => {
         child.remove();
     });
@@ -188,7 +186,7 @@ function bodySettings(bodyComponents, renderComponents) {
 
             renderComponents[0].setSize({ width: newValue, height: newValue });
 
-            //wenn SolidBody vorhanden, auch size setzen
+            //wenn SolidBody vorhanden, diesem auch size setzen
             if (bodyComponents.length) {
                 bodyComponents[0].setSize({ width: newValue, height: newValue });
             }
@@ -240,20 +238,25 @@ function bodySettings(bodyComponents, renderComponents) {
     }
 
 
-    //Form
+    // Form der Entitaet 
     $('input[name="form"]:radio').on('change', function () {
         entity.components.forEach(component => {
             if (component.name == 'Koerper' || component.name == 'Rendering') {
                 component.setShape($("input[name='form']:checked").val());
                 component.setSize({ width: component.size.value.width, height: component.size.value.width });
                 shape = $("input[name='form']:checked").val() === 'rectangle' ? 'Rechteck' : 'Kreis';
+                size = component.size.get();
             }
 
         });
-        var event = new CustomEvent('componentChanged', { detail: entity });
-        document.dispatchEvent(event);
-        console.log("change form", shape);
 
+        // Event für Aktualisierung von Canvas
+        //var event = new CustomEvent('componentChanged', { detail: entity });
+        //document.dispatchEvent(event);
+
+        // Canvas muss aktualisiert werden
+        paintMotorCanvas();
+        paintSensorCanvas();
     });
 
     // wenn SolidBodyComponent vorhanden, den Button auf ON setzten
