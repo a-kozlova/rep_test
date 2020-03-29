@@ -106,13 +106,11 @@ export default class PhysicsSystem extends System {
 
     component.size.onChange((value, old) => {
       const { body } = this.physicsObjects[entity.id];
-      
+
       if (component.shape.get() === 'Kreis') {
-        //Fuer den Kreis muss Radius gesetzt werden, denn sonst wir er null und Body wird zur Ellipse 
-        Phaser.Physics.Matter.Matter.Body.set(body, 'circleRadius', value.width/2);
-
+        //Fuer den Kreis muss Radius gesetzt werden, denn sonst wir er null und Body wird zur Ellipse
+        Phaser.Physics.Matter.Matter.Body.set(body, 'circleRadius', value.width / 2);
       } else {
-
         // Hier wird der Körper einmal in die "aufrechte" Position gedreht, weil `Matter.Body.scale`
         // den Körper aus der "globalen" Sicht skaliert. D.h. sind scaleX und scaleY unterschied-
         // lich, dann wird der Körper gequetscht und zu einem Parallelogramm.
@@ -127,6 +125,16 @@ export default class PhysicsSystem extends System {
 
     component.isStatic.onChange(value => {
       this.physicsObjects[entity.id].body.isStatic = value;
+
+      // Falls body nicht mehr statisch ist, soll inertia sowie inverseInertia gesetzt werden,
+      // denn sie werden in weiteren Berechnungen (in Matter.Body) benutzt
+      if (value === false) {
+        this.physicsObjects[entity.id].body.inertia = 972.733631710278;
+        this.physicsObjects[entity.id].body.inverseInertia = 1 / this.physicsObjects[entity.id].body.inertia;
+        /* this.physicsObjects[entity.id].body.mass = 15;
+           this.physicsObjects[entity.id].body.inverseMass = 1 / this.physicsObjects[entity.id].body.mass;
+           this.physicsObjects[entity.id].body.density = 0.001;*/
+      }
     });
 
     this.createBody(entity, component);
@@ -165,7 +173,7 @@ export default class PhysicsSystem extends System {
 
   // überprüft ob fälschlicherweise die Körper Komponente gelöscht wurde,
   // falls nicht wird die onEntityDestroyed aufgerufen
-    protected onEntityComponentRemoved(entity: Entity, component: Component): void {
+  protected onEntityComponentRemoved(entity: Entity, component: Component): void {
     if (component.name !== ComponentType.SOLID_BODY) return;
 
     this.onEntityDestroyed(entity);
