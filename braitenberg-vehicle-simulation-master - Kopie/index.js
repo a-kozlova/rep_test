@@ -238,6 +238,9 @@ function bodySettings(bodyComponents, renderComponents) {
         case 1791363:
             $("#blue").prop('checked', true);
             break;
+        case 16776960:
+            $("#yellow").prop('checked', true);
+            break;
         default:
             $("#black").prop('checked', true);
             break;            

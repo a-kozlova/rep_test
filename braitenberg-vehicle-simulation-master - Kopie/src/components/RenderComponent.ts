@@ -47,6 +47,7 @@ export default class RenderComponent extends Component {
                     'Farbe: Rot': 0xd14152,
                     'Farbe: Grün': 0x57a639,
                     'Farbe: Blau': 0x1b5583,
+                    'Farbe: Yellow': 0xffff00,
                 },
             }),
         );
@@ -90,6 +91,10 @@ export default class RenderComponent extends Component {
             }
             case 'blue': {
                 this.asset.set(0x1b5583);
+                break;
+            }
+            case 'yellow': {
+                this.asset.set(0xffff00);
                 break;
             }
         }
