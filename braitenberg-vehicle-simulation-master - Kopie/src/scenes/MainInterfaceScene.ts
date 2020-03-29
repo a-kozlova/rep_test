@@ -29,10 +29,6 @@ export default class MainInterfaceScene extends Phaser.Scene {
       MainScene.createSnapshot();
     }, 'Save');
 
-   // const showEditor = new Button(this, this.cameras.main.displayWidth - 35, 35, 17, () => {
-   //   this.scene.launch('EditorScene');
-    //}, '');
-
     const exportButton = new Button(this, 175 + start.getWidth(), 35, 0, () => {
       MainScene.exportJson();
     }, 'Save scene as');
@@ -40,8 +36,6 @@ export default class MainInterfaceScene extends Phaser.Scene {
     const importButton = new Button(this, 240 + start.getWidth(), 35, 4, () => {
       MainScene.importJson();
     }, 'Load scene from');
-
-  
 
     this.buttons.push(start, newFile, /*showEditor,*/ save, exportButton, importButton);	
   }

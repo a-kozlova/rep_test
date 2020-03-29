@@ -46,8 +46,6 @@ const config: Phaser.Types.Core.GameConfig = {
 //create a variable
 var myGame = new Phaser.Game(config);
 
-
-
 // Create objects from sidebar menu by drag and drop
 $(function() {
   $('.draggable').draggable({

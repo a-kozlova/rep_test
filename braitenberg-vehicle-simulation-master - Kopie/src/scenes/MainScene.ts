@@ -157,7 +157,7 @@ export default class MainScene extends Phaser.Scene {
         new TransformableComponent({ position: { x: 950, y: 350 }}),
       new RenderComponent({
         asset: 'prefab-source',
-        size: { width: 100, height: 100 },
+        size: { width: 50, height: 50 },
         shape: BodyShape.CIRCLE,
       }),
       new SourceComponent({

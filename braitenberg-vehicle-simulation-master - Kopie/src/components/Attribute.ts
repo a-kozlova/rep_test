@@ -29,7 +29,6 @@ export default class Attribute<T, S extends BaseInput<T>> implements Settable<T>
     return this.value;
   }
 
-  //4E DELAET SILENT???????????????????????????
   public set(value: T, silent: boolean = false): void {
     const oldValue = this.value;
 
@@ -58,13 +57,11 @@ export default class Attribute<T, S extends BaseInput<T>> implements Settable<T>
   public render(scene: Phaser.Scene, entity: Entity): S {
     this.el = this.createElement(scene, this, entity); // DOMElement Inputs
     this.el.init(); 
-      // ??? ??????
-      //console.log("ELEMENT", typeof (this.el));
-
+    
     return this.el;
   }
 
-    // wird nicht aufgerufen
+  // wird nicht aufgerufen
   public renderedAs(type: any): boolean {
     return this.createElement === type;
   }
