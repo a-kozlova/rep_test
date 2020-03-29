@@ -274,6 +274,7 @@ function bodySettings(bodyComponents, renderComponents) {
     // wenn SolidBodyComponent vorhanden, den Button auf ON setzten
     if (bodyComponents.length) {
         $("#static").prop('disabled', false);
+        $('#staticRow').removeClass('disabled');
         $('#solidBody.switch-btn').addClass("switch-on");
 
         if (bodyComponents[0].isStatic.get()) {
@@ -285,7 +286,8 @@ function bodySettings(bodyComponents, renderComponents) {
     } else {
         $('#solidBody.switch-btn').removeClass("switch-on");
         $('#static.switch-btn').removeClass("switch-on");
-
+        $("#static").prop('disabled', true);
+        $('#staticRow').addClass('disabled');
   
     }
 
@@ -490,8 +492,8 @@ function drawSliders(components) {
             $("#" + component.id).slider({
                 range: true,
                 min: 0,
-                max: 100,
-                step: 10,
+                max: 50,
+                step: 5,
                 values: [component.defaultSpeed.get(), component.maxSpeed.get()],
                 slide: function (event, ui) {
 
@@ -508,8 +510,8 @@ function drawSliders(components) {
         $("#sliderForAll").slider({
             range: true,
             min: 0,
-            max: 100,
-            step: 10,
+            max: 50,
+            step: 5,
             values: [defaultSpeedFA, maxSpeedFA],
             slide: function (event, ui) {
 
