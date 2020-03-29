@@ -318,18 +318,20 @@ function sensorSettings(components) {
     }
 
     components.forEach((component, index) => {
+        let { r, g, b } = hexToRGB(color[index]);
+        console.log("rgb", r, g, b);
         $("#sensorRange").append(
-            '<input class="sensorInput" id = "range' + component.id + '" style = "background: ' + color[index] +
-            '; margin-bottom:10px" placeholder = "' + component.range.value + '">');
+            '<input class="sensorInput" id = "range' + component.id + '" style = "background: rgba(' + r + ',' + g + ',' + b +
+            ', 0.6); margin-bottom:10px" placeholder = "' + component.range.value + '">');
         $("#sensorAngle").append(
-            '<input class="sensorInput" id = "angle' + component.id + '" style = "background: ' + color[index] +
-            '; margin-bottom:10px" placeholder = "' + component.angle.value + '">');
+            '<input class="sensorInput" id = "angle' + component.id + '" style = "background: rgba(' + r + ',' + g + ',' + b +
+            ', 0.6); margin-bottom:10px" placeholder = "' + component.angle.value + '">');
         $("#sensorOrientation").append(
-            '<input class="sensorInput" id = "orientation' + component.id + '" style = "background: ' + color[index] +
-            '; margin-bottom:10px" placeholder = "' + component.orientation.value * 180 / Math.PI  + '">');
+            '<input class="sensorInput" id = "orientation' + component.id + '" style = "background: rgba(' + r + ',' + g + ',' + b +
+            ', 0.6); margin-bottom:10px" placeholder = "' + component.orientation.value * 180 / Math.PI  + '">');
         $("#sensorReaction").append(
-            '<div class="switch-btn switch-reaction" id = "react' + component.id + '" style = "background: ' + color[index] +
-            '; margin-bottom:10px">');
+            '<div class="switch-btn switch-reaction" id = "react' + component.id + '" style = "background: rgba(' + r + ',' + g + ',' + b +
+            ', 0.6); margin-bottom:10px">');
 
         switch (component.reactsTo.get()) {
             case 'Licht': {
@@ -341,6 +343,12 @@ function sensorSettings(components) {
                 break;
             }
         }
+
+        // Change background-color of input while hovering
+        hover('#range' + component.id);
+        hover('#angle' + component.id);
+        hover('#react' + component.id);
+        hover('#orientation' + component.id);
 
         //switch reaction
         $('#react' + component.id).click(function () {
@@ -468,6 +476,37 @@ function sensorSettings(components) {
     });
 
 }
+
+function hover(element) {
+    $(element).mouseover(function () {
+        const value = this.style.getPropertyValue("background");
+
+        // Get all color components 
+        const parts = value.match(/[\d.]+/g);
+
+        // Set alpha
+        parts[3] = 1;
+
+        // Set color
+        this.style.backgroundColor = `rgba(${parts.join(',')})`;
+    }).mouseout(function () {
+        const value = this.style.getPropertyValue("background");
+        const parts = value.match(/[\d.]+/g);
+        parts[3] = 0.6;
+        this.style.backgroundColor = `rgba(${parts.join(',')})`;
+    });
+}
+
+function hexToRGB(hex) {
+    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    //console.log("color rgb", result, parseInt(result[1], 16));
+    return result ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16)
+    } : null;
+}
+
 
 function drawSliders(components) {
     $('#slidecontainer').children().each((idx, child) => {
