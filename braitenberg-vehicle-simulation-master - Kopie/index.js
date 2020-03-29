@@ -12,6 +12,7 @@ let rangeFA = 0;
 let angleFA = 0;
 let orientationFA = 0;
 let reactionFA = 'Hindernis';
+
 // Motor settings
 let defaultSpeedFA = 0;
 let maxSpeedFA = 20;
@@ -165,8 +166,8 @@ function bodySettings(bodyComponents, renderComponents) {
     });
 
     // input erneut erzeugen
-    $('#bodyWidth').after('<input id="width" class="col-3">');
-    $('#bodyHeight').after('<input id="height" class="col-3">');
+    $('#bodyWidth').after('<input id="width" class="col-3" min=20 max=500>');
+    $('#bodyHeight').after('<input id="height" class="col-3" min=20 max=500>');
 
     $("#width").val(renderComponents[0].size.value.width);
     $("#height").val(renderComponents[0].size.value.height);
@@ -204,7 +205,9 @@ function bodySettings(bodyComponents, renderComponents) {
             }
         }
 
+       
         size = renderComponents[0].size.get();
+        console.log("size", size);
         paintMotorCanvas();
         paintSensorCanvas();
     });

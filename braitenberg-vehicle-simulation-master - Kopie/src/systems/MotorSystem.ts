@@ -115,6 +115,7 @@ export default class MotorSystem extends System {
         graphics.fillStyle(0xff0000, 1);
         graphics.fillCircle(x,y,5);
         graphics.strokeCircle(x, y, 5);
+        graphics.setDepth(999);
         this.grs[motor.id] = graphics;
     }
 
