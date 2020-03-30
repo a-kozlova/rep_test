@@ -166,8 +166,26 @@ function bodySettings(bodyComponents, renderComponents) {
     });
 
     // input erneut erzeugen
-    $('#bodyWidth').after('<input id="width" class="col-3" min=20 max=500>');
-    $('#bodyHeight').after('<input id="height" class="col-3" min=20 max=500>');
+    $('#bodyWidth').after('<input id="width" class="col-3">');
+    $('#bodyHeight').after('<input id="height" class="col-3">');
+
+    // wenn SolidBodyComponent vorhanden, den Button auf ON setzten (static changes in index.ts)
+    if (bodyComponents.length) {
+        $("#static").prop('disabled', false);
+        $('#staticRow').removeClass('disabled');
+        $('#solidBody.switch-btn').addClass("switch-on");
+
+        if (bodyComponents[0].isStatic.get()) {
+            $('#static.switch-btn').addClass("switch-on");
+        } else {
+            $('#static.switch-btn').removeClass("switch-on");
+        }
+    } else {
+        $('#solidBody.switch-btn').removeClass("switch-on");
+        $('#static.switch-btn').removeClass("switch-on");
+        $("#static").prop('disabled', true);
+        $('#staticRow').addClass('disabled');
+    }
 
     // die aktuelle Form der Entitaet anzeigen (bei einem Kreis wird die Hoehe deaktiviert)
     if (renderComponents[0].shape.value === "Rechteck") {
@@ -189,6 +207,11 @@ function bodySettings(bodyComponents, renderComponents) {
     // die aktuelle Breite bzw. Hoehe aendern 
     $("#width").change(function () {
         let newValue = parseInt($("#width").val()); 
+
+        if (newValue > 500 || newValue < 20) {
+            alert('Invalid value. Its should be greater than 20 and less then 500');
+            return;
+        }
 
         if (renderComponents[0].shape.get() === 'Kreis') {
             // Fuer den Kreis werden width und height gleich gesetzt
@@ -214,6 +237,12 @@ function bodySettings(bodyComponents, renderComponents) {
 
     $("#height").change(function () {
         let newValue = parseInt($(this).val()); 
+
+        if (newValue > 500 || newValue < 20) {
+            alert('Invalid value. Its should be greater than 20 and less then 500');
+            return;
+        }
+
         if (bodyComponents.length) {
             bodyComponents[0].setSize({ width: renderComponents[0].size.value.width, height: newValue });
         }
@@ -249,50 +278,7 @@ function bodySettings(bodyComponents, renderComponents) {
         default:
             $("#black").prop('checked', true);
             break;            
-    }
-
-
-
-    // Form der Entitaet 
-    $('input[name="form"]:radio').on('change', function () {
-        entity.components.forEach(component => {
-            if (component.name == 'Koerper' || component.name == 'Rendering') {
-                component.setShape($("input[name='form']:checked").val());
-                component.setSize({ width: component.size.value.width, height: component.size.value.width });
-                shape = $("input[name='form']:checked").val() === 'rectangle' ? 'Rechteck' : 'Kreis';
-                size = component.size.get();
-            }
-
-        });
-
-        // Event für Aktualisierung von Canvas
-        var event = new CustomEvent('componentChanged', { detail: entity });
-        document.dispatchEvent(event);
-    });
-
-    // wenn SolidBodyComponent vorhanden, den Button auf ON setzten
-    if (bodyComponents.length) {
-        $("#static").prop('disabled', false);
-        $('#staticRow').removeClass('disabled');
-        $('#solidBody.switch-btn').addClass("switch-on");
-
-        if (bodyComponents[0].isStatic.get()) {
-            $('#static.switch-btn').addClass("switch-on");
-        } else {
-            $('#static.switch-btn').removeClass("switch-on");
-        }
-
-    } else {
-        $('#solidBody.switch-btn').removeClass("switch-on");
-        $('#static.switch-btn').removeClass("switch-on");
-        $("#static").prop('disabled', true);
-        $('#staticRow').addClass('disabled');
-        console.log("testlauf");
-
-    }
-
-
-    //shape = renderComponents[0].shape.get();
+    }    
 }
 
 function sensorSettings(components) {
@@ -319,7 +305,6 @@ function sensorSettings(components) {
 
     components.forEach((component, index) => {
         let { r, g, b } = hexToRGB(color[index]);
-        console.log("rgb", r, g, b);
         $("#sensorRange").append(
             '<input class="sensorInput" id = "range' + component.id + '" style = "background: rgba(' + r + ',' + g + ',' + b +
             ', 0.6); margin-bottom:10px" placeholder = "' + component.range.value + '">');
@@ -515,12 +500,14 @@ function showSliders(components) {
     $('#slidecontainerForAll').children().each((idx, child) => {
         child.remove('div');
     });
+
     if (!components.length) {
         document.getElementById("motorFA").style.display = "none";
         return
     } else {    
         document.getElementById("motorFA").style.display = "block";
     }
+
     components.forEach(component => {
         $("#slidecontainer").append('<div id = "' + component.id + '" class="slider">');
     });
@@ -566,7 +553,6 @@ function showSliders(components) {
         });
     });
 }
-
 
 
 $(document).on("settigs:closed", function (event, options) {
@@ -648,6 +634,7 @@ var motorCanvasStage = new Konva.Stage({
 
 function paintMotorCanvas() {
 
+    // Position umrechnen, falls die Grenze der Enitaet ueberschritten
     motorComponents.forEach(motor => {
         if (Math.abs(motor.position.value.x) > size.width / 2) {
             let newValueX = motor.position.value.x > 0 ? size.width / 2 : -size.width / 2;
@@ -1056,13 +1043,10 @@ function paintSensorCanvas() {
                     angle = y > 0 ? Math.PI / 2 : 3 * Math.PI / 2;
                 }
 
-
                 let newX = radius * Math.cos(angle);
                 let newY = radius * Math.sin(angle);
                 sensor.setPosition(newX, newY);
             }
-
-
         } else {
 
             if (Math.abs(sensor.position.value.x) > size.width / 2) {

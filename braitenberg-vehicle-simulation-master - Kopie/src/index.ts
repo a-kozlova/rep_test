@@ -87,15 +87,6 @@ $('#emis.switch-btn').click(function() {
   document.dispatchEvent(event);
 });
 
-//Farbe
-$('input[name="farbe"]:radio').change(function() {
-  entity.components.forEach(component => {
-    if (component.name == 'Rendering') {
-      component.setColor($("input[name='farbe']:checked").val());
-    }
-  });
-});
-
 //SubstanceType
 $('input[name="substance"]:radio').change(function() {
   entity.components.forEach(component => {
@@ -129,7 +120,16 @@ $('#solidBody.switch-btn').click(function() {
   }
 });
 
-//static
+// Farbe der Entitaet aendern
+$('input[name="farbe"]:radio').change(function () {
+    entity.components.forEach(component => {
+        if (component.name == 'Rendering') {
+            component.setColor($("input[name='farbe']:checked").val());
+        }
+    });
+});
+
+// change static field of entity
 $('#static.switch-btn').click(function() {
   if (entity.getComponent('Koerper')) {
     $(this).toggleClass('switch-on');
@@ -143,6 +143,23 @@ $('#static.switch-btn').click(function() {
   }
 });
 
+// Form der Entitaet aendern
+$('input[name="form"]:radio').on('change', function () {
+    entity.components.forEach(component => {
+        if (component.name == 'Koerper' || component.name == 'Rendering') {
+            component.setShape($("input[name='form']:checked").val());
+            component.setSize({ width: component.size.value.width, height: component.size.value.width });
+            shape = $("input[name='form']:checked").val() === 'rectangle' ? 'Rechteck' : 'Kreis';
+            size = component.size.get();
+        }
+
+    });
+
+    // Event für Aktualisierung von Canvas
+    var event = new CustomEvent('componentChanged', { detail: entity });
+    document.dispatchEvent(event);
+});
+
 // add sensor
 document.addEventListener('addSensor', function(event) {
   myGame.scene.scenes[3].addSensor(entity, event.detail.position);
@@ -153,14 +170,17 @@ document.addEventListener('addMotor', function() {
   myGame.scene.scenes[3].addMotor(entity, event.detail.position);
 });
 
+// delete sensor
 document.addEventListener('deleteSensor', function(event) {
     myGame.scene.scenes[3].deleteSensor(entity, event.detail.component);
 });
 
+// delete motor
 document.addEventListener('deleteMotor', function (event) {
     myGame.scene.scenes[3].deleteMotor(entity, event.detail.component);
 });
 
+//delete entity
 document.addEventListener('deleteEntityEvent', (event) => {
     if (confirm("Delete this entity?")) {
         EntityManager.destroyEntity(entity.id);
