@@ -99,7 +99,7 @@ export default class ReactionSystem extends System {
       });
     });
   }
-/*
+
   private computeCorrelation(type: SubstanceType): Promise<void> {
     return new Promise((resolve, reject) => {
       const sensors = Object.values(this.sensors).filter(s => s.type === type);
@@ -132,7 +132,7 @@ export default class ReactionSystem extends System {
       });
     });
   }
-*/
+
   private computeCombinedSources(type: SubstanceType): void {
     const combined = new Float32Array(this.width * this.height);
     const sources = Object.values(this.sources).filter(s => s.type === type);
@@ -157,22 +157,22 @@ export default class ReactionSystem extends System {
     this.height = payload.height;
 
     this.computeCombinedSources(payload.type);
-    //this.compute();
+    this.compute();
   }
 
   private onSensorCreated(payload: EventMessages.NewSensorInfo): void {
     this.sensors[payload.id] = payload;
-    //this.compute();
+    this.compute();
   }
 
   private onSourceDestroyed(payload: EventMessages.SourceOrSensorDestroyedInfo): void {
     delete this.sources[payload.id];
     this.computeCombinedSources(payload.type);
-    //this.compute();
+    this.compute();
   }
 
   private onSensorDestroyed(payload: EventMessages.SourceOrSensorDestroyedInfo): void {
     delete this.sensors[payload.id];
-    //this.compute();
+    this.compute();
   }
 }
