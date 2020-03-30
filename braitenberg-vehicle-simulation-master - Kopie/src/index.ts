@@ -87,8 +87,6 @@ $('#emis.switch-btn').click(function() {
   document.dispatchEvent(event);
 });
 
-
-
 //Farbe
 $('input[name="farbe"]:radio').change(function() {
   entity.components.forEach(component => {
@@ -97,8 +95,6 @@ $('input[name="farbe"]:radio').change(function() {
     }
   });
 });
-
-
 
 //SubstanceType
 $('input[name="substance"]:radio').change(function() {

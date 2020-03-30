@@ -80,25 +80,26 @@ function openSettings(event) {
             color[i] = temp;
         }
     }
-    
+
+    showSliders(motorComponents);    
     sensorSettings(sensorComponents);
     bodySettings(solidBodyComponents, renderComponents);
     emissionSettings(sourceComponents);
     paintMotorCanvas();
     paintSensorCanvas();
-    drawSliders(motorComponents);    
 }
 
 
 function generateHexColor() {
-    var color = Math.floor(Math.random() * 16777216).toString(16);
+    let color = Math.floor(Math.random() * 16777216).toString(16);
 
     return '#000000'.slice(0, -color.length) + color;
 }
 
 
 function emissionSettings(sourceComponents) {
-    // Alle Kindknoten werden zuerst gelöscht und neu erzeigt, um Abhängigkeiten zwischen Komponenten von verschiedenen Entitäten zu vermeiden
+    // Alle Kindknoten werden zuerst gelöscht und neu erzeigt, 
+    // um Abhängigkeiten zwischen Komponenten von verschiedenen Entitäten zu vermeiden
     $('#emRange').remove();
     $('#emissionRange').after('<input id = "emRange" class="col-4" style = "height: 25px;">');
 
@@ -168,10 +169,7 @@ function bodySettings(bodyComponents, renderComponents) {
     $('#bodyWidth').after('<input id="width" class="col-3" min=20 max=500>');
     $('#bodyHeight').after('<input id="height" class="col-3" min=20 max=500>');
 
-    $("#width").val(renderComponents[0].size.value.width);
-    $("#height").val(renderComponents[0].size.value.height);
-
-    // die aktuelle Form der Entität anzeigen (bei einem Kreis wird die Hoehe deaktiviert)
+    // die aktuelle Form der Entitaet anzeigen (bei einem Kreis wird die Hoehe deaktiviert)
     if (renderComponents[0].shape.value === "Rechteck") {
         $("#height").prop('disabled', false);
         $("#height").removeClass('disabled');
@@ -184,15 +182,19 @@ function bodySettings(bodyComponents, renderComponents) {
         $("#height").addClass('disabled');
     }
 
+    // die aktuelle Groesse der Entitaet anzeigen
+    $("#width").val(renderComponents[0].size.value.width);
+    $("#height").val(renderComponents[0].size.value.height);
+
     // die aktuelle Breite bzw. Hoehe aendern 
     $("#width").change(function () {
         let newValue = parseInt($("#width").val()); 
 
         if (renderComponents[0].shape.get() === 'Kreis') {
-
+            // Fuer den Kreis werden width und height gleich gesetzt
             renderComponents[0].setSize({ width: newValue, height: newValue });
 
-            //wenn SolidBody vorhanden, diesem auch size setzen
+            // wenn SolidBody vorhanden, diesem auch size setzen
             if (bodyComponents.length) {
                 bodyComponents[0].setSize({ width: newValue, height: newValue });
             }
@@ -202,11 +204,10 @@ function bodySettings(bodyComponents, renderComponents) {
             if (bodyComponents.length) {
                 bodyComponents[0].setSize({ width: newValue, height: renderComponents[0].size.value.height });
             }
-        }
-
-       
+        }               
         size = renderComponents[0].size.get();
-        console.log("size", size);
+
+        // Canvas muss angepasst werden
         paintMotorCanvas();
         paintSensorCanvas();
     });
@@ -219,11 +220,13 @@ function bodySettings(bodyComponents, renderComponents) {
         renderComponents[0].setSize({ width: renderComponents[0].size.value.width, height: newValue });
 
         size = renderComponents[0].size.get();
+
+        // Canvas muss angepasst werden
         paintMotorCanvas();
         paintSensorCanvas();
     });
 
-
+    // Farbe anzeigen  (Farbe aendern in index.ts)
     switch (renderComponents[0].asset.value) {
         case 13421772:
             $("#grey").prop('checked', true);
@@ -249,6 +252,7 @@ function bodySettings(bodyComponents, renderComponents) {
     }
 
 
+
     // Form der Entitaet 
     $('input[name="form"]:radio').on('change', function () {
         entity.components.forEach(component => {
@@ -264,10 +268,6 @@ function bodySettings(bodyComponents, renderComponents) {
         // Event für Aktualisierung von Canvas
         var event = new CustomEvent('componentChanged', { detail: entity });
         document.dispatchEvent(event);
-
-        // Canvas muss aktualisiert werden
-        //paintMotorCanvas();
-        //paintSensorCanvas();
     });
 
     // wenn SolidBodyComponent vorhanden, den Button auf ON setzten
@@ -287,7 +287,8 @@ function bodySettings(bodyComponents, renderComponents) {
         $('#static.switch-btn').removeClass("switch-on");
         $("#static").prop('disabled', true);
         $('#staticRow').addClass('disabled');
-  
+        console.log("testlauf");
+
     }
 
 
@@ -507,7 +508,7 @@ function hexToRGB(hex) {
 }
 
 
-function drawSliders(components) {
+function showSliders(components) {
     $('#slidecontainer').children().each((idx, child) => {
         child.remove('div');
     });
