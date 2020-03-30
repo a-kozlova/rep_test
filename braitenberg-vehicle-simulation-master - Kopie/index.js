@@ -67,8 +67,6 @@ function openSettings(event) {
     size = renderComponents[0].size.value;
     shape = renderComponents[0].shape.get();
 
-    drawSliders(motorComponents);    
-
     // Generate color for motors and sensors on canvas
     var largestComponentNumber = motorComponents.length > sensorComponents.length ? motorComponents.length : sensorComponents.length;
     if (color.length < largestComponentNumber) {
@@ -82,12 +80,13 @@ function openSettings(event) {
             color[i] = temp;
         }
     }
-
+    
     sensorSettings(sensorComponents);
     bodySettings(solidBodyComponents, renderComponents);
     emissionSettings(sourceComponents);
     paintMotorCanvas();
     paintSensorCanvas();
+    drawSliders(motorComponents);    
 }
 
 
@@ -498,8 +497,8 @@ function hover(element) {
 }
 
 function hexToRGB(hex) {
+    // Get all color components
     var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    //console.log("color rgb", result, parseInt(result[1], 16));
     return result ? {
         r: parseInt(result[1], 16),
         g: parseInt(result[2], 16),

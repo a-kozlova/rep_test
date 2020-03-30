@@ -45,6 +45,12 @@ export default class SensorSystem extends System {
             const x = bodyPosition.x + sensorOffset.x;
             const y = bodyPosition.y + sensorOffset.y;
             image.setPosition(x, y);
+
+            let colorAlpha = Number(sensor.activation.get()) / 200 + 0.5;
+            image.setAlpha(colorAlpha);
+
+            image.setDepth(999);
+
             image.setVisible(true);
           } else {
             image.setVisible(false);
