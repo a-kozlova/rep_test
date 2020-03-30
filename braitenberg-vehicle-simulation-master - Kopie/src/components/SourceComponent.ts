@@ -38,11 +38,11 @@ export default class SourceComponent extends Component {
       data.emissionType || EmissionType.GAUSSIAN,
       SelectInput.create<EmissionType, SelectInput<EmissionType>>({ label: 'Charakteristik', options: EmissionType }),
     );
-	this.isActive = this.range.value === 0 ? false : true;	
+	this.isActive = this.range.get() === 0 ? false : true;	
   }
 	
 	public activateSourceComponent (){
-		if(this.originalRange.value === 0){
+		if(this.originalRange.get() === 0){
 			this.range.set(100);
 		} else {
 			this.range.set(this.originalRange.get());
@@ -54,7 +54,7 @@ export default class SourceComponent extends Component {
 		this.isActive = true;		
 	}
 	public deactivateSourceComponent (){
-		this.wasFlat = this.emissionType.value === "FLAT" ? true : false;
+		this.wasFlat = this.emissionType.get() === "FLAT" ? true : false;
 		if (this.wasFlat) {
 			this.originalRange.set(this.gausRange.get());
 			this.emissionType.set(EmissionType.GAUSSIAN);
@@ -69,7 +69,7 @@ export default class SourceComponent extends Component {
 		this.range.set(range);
    }
 
-   public setSubstanceType(substance){
+   public setSubstanceType(substance: string): void{
 	switch (substance) {
 		case 'source': {
 			this.substance.set(SubstanceType.LIGHT);
@@ -82,7 +82,7 @@ export default class SourceComponent extends Component {
 	}	
 	}
 
-	public setEmissionType(emission){
+	public setEmissionType(emission: string): void{
 	switch (emission) {
 		case 'gaus': {				
 			this.range.set(this.gausRange.get());
