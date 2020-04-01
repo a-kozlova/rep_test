@@ -101,6 +101,7 @@ export default class SourceSystem extends System {
     const solidBody = entity.getComponent(ComponentType.SOLID_BODY) as SolidBodyComponent | undefined;
 
     const transform = entity.getComponent(ComponentType.TRANSFORMABLE) as TransformableComponent;
+	const render = entity.getComponent(ComponentType.RENDER) as RenderComponent;
 
     // const { width, height } = this.scene.cameras.main;
     const width = Math.ceil(this.scene.cameras.main.width / CORRELATION_SCALE);
@@ -117,11 +118,11 @@ export default class SourceSystem extends System {
       ? gaussian(transform.position.get(), { x: source.range.get(), y: source.range.get() })
       : flatRect(
           Phaser.Physics.Matter.Matter.Vector.sub(transform.position.get(), {
-            x: (solidBody ? solidBody.size.get().width : source.range.get()) / 2,
-            y: (solidBody ? solidBody.size.get().height : source.range.get()) / 2,
+            x: (solidBody ? solidBody.size.get().width : render.size.get().width) / 2,
+            y: (solidBody ? solidBody.size.get().height : render.size.get().height) / 2,
           }),
-          solidBody ? solidBody.size.get().width : source.range.get(),
-          solidBody ? solidBody.size.get().height : source.range.get(),
+          solidBody ? solidBody.size.get().width : render.size.get().width,
+          solidBody ? solidBody.size.get().height : render.size.get().height,
           transform.angle.get(),
         );
 
