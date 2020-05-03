@@ -249,12 +249,6 @@ export default class RenderSystem extends System {
     if (render) {
       const renderHeight = render.size.get().height === 0 ? render.size.get().width : render.size.get().height;
       if (render.shape.get() === BodyShape.RECTANGLE) {
-        /* image = this.scene.add.circle(
-                     transform.position.get().x,
-                     transform.position.get().y,
-                     100);
-                 image.setStrokeStyle(10, render.asset.get() as number) 
-            */
         image = this.scene.add.rectangle(
           transform.position.get().x,
           transform.position.get().y,

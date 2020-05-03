@@ -114,14 +114,14 @@ export default class MainScene extends Phaser.Scene {
 
     const sensor1 = entity.addComponent(
       new SensorComponent({
-        position: { x: -50, y: 0 },
+        position: { x: -50, y: 50 },
         range: 20,
         angle: 0.4,
       }),
     );
     const sensor2 = entity.addComponent(
       new SensorComponent({
-        position: { x: 50, y: -75 },
+        position: { x: 50, y: 50 },
         range: 20,
         angle: 0.4,
       }),

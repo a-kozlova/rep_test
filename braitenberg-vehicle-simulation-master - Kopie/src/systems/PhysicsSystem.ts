@@ -131,9 +131,7 @@ export default class PhysicsSystem extends System {
       if (value === false) {
         this.physicsObjects[entity.id].body.inertia = 972.733631710278;
         this.physicsObjects[entity.id].body.inverseInertia = 1 / this.physicsObjects[entity.id].body.inertia;
-        /* this.physicsObjects[entity.id].body.mass = 15;
-           this.physicsObjects[entity.id].body.inverseMass = 1 / this.physicsObjects[entity.id].body.mass;
-           this.physicsObjects[entity.id].body.density = 0.001;*/
+        
       }
     });
 
