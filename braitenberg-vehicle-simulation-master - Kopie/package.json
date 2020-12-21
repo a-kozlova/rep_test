@@ -45,7 +45,7 @@
     "@types/lodash-es": "^4.17.3",
     "animate.css": "^3.7.2",
     "interactjs": "^1.5.4",
-    "jquery": "^3.4.1",
+    "jquery": "^3.5.0",
     "jquery-ui": "^1.12.1",
     "jquery-ui-dist": "^1.12.1",
     "lodash-es": "^4.17.14",
