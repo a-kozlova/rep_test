@@ -94,7 +94,7 @@ export default class ConnectionNetwork extends BaseInput<ConnectionNetworkData> 
       content: {
         element: 'input',
         attributes: {
-          placeholder: 'Bitte tippe hier das Gewicht ein.',
+          placeholder: 'Please type in the weight here.',
           value: this.value.weights[index1][index2],
         },
       },
@@ -109,7 +109,7 @@ export default class ConnectionNetwork extends BaseInput<ConnectionNetworkData> 
       }
 
       if (!value || Number.isNaN(Number(value)) || Number(value) < -1 || Number(value) > 1) {
-        swal('Der Wert muss zwischen -1 und 1 liegen. ').then(() => {
+        swal('The value must be between -1 and 1. ').then(() => {
           this.promptForValue(text, line, index1, index2);
         });
         return;

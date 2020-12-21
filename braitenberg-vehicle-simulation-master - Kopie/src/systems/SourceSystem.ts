@@ -57,7 +57,8 @@ export default class SourceSystem extends System {
 
     const handleTransform = this.addHandler(
       source.id,
-      debounce(() => {
+      debounce(
+       () => {
         this.removeSourceObject(source, currentType);
         this.addSourceObject(entity, source);
       }, 200),
@@ -100,6 +101,7 @@ export default class SourceSystem extends System {
     const solidBody = entity.getComponent(ComponentType.SOLID_BODY) as SolidBodyComponent | undefined;
 
     const transform = entity.getComponent(ComponentType.TRANSFORMABLE) as TransformableComponent;
+	const render = entity.getComponent(ComponentType.RENDER) as RenderComponent;
 
     // const { width, height } = this.scene.cameras.main;
     const width = Math.ceil(this.scene.cameras.main.width / CORRELATION_SCALE);
@@ -116,22 +118,23 @@ export default class SourceSystem extends System {
       ? gaussian(transform.position.get(), { x: source.range.get(), y: source.range.get() })
       : flatRect(
           Phaser.Physics.Matter.Matter.Vector.sub(transform.position.get(), {
-            x: (solidBody ? solidBody.size.get().width : source.range.get()) / 2,
-            y: (solidBody ? solidBody.size.get().height : source.range.get()) / 2,
+            x: (solidBody ? solidBody.size.get().width : render.size.get().width) / 2,
+            y: (solidBody ? solidBody.size.get().height : render.size.get().height) / 2,
           }),
-          solidBody ? solidBody.size.get().width : source.range.get(),
-          solidBody ? solidBody.size.get().height : source.range.get(),
+          solidBody ? solidBody.size.get().width : render.size.get().width,
+          solidBody ? solidBody.size.get().height : render.size.get().height,
           transform.angle.get(),
         );
 
+    // zeichnet die Ausstrahlung auf dem Canvas
     for (let y = 0; y < height; y += 1) {
       for (let x = 0; x < width; x += 1) {
         let v = f(x * CORRELATION_SCALE, y * CORRELATION_SCALE);
         values[y * width + x] = v;
-
+        
         if (source.substance.get() === SubstanceType.BARRIER) {
           v = Math.round(v * 255);
-          context.fillStyle = `rgb(${v}, ${0}, ${0})`;
+          context.fillStyle = `rgb(${0}, ${0}, ${v})`;
           context.fillRect(x, y, 1, 1);
         } else if (source.substance.get() === SubstanceType.LIGHT) {
           v = Math.round(v * 255);
@@ -149,8 +152,7 @@ export default class SourceSystem extends System {
     image.setDepth(99);
     this.scene.children.bringToTop(image);
 
-    this.textures[source.id] = image;
-
+      this.textures[source.id] = image;
     EventBus.publish(EventType.SOURCE_CREATED, {
       id: source.id,
       values,

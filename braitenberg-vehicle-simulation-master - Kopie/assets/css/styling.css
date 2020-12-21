@@ -180,7 +180,6 @@ button,
 }
 
 
-/*VON HIER SIND LAPKIS*/
 /*settings menu*/
 .nav-tabs a {
     color: black;
@@ -243,29 +242,51 @@ h4 {
 }
 
 /*VITALINA*/
-.btn {
-    align: center;
+.title {
     background-color: #EFEFEF;
+    border-radius: 3%;
+    padding: 5px 15px; 
     color: #383838;
-    width: 230px;
-    margin-right: 50 px;
-    margin-left: 0;
-    text-align: left;
-    outline: none;
+	display: inline;
+
+}
+.my-btn {
+    background-color: #EFEFEF !important;
+    color: #383838 !important;
+    text-align: left !important;
+    outline: none !important;
+	border: none !important;
+	display: block;
+    margin-block-start: 1.33em;
+    margin-block-end: 1.33em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+	margin-top: 0px;
+	margin-bottom: 0px;
+	padding: 5px;
 }
 
-.card {
-    width: 230px;
+.my-btn:hover, .my-btn:focus, .my-btn:active {
+    background-color: #EFEFEF !important;
+    color: #383838 !important;
+    outline: 0 !important;
+	border: none !important;
+	box-shadow: 0 !important;
+	outline-width:0!important;
+	outline-color: transparent !important;
+	outline-style: none;
+}
+.card {   
     border: none;
     background-color: #f8f8f8;
-    margin: 3px;
+    margin: 0 !important;
 }
 
 .prefab-btn {
     background-color: #f8f8f8;
     outline: none;
+	margin-left: 20px !important;
 }
-
 
 /*OFF CANVAS in INDEX.HTML*/
 .sidenav {
@@ -278,18 +299,139 @@ h4 {
     background-color: #f8f8f8;
     overflow-x: hidden;
     transition: 0.5s;
-    padding-top: 60px;
 }
 
-.sidenav .closebtn {
-    position: absolute;
-    top: 0;
-    right: 25px;
-    font-size: 36px;
-    margin-left: 50px;
+.sidenav button {
+    background-color: #f8f8f8;
+    color: #383838;
+}
+.closebtn {
+	padding: 0;
+	margin: 0;
+	background-color: #EFEFEF !important;
+}
+
+.container  {
+	background-color: #EFEFEF;	
+	font-size: 26px;
+	font-style: bold;
+}
+
+
+.prefab-btn:hover,.prefab-btn:focus, .prefab-btn:active,
+.closebtn:hover, .closebtn:focus, .closebtn:active {
+    background-color: #f8f8f8;
+    outline: 0 ;
+	border: none ;
+	box-shadow: 0 ;
+	outline-width:0;
+	outline-color: transparent ;
+	outline-style: none;
 }
 
 #main {
-    transition: margin-left .5s;
-    
+    transition: margin-left .5s;    
 }
+
+
+/*Switch on*/
+
+.switch-btn {
+    display: inline-block;
+    width: 50px; 
+    height: 20px;  
+    background: #bfbfbf; 
+    z-index: 0;
+    margin: 0;
+    padding: 0;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    transition-duration: 300ms; 
+}
+.switch-btn::after {
+    content: "";
+    height: 14px;
+    width: 22px;  
+    background: #fff; 
+    top: 3px; 
+    left: 3px; 
+    transition-duration: 300ms; 
+    position: absolute;
+    z-index: 1;
+}
+.switch-on {
+    background: #3fb53f;
+}
+.switch-on::after {
+    left: 25px;
+}
+.switch-reaction {
+    height: 31px;
+	width: 60px;
+}
+.switch-reaction::after {
+    height: 25px;	
+	width: 25px;
+}
+.switch-reaction.switch-on::after {
+	left: 33px;
+}
+#reactFA {
+    background: rgba(0,0,255,0.3) !important;
+}
+#reactFA.switch-on {
+    background: rgba(255,0,0,0.3) !important;
+}
+
+/*slider*/
+.slidecontainer {
+	width: 100%; /* Width of the outside container */
+}
+
+/* The slider itself */
+.slider {
+	align: center;
+	-webkit-appearance: none;  /* Override default CSS styles */
+	appearance: none;
+	width: 80%; 
+	height: 25px; /* Specified height */
+	background: #efefef; 
+	outline: none; /* Remove outline */
+	opacity: 0.6; /* Set transparency (for mouse-over effects on hover) */
+	-webkit-transition: .2s; /* 0.2 seconds transition on hover */
+	transition: opacity .2s;
+	margin: 15px;
+	margin-left: 10%;
+	color: red;
+}
+/* Mouse-over effects */
+.slider:hover {
+    opacity: 0.9;
+}
+
+.disabled {
+	color: gray;
+}
+input.disabled  {
+	background-color: rgba(128,128,128,0.2);
+}
+
+#deleteEntity{
+	color: red;
+	position: fixed;
+    bottom: 0;
+    right: 0;
+	display:none;
+	background-color: #f8f8f8;
+}
+
+.sensorInput::placeholder {
+    color: black;
+	opacity: 1 !important;
+}
+
+
+
+
+

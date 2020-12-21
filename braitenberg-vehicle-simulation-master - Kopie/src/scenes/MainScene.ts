@@ -1,7 +1,6 @@
 import Phaser from 'phaser';
 import swal from 'sweetalert';
 
-import EditorScene from './EditorScene';
 import SettingScene from './SettingScene';
 
 import SolidBodyComponent from '../components/SolidBodyComponent';
@@ -20,6 +19,7 @@ import PhysicsSystem from '../systems/PhysicsSystem';
 import RenderSystem from '../systems/RenderSystem';
 import EngineSystem from '../systems/EngineSystem';
 import SensorSystem from '../systems/SensorSystem';
+import MotorSystem from '../systems/MotorSystem';
 
 import ConnectionSystem from '../systems/ConnectionSystem';
 import SourceSystem from '../systems/SourceSystem';
@@ -45,19 +45,18 @@ export default class MainScene extends Phaser.Scene {
     this.scale.on('resize', this.handleResize.bind(this));
     this.matter.world.setBounds();
 
-    this.scene.add('editor', EditorScene, false);
     this.scene.add('settings', SettingScene, false);
-
-      EventBus.subscribe(EventType.ENTITY_SELECTED, (entity: Entity) => {
-          var event = new CustomEvent("entitySelected", { detail: entity });
-          document.dispatchEvent(event);
-          console.log("entity_selected");
-
-        //this.scene.launch('SettingScene', entity);
+    
+    EventBus.subscribe(EventType.ENTITY_SELECTED, (entity: Entity) => {
+        var event = new CustomEvent("entitySelected", { detail: entity });
+        event.preventDefault();
+        // event to catch in html
+      document.dispatchEvent(event);
     });
 
+	//Barrier
     EntityManager.createEntity(
-      new TransformableComponent({ position: { x: 600, y: 450 } }),
+      new TransformableComponent({ position: { x: 800, y: 450 }, angle: Math.PI }),
       new SolidBodyComponent({
         size: { width: 20, height: 400 },
         shape: BodyShape.RECTANGLE,
@@ -70,10 +69,12 @@ export default class MainScene extends Phaser.Scene {
       }),
       new RenderComponent({
         asset: 0xcccccc,
-        size: 110,
+        size: { width: 20, height: 400 },
+        shape: BodyShape.RECTANGLE,
       }),
     );
 
+	//Vehicle
     const entity = new Entity();
     const transform = new TransformableComponent({
       position: { x: 100, y: 500 },
@@ -85,10 +86,15 @@ export default class MainScene extends Phaser.Scene {
         size: { width: 100, height: 150 },
       }),
     );
+	entity.addComponent(
+      new SourceComponent({
+        range: 0,
+      }),
+    );
     entity.addComponent(
       new RenderComponent({
         asset: 'vehicle',
-        size: 100,
+        size: { width: 100, height: 150 },
       }),
     );
     const motor1 = entity.addComponent(
@@ -104,17 +110,18 @@ export default class MainScene extends Phaser.Scene {
         maxSpeed: 30,
         defaultSpeed: 1,
       }),
-    );
+      );
+
     const sensor1 = entity.addComponent(
       new SensorComponent({
-        position: { x: -50, y: 75 },
+        position: { x: -50, y: 50 },
         range: 20,
         angle: 0.4,
       }),
     );
     const sensor2 = entity.addComponent(
       new SensorComponent({
-        position: { x: 50, y: 75 },
+        position: { x: 50, y: 50 },
         range: 20,
         angle: 0.4,
       }),
@@ -144,22 +151,19 @@ export default class MainScene extends Phaser.Scene {
     );
     EntityManager.addExistingEntity(entity);
 
+
+	//Source
     EntityManager.createEntity(
-      new TransformableComponent({ position: { x: 950, y: 350 } }),
+        new TransformableComponent({ position: { x: 950, y: 350 }}),
       new RenderComponent({
         asset: 'prefab-source',
-        size: 100,
+        size: { width: 50, height: 50 },
+        shape: BodyShape.CIRCLE,
       }),
       new SourceComponent({
         range: 200,
       }),
     );
-
-    // EntityManager.createEntity(
-    //   new TransformableComponent({ x: 200, y: 400 }),
-    //   new RenderComponent('source', 150, Phaser.BlendModes.ADD),
-    //   new SourceComponent(150, SubstanceType.BARRIER),
-    // );
   }
 
   private createSystems(): void {
@@ -168,6 +172,7 @@ export default class MainScene extends Phaser.Scene {
       new SourceSystem(this),
       new EngineSystem(this),
       new SensorSystem(this),
+      new MotorSystem(this),
       new ConnectionSystem(this),
       new ReactionSystem(this),
       new RenderSystem(this),
@@ -211,7 +216,7 @@ export default class MainScene extends Phaser.Scene {
       entities.forEach(entity => EntityManager.destroyEntity(entity.id));
       EntityManager.loadEntities(aktuellerStatus);
     } else {
-      swal('Es konnte keine Scene geladen werden! Bitte verwenden Sie zunächst den Speichern Knopf.');
+      swal('No scene could be loaded! Please use the save button first.');
     }
   }
 
@@ -239,7 +244,7 @@ export default class MainScene extends Phaser.Scene {
       const files = importEl.files || [];
 
       if (files.length <= 0) {
-        swal('Es wurde keine korrete Datei ausgewählt.');
+        swal('No correct file was selected.');
         return;
       }
       const fr = new FileReader();
@@ -261,13 +266,13 @@ export default class MainScene extends Phaser.Scene {
     this.matter.world.setBounds();
   }
 
- // test funktion 14.11.19
- public createBarrier(): void {
+  // create entities for mainscene
+  public createBarrier(mouseX: number, mouseY: number): void {
     EntityManager.createEntity(
-        new TransformableComponent({ position: { x: 200, y: 450 } }),
+        new TransformableComponent({ position: { x: mouseX, y: mouseY } }),
         new SolidBodyComponent({
             size: { width: 20, height: 400 },
-            shape: BodyShape.CIRCLE,
+            shape: BodyShape.RECTANGLE,
             isStatic: true,
         }),
         new SourceComponent({
@@ -277,9 +282,321 @@ export default class MainScene extends Phaser.Scene {
         }),
         new RenderComponent({
             asset: 0xcccccc,
-            size: 110,
+			size: { width: 20, height: 400 },
+			shape: BodyShape.RECTANGLE
         }),
     );
 }
 
+  private createBlank(mouseX: number, mouseY: number): void {
+	EntityManager.createEntity(
+	
+        new TransformableComponent({ position: { x: mouseX, y: mouseY }}),
+        new RenderComponent({
+            asset: 'prefab-blank',
+            size: { width: 100, height: 100 },
+			shape: BodyShape.CIRCLE
+        }),
+		new SourceComponent({
+        range: 0,
+        })
+    );   
+}
+  private createSource(mouseX: number, mouseY: number): void {
+	EntityManager.createEntity(
+        new TransformableComponent({ position: { x: mouseX, y: mouseY }}),
+        new SourceComponent({
+          range: 100,
+        }),
+        new RenderComponent({ asset: 'prefab-source',         
+		size: { width: 100, height: 100 },
+        shape: BodyShape.CIRCLE }),
+      );
+   
+}
+  private createPrefab2a(mouseX: number, mouseY: number): void {
+	  const entity = new Entity();
+      const transform = new TransformableComponent({
+        position: { x: mouseX, y: mouseY },
+        angle: Math.PI,
+      });
+      entity.addComponent(transform);
+	  entity.addComponent(
+      new SourceComponent({
+        range: 0,
+      }),
+      );
+      entity.addComponent(
+        new SolidBodyComponent({
+          size: { width: 100, height: 150 },
+        }),
+      );
+      entity.addComponent(
+        new RenderComponent({
+          asset: 'vehicle',
+          size: { width: 100, height: 150 },
+	      shape: BodyShape.RECTANGLE
+        }),
+      );
+      const motor1 = entity.addComponent(
+        new MotorComponent({
+          position: { x: -50, y: 0 },
+          maxSpeed: 30,
+          defaultSpeed: 1,
+        }),
+      );
+      const motor2 = entity.addComponent(
+        new MotorComponent({
+          position: { x: 50, y: 0 },
+          maxSpeed: 30,
+          defaultSpeed: 1,
+        }),
+      );
+      const sensor1 = entity.addComponent(
+        new SensorComponent({
+          position: { x: -50, y: 75 },
+          range: 20,
+          angle: 0.4,
+        }),
+      );
+      const sensor2 = entity.addComponent(
+        new SensorComponent({
+          position: { x: 50, y: 75 },
+          range: 20,
+          angle: 0.4,
+        }),
+      );
+      entity.addComponent(
+        new ConnectionComponent({
+          inputIds: [sensor1, sensor2],
+          outputIds: [motor1, motor2],
+          weights: [[1, 0], [0, 1]],
+        }),
+      );
+      EntityManager.addExistingEntity(entity);
+   
+}
+  private createPrefab2b(mouseX: number, mouseY: number): void {
+	  const entity = new Entity();
+      const transform = new TransformableComponent({
+        position: { x: mouseX, y: mouseY },
+        angle: Math.PI,
+      });
+      //transform.angle.set(-Math.PI / 2);
+      entity.addComponent(transform);
+	  entity.addComponent(
+      new SourceComponent({
+        range: 0,
+      }),
+      );
+      entity.addComponent(
+        new SolidBodyComponent({
+          size: { width: 100, height: 150 },
+        }),
+      );
+      entity.addComponent(
+        new RenderComponent({
+          asset: 'vehicle',
+          size: { width: 100, height: 150 },
+	      shape: BodyShape.RECTANGLE
+        }),
+      );
+      const motor1 = entity.addComponent(
+        new MotorComponent({
+          position: { x: -50, y: 0 },
+          maxSpeed: 30,
+          defaultSpeed: 1,
+        }),
+      );
+      const motor2 = entity.addComponent(
+        new MotorComponent({
+          position: { x: 50, y: 0 },
+          maxSpeed: 30,
+          defaultSpeed: 1,
+        }),
+      );
+      const sensor1 = entity.addComponent(
+        new SensorComponent({
+          position: { x: -50, y: 75 },
+          range: 20,
+          angle: 0.4,
+        }),
+      );
+      const sensor2 = entity.addComponent(
+        new SensorComponent({
+          position: { x: 50, y: 75 },
+          range: 20,
+          angle: 0.4,
+        }),
+      );
+      entity.addComponent(
+        new ConnectionComponent({
+          inputIds: [sensor1, sensor2],
+          outputIds: [motor1, motor2],
+          weights: [[0, 1], [1, 0]],
+        }),
+      );
+      EntityManager.addExistingEntity(entity);
+   
+}
+  private createPrefab3a(mouseX: number, mouseY: number): void {
+      const entity = new Entity();
+      const transform = new TransformableComponent({
+        position: { x: mouseX, y: mouseY },
+        angle: Math.PI,
+      });
+      //transform.angle.set(-Math.PI / 2);
+      entity.addComponent(transform);
+	  entity.addComponent(
+      new SourceComponent({
+        range: 0,
+      }),
+      );
+      entity.addComponent(
+        new SolidBodyComponent({
+          size: { width: 100, height: 150 },
+        }),
+      );
+      entity.addComponent(
+        new RenderComponent({
+          asset: 'vehicle',
+          size: { width: 100, height: 150 },
+	      shape: BodyShape.RECTANGLE
+        }),
+      );
+      const motor1 = entity.addComponent(
+        new MotorComponent({
+          position: { x: -50, y: 0 },
+          maxSpeed: 30,
+          defaultSpeed: 1,
+        }),
+      );
+      const motor2 = entity.addComponent(
+        new MotorComponent({
+          position: { x: 50, y: 0 },
+          maxSpeed: 30,
+          defaultSpeed: 1,
+        }),
+      );
+      const sensor1 = entity.addComponent(
+        new SensorComponent({
+          position: { x: -50, y: 75 },
+          range: 20,
+          angle: 0.4,
+        }),
+      );
+      const sensor2 = entity.addComponent(
+        new SensorComponent({
+          position: { x: 50, y: 75 },
+          range: 20,
+          angle: 0.4,
+        }),
+      );
+      entity.addComponent(
+        new ConnectionComponent({
+          inputIds: [sensor1, sensor2],
+          outputIds: [motor1, motor2],
+          weights: [[-1, 0], [0, -1]],
+        }),
+      );
+      EntityManager.addExistingEntity(entity);
+   
+}
+  private createPrefab3b(mouseX: number, mouseY: number): void {
+      const entity = new Entity();
+      const transform = new TransformableComponent({
+        position: { x: mouseX, y: mouseY },
+        angle: Math.PI,
+      });
+      //transform.angle.set(-Math.PI / 2);
+      entity.addComponent(transform);
+	  entity.addComponent(
+      new SourceComponent({
+        range: 0,
+      }),
+      );
+      entity.addComponent(
+        new SolidBodyComponent({
+          size: { width: 100, height: 150 },
+        }),
+      );
+      entity.addComponent(
+        new RenderComponent({
+          asset: 'vehicle',
+          size: { width: 100, height: 150 },
+	      shape: BodyShape.RECTANGLE
+        }),
+      );
+      const motor1 = entity.addComponent(
+        new MotorComponent({
+          position: { x: -50, y: 0 },
+          maxSpeed: 30,
+          defaultSpeed: 1,
+        }),
+      );
+      const motor2 = entity.addComponent(
+        new MotorComponent({
+          position: { x: 50, y: 0 },
+          maxSpeed: 30,
+          defaultSpeed: 1,
+        }),
+      );
+      const sensor1 = entity.addComponent(
+        new SensorComponent({
+          position: { x: -50, y: 75 },
+          range: 20,
+          angle: 0.4,
+        }),
+      );
+      const sensor2 = entity.addComponent(
+        new SensorComponent({
+          position: { x: 50, y: 75 },
+          range: 20,
+          angle: 0.4,
+        }),
+      );
+      entity.addComponent(
+        new ConnectionComponent({
+          inputIds: [sensor1, sensor2],
+          outputIds: [motor1, motor2],
+          // TO-DO Negative Verknüpfung umsetzen
+          weights: [[0, -1], [-1, 0]],
+        }),
+      );
+      EntityManager.addExistingEntity(entity);
+   
+}
+
+  public createObject(mouseX: number, mouseY: number, droppedItemID: number ) {
+	switch(droppedItemID) { 
+		case 'blank': { 
+			this.createBlank(mouseX, mouseY);
+			break; 
+		}
+		case 'source': { 
+			this.createSource(mouseX, mouseY);
+			break; 
+		} 
+		case 'prefab2a': { 
+			this.createPrefab2a(mouseX, mouseY);
+			break; 
+		}		 
+		case 'prefab2b': { 
+			this.createPrefab2b(mouseX, mouseY);
+			break; 
+		} 
+		case 'prefab3a': { 
+			this.createPrefab3a(mouseX, mouseY);
+			break; 
+		} 
+		case 'prefab3b': { 
+			this.createPrefab3b(mouseX, mouseY);
+			break; 
+		} 
+		case 'barrier': { 
+			this.createBarrier(mouseX, mouseY);
+			break; 
+		}	
+    }
+}
 }

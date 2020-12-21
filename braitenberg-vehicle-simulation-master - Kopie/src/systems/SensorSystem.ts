@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import Entity from '../Entity';
-import { ComponentType, EventType } from '../enums';
+import { ComponentType, EventType, SubstanceType } from '../enums';
 import { CORRELATION_SCALE } from '../constants';
 import SensorComponent from '../components/SensorComponent';
 import TransformableComponent from '../components/TransformableComponent';
@@ -29,7 +29,7 @@ export default class SensorSystem extends System {
       const closestAngle = AVAILABLE_ANGLES.reduce((prev, curr) => {
         return Math.abs(curr - currentAngle) < Math.abs(prev - currentAngle) ? curr : prev;
       });
-
+	  
       sensors.forEach(sensor => {
         if (!this.textures[sensor.id]) {
           return;
@@ -45,6 +45,12 @@ export default class SensorSystem extends System {
             const x = bodyPosition.x + sensorOffset.x;
             const y = bodyPosition.y + sensorOffset.y;
             image.setPosition(x, y);
+
+            let colorAlpha = Number(sensor.activation.get()) / 200 + 0.5;
+            image.setAlpha(colorAlpha);
+
+            image.setDepth(999);
+
             image.setVisible(true);
           } else {
             image.setVisible(false);
@@ -70,6 +76,11 @@ export default class SensorSystem extends System {
       });
 
       sensor.reactsTo.onChange(value => {
+        this.removeSensorObject(sensor);
+        this.addSensorObject(entity, sensor);
+      });
+
+      sensor.orientation.onChange(value => {
         this.removeSensorObject(sensor);
         this.addSensorObject(entity, sensor);
       });
@@ -100,9 +111,14 @@ export default class SensorSystem extends System {
     });
 
     sensor.reactsTo.onChange(value => {
-      this.removeSensorObject(sensor);
-      this.addSensorObject(entity, sensor);
+        this.removeSensorObject(sensor);
+        this.addSensorObject(entity, sensor);
     });
+
+    sensor.orientation.onChange(value => {
+       this.removeSensorObject(sensor);
+       this.addSensorObject(entity, sensor);
+     });
   }
 
   protected onEntityComponentRemoved(entity: Entity, component: Component): void {
@@ -141,14 +157,22 @@ export default class SensorSystem extends System {
       const context = texture.getContext();
       const angleValues = new Float32Array(width * height);
 
+      // zeichnet die Sensoren auf dem Canvas
       for (let y = 0; y < height; y += 1) {
         for (let x = 0; x < width; x += 1) {
           const v = f((x - halfWidth) * CORRELATION_SCALE, (y - halfHeight) * CORRELATION_SCALE, angle);
 
           angleValues[y * width + x] = v;
 
-          context.fillStyle = `rgba(50, 50, 100, ${v * 0.6})`;
-          context.fillRect(x, y, 1, 1);
+		  //Sensorenfarbe haengt von der Emissionsart ab
+          if (sensor.reactsTo.get() == SubstanceType.LIGHT){
+			context.fillStyle = `rgba(255, 0, 0, ${v * 0.6})`;
+			context.fillRect(x, y, 1, 1);
+		  } else {
+			context.fillStyle = `rgba(0, 0, 255, ${v * 0.6})`;
+			context.fillRect(x, y, 1, 1);
+		  }
+		  
         }
       }
 
@@ -164,13 +188,14 @@ export default class SensorSystem extends System {
       // image.setBlendMode(Phaser.BlendModes.SCREEN);
       image.setVisible(false);
       image.setDepth(99);
+      image.setRotation(sensor.orientation.get());
       this.scene.children.bringToTop(image);
 
       textures[angle] = image;
       values[angle] = angleValues;
     });
-
-    this.textures[sensor.id] = textures;
+     // textures.setRotation(sensor.orientation.get());
+      this.textures[sensor.id] = textures;
 
     EventBus.publish(EventType.SENSOR_CREATED, {
       id: sensor.id,

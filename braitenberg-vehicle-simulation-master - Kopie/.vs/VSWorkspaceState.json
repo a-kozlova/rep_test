@@ -1,13 +1,11 @@
 {
   "ExpandedNodes": [
     "",
+    "\\assets",
     "\\src",
-    "\\src\\components",
-    "\\src\\dynamic_input",
-    "\\src\\gui",
     "\\src\\scenes",
     "\\src\\systems"
   ],
-  "SelectedNode": "\\src\\systems\\ReactionSystem.ts",
+  "SelectedNode": "\\src\\scenes\\LoadingScene.ts",
   "PreviewInSolutionExplorer": false
 }

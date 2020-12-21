@@ -54,6 +54,10 @@ class EntityManager {
     const entity = this.entities[id];
 
     EventBus.publish(EventType.ENTITY_DESTROYED, entity);
+
+    var event = new CustomEvent("closeSettings");
+    document.dispatchEvent(event);
+
     delete this.entities[id];
   }
 
@@ -73,7 +77,7 @@ class EntityManager {
     const entity = this.entities[entityId];
 
     if (!entity) {
-      new Noty({ text: `Entität mit ID ${entityId} konnte nicht gefunden werden` }).show();
+      new Noty({ text: `Entity with ID ${entityId} could not be found.` }).show();
       return undefined;
     }
 
@@ -100,7 +104,7 @@ class EntityManager {
     const entity = this.entities[entityId];
 
     if (!entity) {
-      new Noty({ text: `Entität mit ID ${entityId} konnte nicht gefunden werden` }).show();
+      new Noty({ text: `Entity with ID ${entityId} could not be found.` }).show();
       return;
     }
 
@@ -174,6 +178,7 @@ class EntityManager {
         return undefined;
     }
   }
+
 }
 
 export default new EntityManager();

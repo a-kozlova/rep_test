@@ -10,6 +10,10 @@ import vehicle3a from '../../assets/prefabs/3a.png';
 import vehicle3b from '../../assets/prefabs/3b.png';
 import source from '../../assets/prefabs/source.png';
 import blank from '../../assets/prefabs/blank.png';
+import barrier from '../../assets/prefabs/barrier.png';
+
+import del from '../../assets/delete-button.png';
+import rotate from '../../assets/rotate.png';
 
 export default class LoadingScene extends Phaser.Scene {
   public constructor() {
@@ -33,9 +37,16 @@ export default class LoadingScene extends Phaser.Scene {
     this.load.image('prefab-3a', vehicle3a);
     this.load.image('prefab-3b', vehicle3b);
     this.load.image('prefab-source', source);
-    this.load.image('prefab-blank', blank);
+    this.load.image('barrier', barrier);
+
+    this.load.image('del', del);
+    this.load.image('rotate', rotate);
 
     this.load.spritesheet('button', buttonSpriteSheet, { frameWidth: 50, frameHeight: 48 });
+
+	var url;  
+    url = 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexdragrotateplugin.min.js';
+    this.load.plugin('rexdragrotateplugin', url, true);
   }
 
   public create(): void {
@@ -59,10 +70,12 @@ export default class LoadingScene extends Phaser.Scene {
   private createProgress(): void {
     const progress = this.add.graphics();
 
+    // zeigt den Progress bei der Ladung der Scene an (weißer Rechteck in der Mitte links)
     this.load.on('progress', (value: number) => {
       progress.clear();
       progress.fillStyle(0xffffff, 1);
       progress.fillRect(0, 270, 800 * value, 60);
+        
     });
 
     this.load.on('complete', () => {

@@ -1,4 +1,4 @@
-import { ComponentType } from '../enums';
+﻿import { ComponentType } from '../enums';
 import Component from './Component';
 import Attribute from './Attribute';
 import NumberInput from '../dynamic_input/NumberInput';
@@ -28,7 +28,7 @@ export default class MotorComponent extends Component {
   public constructor(data: MotorComponentData) {
     super();
     this.position = new Attribute(data.position, PositionInput.create({ label: 'Position' }));
-
+      
     this.maxSpeed = new Attribute(
       data.maxSpeed || 50,
       NumberInput.create({ label: 'Maximalgeschwindigkeit', min: 1, max: 50 }),
@@ -45,4 +45,17 @@ export default class MotorComponent extends Component {
       TextInput.create({ label: 'Aktuelle Geschwindigkeit' }),
     );
   }
+
+    // Für interaktion mit html
+    public setPosition( newX: number, newY: number ) {
+        this.position.set({ x: newX, y: newY });
+    }
+
+	public setDefaultSpeed(speed: number) {        
+        this.defaultSpeed.set(speed);
+    }
+	public setMaxSpeed(speed: number) {        
+        this.maxSpeed.set(speed);
+    }
+
 }

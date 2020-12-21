@@ -62,7 +62,7 @@ export default class PhysicsSystem extends System {
         }
 
         graphics.lineStyle(1, bodyColor, part.render.opacity);
-        graphics.fillStyle(bodyColor, part.render.opacity);
+        //graphics.fillStyle(bodyColor, part.render.opacity);
 
         //  Part polygon
         if (part.circleRadius) {
@@ -106,18 +106,33 @@ export default class PhysicsSystem extends System {
 
     component.size.onChange((value, old) => {
       const { body } = this.physicsObjects[entity.id];
-      // Hier wird der Körper einmal in die "aufrechte" Position gedreht, weil `Matter.Body.scale`
-      // den Körper aus der "globalen" Sicht skaliert. D.h. sind scaleX und scaleY unterschied-
-      // lich, dann wird der Körper gequetscht und zu einem Parallelogramm.
-      Phaser.Physics.Matter.Matter.Body.rotate(body, -body.angle);
-      Phaser.Physics.Matter.Matter.Body.scale(body, value.width / old.width, value.height / old.height);
-      // Da wir den Körper vorher gedreht haben, muss er auch wieder in die Ausgangsdrehung
-      // gebracht werden.
-      Phaser.Physics.Matter.Matter.Body.rotate(body, body.angle);
+
+      if (component.shape.get() === 'Kreis') {
+        //Fuer den Kreis muss Radius gesetzt werden, denn sonst wir er null und Body wird zur Ellipse
+        Phaser.Physics.Matter.Matter.Body.set(body, 'circleRadius', value.width / 2);
+      } else {
+        // Hier wird der Körper einmal in die "aufrechte" Position gedreht, weil `Matter.Body.scale`
+        // den Körper aus der "globalen" Sicht skaliert. D.h. sind scaleX und scaleY unterschied-
+        // lich, dann wird der Körper gequetscht und zu einem Parallelogramm.
+        Phaser.Physics.Matter.Matter.Body.rotate(body, -body.angle);
+        Phaser.Physics.Matter.Matter.Body.scale(body, value.width / old.width, value.height / old.height);
+        // Phaser.Physics.Matter.Matter.Body.scale(body, value.width / old.width, value.height / old.height);
+        // Da wir den Körper vorher gedreht haben, muss er auch wieder in die Ausgangsdrehung
+        // gebracht werden.
+        Phaser.Physics.Matter.Matter.Body.rotate(body, body.angle);
+      }
     });
 
     component.isStatic.onChange(value => {
       this.physicsObjects[entity.id].body.isStatic = value;
+
+      // Falls body nicht mehr statisch ist, soll inertia sowie inverseInertia gesetzt werden,
+      // denn sie werden in weiteren Berechnungen (in Matter.Body) benutzt
+      if (value === false) {
+        this.physicsObjects[entity.id].body.inertia = 972.733631710278;
+        this.physicsObjects[entity.id].body.inverseInertia = 1 / this.physicsObjects[entity.id].body.inertia;
+        
+      }
     });
 
     this.createBody(entity, component);
@@ -174,7 +189,7 @@ export default class PhysicsSystem extends System {
         return Phaser.Physics.Matter.Matter.Bodies.circle(
           0,
           0,
-          component.size.get().width,
+          component.size.get().width / 2,
           pickBy(options, v => v !== undefined),
         );
       }
@@ -234,8 +249,6 @@ export default class PhysicsSystem extends System {
     // Vehikel sich dadurch eher dreht. Es ist wichtig eine ungerade Potenz zu nehmen,
     // damit entgegengesetztes Drehmoment die Rotatioin ausgleicht.
     body.torque -= (t + Math.sign(t)) ** 5;
-
-    // console.log(body.torque, t);
 
     Phaser.Physics.Matter.Matter.Body.applyForce(
       body,

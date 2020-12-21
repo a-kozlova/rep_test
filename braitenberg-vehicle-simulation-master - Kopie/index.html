@@ -2,226 +2,297 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <!--<link rel="stylesheet" type="text/css" href="assets/css/font-awesome.min.css" media="screen" />
-    <style>
+    <link rel="stylesheet" type="text/css" href="assets/css/font-awesome.min.css" media="screen" />
 
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,500|Open+Sans" rel="stylesheet">
+    <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.css"> -->
+    <link rel="stylesheet" href="bootstrap-4.3.1-dist/css/bootstrap.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script> -->
+    <script src="bootstrap-4.3.1-dist/js/bootstrap.js"></script>
+    
+    <!--DRAGGABLE-->
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    
+    <!--LIGHT-BARRIER-->
+    <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
+
+    <!--CANVAS-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/konva/4.0.18/konva.min.js"></script>
+
+
+    <style>
         html,
         body {
             margin: 0 !important;
             padding: 0 !important;
             overflow: hidden;
         }
-    </style>-->
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-
-    <link href="https://fonts.googleapis.com/css?family=Roboto:400,500|Open+Sans" rel="stylesheet">
-    <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.css"> -->
-    <link rel="stylesheet" href="bootstrap-4.3.1-dist/css/bootstrap.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
-
-    <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script> -->
-    <script src="bootstrap-4.3.1-dist/js/bootstrap.js"></script>
+       
+        .konvajs-content {
+            border: 1px solid black;
+        }
+   
+    </style>
 </head>
 <body>
     
-    
+    <!--SETTINGS-->
+
     <div id="myEntitySettings" class="sidenav">
-        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <!--HEAD-->
+        <div class="container">
+            <div class="row">
+                <div class="col-10 left">
+                    Settings
+                </div>
+                <div class="col-2 right">
+                    <button id="closeSettings" class="closebtn">&times;</button>
+                </div>
+            </div>
+        </div>
 
         <div id="settingsMenu">
+            <!--TABS-->
             <div class="nav nav-tabs nav-fil" id="myTabs" role="tablist">
                 <a class="nav-item nav-link active col-4" data-toggle="tab" href="#motor" role="tab" aria-controls="nav-home" aria-selected="true">Motor</a>
                 <a class="nav-item nav-link col-4" data-toggle="tab" href="#sensor" role="tab" aria-controls="nav-home" aria-selected="false">Sensor</a>
-                <a class="nav-item nav-link col-4" data-toggle="tab" href="#body" role="tab" aria-controls="nav-home" aria-selected="false">Body</a>
+                <a class="nav-item nav-link col-4" data-toggle="tab" href="#solidBody" role="tab" aria-controls="nav-home" aria-selected="false">Body</a>
                 <a class="nav-item nav-link col-6" data-toggle="tab" href="#emission" role="tab" aria-controls="nav-home" aria-selected="false">Emission</a>
                 <a class="nav-item nav-link col-6" data-toggle="tab" href="#connection" role="tab" aria-controls="nav-home" aria-selected="false">Connection</a>
             </div>
-
+            <!--CONTENT-->
             <div class="tab-content" id="nav-tabContent">
+                <!--MOTOR-->
                 <div role="tabpanel" class="tab-pane active" id="motor">
                     <h4>Position</h4>
-                    <div id="drag-drop-basic">
-                        <div id="motor-container" data-role="drag-drop-container" class="col-8" style="border: 1px black solid">
-                            <canvas id="motorCanvas" width="100" height="150" style="padding: 0;"> </canvas>
-                        </div>
-                        <div id="add-remove-container" data-role="drag-drop-container" class="col-4">
-                            <button id="drag-source" draggable="true">+</button>
-                        </div>
-                    </div>
-                    <h4>Current Speed</h4>
-                        <div id="currentSpeed"> </div>
-                    <h4>Min Speed</h4>
-                        <div id="minSpeed"> </div>
-                    <h4>Max Speed</h4>
-                        <div id="maxSpeed"> </div>
-                </div>
 
+                    <div id="motorCanvasContainer" class="col-12" style="border: 1px green dashed; padding: 0">
+                        <!--<canvas id="motorCanvas" style=" border: 1px black solid; margin: 0;" width="240" height="240"> </canvas>-->
+                    </div>
+
+                    <h4>Speed</h4>
+                    <div id="slidecontainer"></div>
+                    <div class="row" id="motorFA" style="padding-left: 20px;"> For all motors</div>
+					<div id="slidecontainerForAll"></div>
+                </div>
+                <!--SENSOR-->
                 <div role="tabpanel" class="tab-pane fade" id="sensor">
                     <h4>Position</h4>
-                    <h4>Reichweite</h4>
-                    <h4>Winkel</h4>
-                </div>
+                    <div id="sensorCanvasContainer" class="col-12" style="border: 1px green dashed; padding: 0">
+                        <!--<canvas id="sensorCanvas" style=" border: 1px black solid; margin: 0"> </canvas>-->
+                    </div>
 
+                    <div class="row">
+                        <h4 class="col-3">Range</h4>
+                        <h4 class="col-3"> Angle</h4>
+                        <h4 class="col-3">B/L</h4>
+                        <h4 class="col-3">Orient</h4>
+                    </div>
+
+                    <div class="row" id="sensorRow">
+                        <form id="sensorRange" class="col-3"> </form>
+                        <form id="sensorAngle" class="col-3"> </form>
+                        <form id="sensorReaction" class="col-3"> </form>
+                        <form id="sensorOrientation" class="col-3"> </form>
+                    </div>
+                    <div class="row" id="sensorFA" style="padding-left: 20px;"> For all sensors</div>
+                    <div class="row" id="sensorRowForAll">
+                        <form id="sensorRangeFA" class="col-3" onsubmit="return false;"> </form>
+                        <form id="sensorAngleFA" class="col-3" onsubmit="return false;"> </form>
+                        <form id="sensorReactionFA" class="col-3"> </form>
+                        <form id="sensorOrientationFA" class="col-3" onsubmit="return false;"> </form>
+                    </div>
+                </div>
+                <!--EMISSION-->
                 <div role="tabpanel" class="tab-pane fade" id="emission">
-                    <h4>Type</h4>
-                    <div class="custom-control">
-                        <input type="radio" id="barrier" name="emission" class="custom-control-input" checked>
-                        <label class="custom-control-label" for="barrier">Barrier</label>
+                    <div class="row">
+                        <div class="col-6 left">
+                            Emission
+                        </div>
+                        <div class="col-6 right">
+                            <div class="switch-btn" id="emis"></div>
+                        </div>
                     </div>
-                    <div class="custom-control">
-                        <input type="radio" id="sour" name="emission" class="custom-control-input">
-                        <label class="custom-control-label" for="sour">Source</label>
+                    <h4>Substance type</h4>
+                    <div id="substance">
+                        <div class="custom-control">
+                            <input type="radio" id="barrier" name="substance" class="custom-control-input" value="barrier">
+                            <label class="custom-control-label" for="barrier">Barrier</label>
+                        </div>
+                        <div class="custom-control">
+                            <input type="radio" id="sour" name="substance" class="custom-control-input" value="source">
+                            <label class="custom-control-label" for="sour">Source</label>
+                        </div>
+                    </div>
+                    <h4>Emission type</h4>
+                    <div id="emission">
+                        <div class="custom-control">
+                            <input type="radio" id="gaus" name="emission" class="custom-control-input" value="gaus">
+                            <label class="custom-control-label" for="gaus">Gaussian</label>
+                        </div>
+                        <div class="custom-control">
+                            <input type="radio" id="flat" name="emission" class="custom-control-input" value="flat">
+                            <label class="custom-control-label" for="flat">Flat</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div id="range-label" class="col-4">Range</div>
+                        <form id="emissionRange"></form>
                     </div>
                 </div>
+                <!--BODY-->
+                <div role="tabpanel" class="tab-pane fade" id="solidBody">
+                    <div class="row">
+                        <div class="col-6 left">
+                            Solid Body
+                        </div>
+                        <div class="col-6 right">
+                            <div class="switch-btn" id="solidBody"></div>
+                        </div>
+                    </div>
 
-                <div role="tabpanel" class="tab-pane fade" id="body">
+
+                    <div class="row" id="staticRow">
+                        <div class="col-6 left">
+                            Static
+                        </div>
+                        <div class="col-6 right">
+                            <div class="switch-btn" id="static"></div>
+                        </div>
+                    </div>
+
+
                     <h4>Form</h4>
-                    <div class="custom-control">
-                        <input type="radio" id="rectangle" name="form" class="custom-control-input" checked>
-                        <label class="custom-control-label" for="rectangle">Rectangle</label>
-                    </div>
-                    <div class="custom-control">
-                        <input type="radio" id="circle" name="form" class="custom-control-input">
-                        <label class="custom-control-label" for="circle">Circle</label>
+
+                    <div id="shape">
+                        <div class="custom-control">
+                            <input type="radio" id="rectangle" name="form" class="custom-control-input" value="rectangle">
+                            <label class="custom-control-label" for="rectangle">Rectangle</label>
+                        </div>
+                        <div class="custom-control">
+                            <input type="radio" id="circle" name="form" class="custom-control-input" value="circle">
+                            <label class="custom-control-label" for="circle">Circle</label>
+                        </div>
                     </div>
 
-                    <h4>Breite</h4>
-                    <h4>Höhe</h4>
-                    <h4>Farbe</h4>
-                    <div class="custom-control custom-radio">
-                        <input type="radio" id="grey" name="farbe" class="custom-control-input" checked>
+                    <div class="row" id="bodySize">
+                        <div id="bodyWidth" class="col-3">Width</div>
+                        <div id="bodyHeight" class="col-3">Height</div>
+                    </div>
+
+                    <h4>Color</h4>
+                    <div class="custom-control custom-radio" id="color">
+                        <input type="radio" id="black" name="farbe" class="custom-control-input" value="black">
+                        <label class="custom-control-label" for="black">Black</label>
+                    </div>
+                    <div class="custom-control custom-radio" id="color">
+                        <input type="radio" id="grey" name="farbe" class="custom-control-input" value="grey">
                         <label class="custom-control-label" for="grey">Grey</label>
                     </div>
                     <div class="custom-control custom-radio">
-                        <input type="radio" id="red" name="farbe" class="custom-control-input">
+                        <input type="radio" id="red" name="farbe" class="custom-control-input" value="red">
                         <label class="custom-control-label" for="red">Red</label>
                     </div>
                     <div class="custom-control custom-radio">
-                        <input type="radio" id="green" name="farbe" class="custom-control-input">
+                        <input type="radio" id="green" name="farbe" class="custom-control-input" value="green">
                         <label class="custom-control-label" for="green">Green</label>
                     </div>
                     <div class="custom-control custom-radio">
-                        <input type="radio" id="blue" name="farbe" class="custom-control-input">
+                        <input type="radio" id="blue" name="farbe" class="custom-control-input" value="blue">
                         <label class="custom-control-label" for="blue">Blue</label>
                     </div>
+                    <div class="custom-control custom-radio">
+                        <input type="radio" id="yellow" name="farbe" class="custom-control-input" value="yellow">
+                        <label class="custom-control-label" for="yellow">Yellow</label>
+                    </div>
                 </div>
-
+                <!--CONNECTION-->
                 <div role="tabpanel" class="tab-pane fade" id="connection">Connection</div>
 
             </div>
+
         </div>
-    </div>
-
-    
-
-    <div id="main">
-        <div id="phaser">  </div>
        
     </div>
+    <div>
+        <button id="deleteEntity" >Delete entity</button>
+    </div>
 
-    <script>
-        // settings menu aufmachen
-        
-        function openSettings(event) {
-            document.getElementById("myEntitySettings").style.width = "256px";
-            var entity = event.detail;                  // die aufgerufene Entität
+        <!--CREATE ENTITY-->
+        <div id="createEntityMenu" style="float: right; margin-right: 60px;">
+            <span style="font-size:30px;cursor:pointer; position: absolute" onclick="openNav()">&#9776;</span>
+        </div>
 
-            drawComponents(entity.components);
-            onCreate(entity.components);
+        <div id="mySidenav" class="sidenav">
 
-            /*
-            // Versuch die Taste für Hinzufügen eines Motoren draggable zu machen
-            let createMotorBtn = document.getElementById("drag-source");
-            createMotorBtn.addEventListener("dragstart", (entity) => {
-                console.log("start", entity);
-            });
+            <div class="container">
+                <div class="row">
+                    <div class="col-10 left">
+                        Create entity
+                    </div>
+                    <div class="col-2 right">
+                        <button class="closebtn" onclick="closeNav()">&times;</button>
+                    </div>
+                </div>
+            </div>
 
-            let obj = document.getElementById("motor-container");
-            obj.addEventListener("dragover", (e) => {
-                e.preventDefault();
-                console.log("over");
-            });
+            <div class="accordion" id="accordionExample">
+                <div class="card">
+				    <button type="button" class="my-btn collapsed" data-toggle="collapse" data-target="#collapseOne">Blank</button>
+                    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+                        <div class="card-body">
+							<button id="blank" class="prefab-btn draggable"><img src="assets/prefabs/blank.png" alt="blank"></button>
+                        </div>
+                    </div>
+                </div>
 
-            obj.addEventListener("drop", () => {
-                console.log("end");
-                // TODO addComponent?
-            });*/
+                <div class="card">
+                    <button type="button" class="my-btn collapsed" data-toggle="collapse" data-target="#collapseTwo">Source</button>
+                    <div id="collapseTwo" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+                        <div class="card-body">
+                            <button id="source" class="prefab-btn draggable"><img src="assets/prefabs/source.png" alt="source"></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <button type="button" class="my-btn collapsed" data-toggle="collapse" data-target="#collapseThree">Vehicle</button>
+                    <div id="collapseThree" class="collapse show" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                        <div class="card-body">
+                            <button id="prefab2a" class="prefab-btn draggable"><img src="assets/prefabs/2a.png" alt="vehicle-2a"></button>
+                            <button id="prefab2b" class="prefab-btn draggable"><img src="assets/prefabs/2b.png" alt="vehicle-2b"></button>
+                            <button id="prefab3a" class="prefab-btn draggable"><img src="assets/prefabs/3a.png" alt="vehicle-3a"></button>
+                            <button id="prefab3b" class="prefab-btn draggable"><img src="assets/prefabs/3b.png" alt="vehicle-3b"></button>
 
-            document.addEventListener("entitySelected", switchEntity);            
-        }
+                        </div>
+                    </div>
+                </div>
 
-        function switchEntity(event) {
-            closeNav();
-            console.log("switch", event);
-            openSettings(event);
-        }
-              
-        document.addEventListener("entitySelected", openSettings);
+                <div class="card">
+                    <button type="button" class="my-btn collapsed" data-toggle="collapse" data-target="#collapseFour">Barrier</button>
+                    <div id="collapseFour" class="collapse show" aria-labelledby="headingThree" data-parent="#accordionExample">
+                        <div class="card-body">
+                            <button id="barrier" class="prefab-btn draggable"><img src="assets/prefabs/barrier.png" alt="barrier"></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-        function onCreate(components) {
-            var slider = `<div class="d-flex justify-content-center my-8">
-                             <span class="font-weight-bold indigo-text mr-2 mt-1">0</span>
-                             <form class="range-field w-25">
-                                 <input class="border-0" type="range" min="0" max="100" />
-                             </form>
-                             <span class="font-weight-bold indigo-text ml-2 mt-1">100</span>
-                         </div>`;
-            var currentSpeed = document.getElementById("currentSpeed");
-            var maxSpeed = document.getElementById("maxSpeed");
-            var minSpeed = document.getElementById("minSpeed");
-            var sliders = [];
-            components.forEach(component => {
-                if (component.name == "Motor") {
-                    sliders.push(slider);
-                    console.log(component);
-                }
-            });
-            
-            currentSpeed.innerHTML = sliders;
-            maxSpeed.innerHTML = sliders;
-            minSpeed.innerHTML = sliders;
-        }
+        <!--GAME-->
+        <div id="phaser">  </div>
 
-
-        function drawComponents(components) {
-            var canvas = document.getElementById("motorCanvas");
-            canvas.style.border = "1px dashed";
-            var startPoint = { "x": canvas.width / 2, "y": canvas.height / 2 };
-
-            components.forEach(component => {
-                console.log("name", component.name);
-                if (component.name == "Motor") {
-                    var ctx = canvas.getContext('2d');
-                    console.log("component", component.position.value);
-                    var test = ctx.beginPath();
-                    ctx.arc(startPoint.x + component.position.value.x, startPoint.y + component.position.value.y, 5, 0, 2 * Math.PI);
-                    ctx.stroke();
-                    console.log("context", test);
-                }
-            });
-
-            canvas.ondragstart = closeNav;
-            
-            document.getElementById("motor-container").appendChild(canvas);
-        }
-
-
-
-        function closeNav() {
-            console.log("closeNav");
-            document.getElementById("myEntitySettings").style.width = "0";
-            var canvas = document.getElementById("motorCanvas");
-            var ctx = canvas.getContext("2d");
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-        }     
-
-
-    </script>
+        <!--GUI interaktiv-->
+        <script src="index.js"></script>
 
 
 </body>
 </html>
+
